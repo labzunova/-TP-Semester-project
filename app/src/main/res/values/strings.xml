@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Tindog</string>
+    <string name="emailHint">email</string>
+    <string name="passwordHint">password</string>
+    <string name="loginBtnText">Log in</string>
+    <string name="loginPageName">Authorization</string>
+</resources>
