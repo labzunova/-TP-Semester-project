@@ -5,4 +5,5 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="customDarkPink">#8A2B4B</color>
     <color name="customPink">#9F7281</color>
+    <color name="customPinkLight">#E1D5DD</color>
 </resources>

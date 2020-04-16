@@ -4,4 +4,10 @@
     <string name="passwordHint">password</string>
     <string name="loginBtnText">Log in</string>
     <string name="loginPageName">Authorization</string>
+    <string name="registrationBtnName">Are you new?</string>
+    <string name="registrationPageName">Registration</string>
+    <string name="regiserBtn">Regiser</string>
+    <string name="nameHint">your name</string>
+    <string name="registrateBtnText">Registrate</string>
+    <string name="myProfileName">My profile</string>
 </resources>
