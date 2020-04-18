@@ -11,4 +11,5 @@
     <string name="registrateBtnText">Registrate</string>
     <string name="myProfileName">My profile</string>
     <string name="profile_editing">Profile Editing</string>
+    <string name="saveBtn">Save changes</string>
 </resources>

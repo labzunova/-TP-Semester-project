@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 public class AccountActivity extends AppCompatActivity {
 
     private Button mExitButton;
+    private Button mEditButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +28,22 @@ public class AccountActivity extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
+
         mExitButton = (Button) findViewById(R.id.exitBtn);
+        mEditButton = (Button) findViewById(R.id.editBtn);
 
         mExitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(AccountActivity.this,AuthorizationActivity.class));
+            }
+        });
+
+        mEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountActivity.this, AccountEditActivity.class));
             }
         });
 
