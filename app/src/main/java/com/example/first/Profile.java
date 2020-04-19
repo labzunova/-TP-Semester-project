@@ -7,7 +7,7 @@ public class Profile {
     private String email;
     private String phone;
     private String breed;
-    private int age;
+    private String age;
     private String country;
     private String city;
     private String address;
@@ -16,7 +16,7 @@ public class Profile {
 
     }
 
-    public Profile (String name, String email, String phone, String breed, int age, String country, String city, String address) {
+    public Profile (String name, String email, String phone, String breed, String age, String country, String city, String address) {
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -45,7 +45,7 @@ public class Profile {
         return breed;
     }
 
-    public int getAge() {
+    public String getAge() {
         return age;
     }
 
@@ -79,7 +79,7 @@ public class Profile {
         this.breed = breed;
     }
 
-    public void setAge(int age) {
+    public void setAge(String age) {
         this.age = age;
     }
 
