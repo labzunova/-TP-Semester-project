@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -92,6 +94,7 @@ public class AccountEditActivity extends AppCompatActivity {
             }
         });
 
+        // получение текущих данных с Database
         databaseProfile.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -113,6 +116,48 @@ public class AccountEditActivity extends AppCompatActivity {
 
             }
         });
+
+        // Загрузка текущих файлов со Storage
+        /*
+        StorageReference avatarRef = storageRef.child("Profiles").child(userId).child("AvatarImage");
+        final Uri[] imgUri = new Uri[1];
+        avatarRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                imgUri[0] = uri;
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+        avatarRef.getFile(imgUri[0]);
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imgUri[0]);
+            imgPreview.setImageBitmap(bitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+         */
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+        StorageReference avatarRef = storageRef.child("Profiles").child(userId).child("AvatarImage");
+        avatarRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                imgPreview.setImageBitmap(bmp);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "No Such file or Path found!!", Toast.LENGTH_LONG).show();
+            }
+        });
+
+
 
         chooseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,19 +232,6 @@ public class AccountEditActivity extends AppCompatActivity {
 
     private void saveData() {
         String name = mNameField.getText().toString();
-
-        /*
-        if (!TextUtils.isEmpty(name)) {
-            // Profile profile = new Profile();
-            currentUserProfile.setName(name);
-
-            //String id = databaseProfile.push().getKey();
-            databaseProfile.child(user.getUid()).setValue(currentUserProfile);
-
-        } else {
-            Toast.makeText(this, "Name field is empty", Toast.LENGTH_SHORT).show();
-        }
-         */
 
         if (!mNameField.getText().toString().equals(currentUserProfile.getName()))
             currentUserProfile.setName(mNameField.getText().toString());
