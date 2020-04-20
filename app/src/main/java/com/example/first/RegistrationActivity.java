@@ -52,13 +52,17 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference();
+                DatabaseReference myRef = database.getReference("Profiles");
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String name = mNameField.getText().toString();
+                String email = mEmailField.getText().toString();
 
                 if (firebaseAuth.getCurrentUser() != null) {
-                    DatabaseReference childRef = myRef.child(user.getUid());
-                    childRef.child("name").setValue(name);
+                    Profile profile = new Profile();
+                    profile.setName(name);
+                    profile.setEmail(email);
+
+                    myRef.child(user.getUid()).setValue(profile);
 
                     startActivity(new Intent(RegistrationActivity.this, AccountActivity.class));
                 }
