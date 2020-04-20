@@ -57,7 +57,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 String name = mNameField.getText().toString();
 
                 if (firebaseAuth.getCurrentUser() != null) {
-                    DatabaseReference childRef = myRef.child(user.getUid());
+                    DatabaseReference childRef = myRef.child("ProfilesSergei").child(user.getUid());
                     childRef.child("name").setValue(name);
 
                     startActivity(new Intent(RegistrationActivity.this, AccountActivity.class));

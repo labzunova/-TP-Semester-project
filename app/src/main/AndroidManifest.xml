@@ -11,11 +11,11 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MatchesActivity"></activity>
         <activity android:name=".CurtainActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".AuthorizationActivity" />
         <activity android:name=".AccountEditActivity" />
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".AccountActivity" />
-        <activity android:name=".AuthorizationActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
