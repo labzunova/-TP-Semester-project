@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    tools:context=".AccountActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".AccountActivity">
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg"
+            android:alpha="0.7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/myProfile"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:shadowDy="-3"
+            android:shadowDx="-3"
+            android:shadowColor="@color/customDarkPink"
+            android:shadowRadius="5"
+            android:background="#808A2B4B"
+            android:fontFamily="casual"
+            android:gravity="center"
+            android:text="@string/myProfileName"
+            android:textColor="#000"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="MissingConstraints"
+            android:id="@+id/liner"
+            android:layout_below="@id/myProfile">
+
+
+            <ImageView
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_marginLeft="65dp"
+                android:layout_marginTop="25dp"
+                android:id="@+id/photo_profil"
+                />
+            <LinearLayout
+                android:layout_width="350dp"
+                android:layout_height="43dp"
+                android:background="@drawable/rounded"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_settings_black_24dp"
+                    android:id="@+id/edit"/>
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="15dp"
+
+                    android:id="@+id/to_str_scroll"/>
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/ic_img_match_love"
+                    android:id="@+id/match"/>
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/ic_exit_to_app_black_24dp"
+                    android:id="@+id/exit"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="30dp"
+                android:layout_toRightOf="@+id/liner">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="@drawable/rounded"
+                    android:text=""
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#000"
+                    android:textSize="20sp"
+                    android:shadowDy="-3"
+                    android:shadowDx="-3"
+                    android:shadowColor="@color/customDarkPink"
+                    android:shadowRadius="5"
+                    android:textStyle="italic"
+                    android:layout_marginTop="75dp"
+                    android:id="@+id/i_name"
+                    />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/layout_mail">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_mail_black_24dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="15sp"
+                    android:shadowDy="-3"
+                    android:shadowDx="-3"
+                    android:shadowRadius="5"
+                    android:textColor="#000"
+                    android:textStyle="italic"
+                    android:id="@+id/i_email"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/layout_telephone">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_phone_black_24dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="15sp"
+                    android:shadowDy="-3"
+                    android:shadowDx="-3"
+                    android:shadowRadius="5"
+                    android:textColor="#000"
+                    android:textStyle="italic"
+                    android:id="@+id/i_phone"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/layout_breed">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_img_breed"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="15sp"
+                    android:shadowDy="-3"
+                    android:shadowDx="-3"
+                    android:shadowRadius="5"
+                    android:textColor="#000"
+                    android:textStyle="italic"
+                    android:id="@+id/i_breed"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/layout_age" >
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_img_age_love"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="15sp"
+                    android:shadowDy="-3"
+                    android:shadowDx="-3"
+                    android:shadowRadius="5"
+                    android:textColor="#000"
+                    android:textStyle="italic"
+                    android:id="@+id/i_age"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/layout_country">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_language_black_24dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="15sp"
+                    android:shadowDy="-3"
+                    android:shadowDx="-3"
+                    android:shadowRadius="5"
+                    android:textColor="#000"
+                    android:textStyle="italic"
+                    android:id="@+id/i_country"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/layout_city">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_location_city_black_24dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="15sp"
+                    android:shadowDy="-3"
+                    android:shadowDx="-3"
+                    android:shadowRadius="5"
+                    android:textColor="#000"
+                    android:textStyle="italic"
+                    android:id="@+id/i_city"
+
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/layout_addres">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_home_black_24dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="15sp"
+                    android:shadowDy="-3"
+                    android:shadowDx="-3"
+                    android:shadowRadius="5"
+                    android:textColor="#000"
+                    android:textStyle="italic"
+                    android:id="@+id/i_addres"
+                    />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+
+
+    </RelativeLayout>
+</ScrollView>
