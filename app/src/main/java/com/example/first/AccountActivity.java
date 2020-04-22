@@ -4,10 +4,24 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+//import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+//import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+//import com.facebook.drawee.backends.pipeline.Fresco;
+//import com.facebook.drawee.view.SimpleDraweeView;
+//import com.facebook.imagepipeline.request.ImageRequest;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -15,24 +29,62 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 
 public class AccountActivity extends AppCompatActivity {
+    private ImageView imgSetting, imgExit, imgScroll, imgMatch, photoProfil;
+    private TextView labName, labEmail, labPhone, labBreed, labAge, labCountry, labCity, labAddres;
+    private LinearLayout layoutPhone, layoutBreed, layoutAge, layoutCountry, layoutCity, layoutAddres;
+    private boolean isImageScaled = false;
 
-    private Button mExitButton;
-    private Button mEditButton;
+    private DatabaseReference databaseProfile;
+    private FirebaseUser user;
+    private String userId;
+    private Profile currentUserProfile;
+    private Uri filepath;
+    FirebaseStorage storage;
+    StorageReference storageRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
-
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
 
-        mExitButton = (Button) findViewById(R.id.exitBtn);
-        mEditButton = (Button) findViewById(R.id.editBtn);
+        databaseProfile = FirebaseDatabase.getInstance().getReference("Profiles");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = user.getUid();
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
 
-        mExitButton.setOnClickListener(new View.OnClickListener() {
+        imgSetting = findViewById(R.id.edit);
+        imgExit = findViewById(R.id.exit);
+        imgScroll = findViewById(R.id.to_str_scroll);
+        imgMatch = findViewById(R.id.match);
+
+        labName = findViewById(R.id.i_name);
+        labEmail = findViewById(R.id.i_email);
+        labPhone = findViewById(R.id.i_phone);
+        labBreed = findViewById(R.id.i_breed);
+        labAge = findViewById(R.id.i_age);
+        labCountry = findViewById(R.id.i_country);
+        labCity = findViewById(R.id.i_city);
+        labAddres = findViewById(R.id.i_addres);
+
+        photoProfil = findViewById(R.id.photo_profil);
+
+        layoutPhone = (LinearLayout) findViewById(R.id.layout_telephone);
+        layoutBreed = (LinearLayout) findViewById(R.id.layout_breed);
+        layoutAge = (LinearLayout) findViewById(R.id.layout_age);
+        layoutCountry = (LinearLayout) findViewById(R.id.layout_country);
+        layoutCity = (LinearLayout) findViewById(R.id.layout_city);
+        layoutAddres = (LinearLayout) findViewById(R.id.layout_addres);
+
+        imgExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
@@ -40,13 +92,83 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
-        mEditButton.setOnClickListener(new View.OnClickListener() {
+        photoProfil.setOnClickListener(new View.OnClickListener() {
+             @Override
+               public void onClick(View v) {
+               if(!isImageScaled) v.animate().scaleX(1.4f).scaleY(1.4f).setDuration(500);
+                if (isImageScaled) v.animate().scaleX(1f).scaleY(1f).setDuration(500);
+
+                isImageScaled = !isImageScaled;
+                }
+             });
+
+        imgSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AccountActivity.this, AccountEditActivity.class));
             }
         });
 
+        imgScroll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountActivity.this, MainActivity.class));
+            }
+        });
+
+        imgMatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountActivity.this, MatchesActivity.class));
+            }
+        });
+
+        databaseProfile.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                currentUserProfile = dataSnapshot.child(userId).getValue(Profile.class);
+
+                labName.setText(currentUserProfile.getName());
+                labEmail.setText(currentUserProfile.getEmail());
+
+                labBreed.setText(currentUserProfile.getBreed());
+
+                 labAge.setText(currentUserProfile.getAge());
+
+                labCountry.setText(currentUserProfile.getCountry());
+
+
+               labCity.setText(currentUserProfile.getCity());
+
+                labAddres.setText(currentUserProfile.getAddress());
+
+                 labPhone.setText(currentUserProfile.getPhone());
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        final long ONE_MEGABYTE = 1024*1024;
+        StorageReference avatarPhoto =  storageRef.child("Profiles").child(userId).child("AvatarImage"); //берем из storage
+        avatarPhoto.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                photoProfil.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                photoProfil.setImageResource(R.drawable.dog);
+                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
 

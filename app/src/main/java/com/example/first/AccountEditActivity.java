@@ -89,6 +89,7 @@ public class AccountEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saveData();
+                startActivity(new Intent(AccountEditActivity.this, AccountActivity.class));
             }
         });
 
@@ -188,18 +189,7 @@ public class AccountEditActivity extends AppCompatActivity {
     private void saveData() {
         String name = mNameField.getText().toString();
 
-        /*
-        if (!TextUtils.isEmpty(name)) {
-            // Profile profile = new Profile();
-            currentUserProfile.setName(name);
 
-            //String id = databaseProfile.push().getKey();
-            databaseProfile.child(user.getUid()).setValue(currentUserProfile);
-
-        } else {
-            Toast.makeText(this, "Name field is empty", Toast.LENGTH_SHORT).show();
-        }
-         */
 
         if (!mNameField.getText().toString().equals(currentUserProfile.getName()))
             currentUserProfile.setName(mNameField.getText().toString());
