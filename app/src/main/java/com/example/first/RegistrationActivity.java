@@ -19,6 +19,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 public class RegistrationActivity extends AppCompatActivity {
 
     private Button mRegisterBtn;
@@ -52,7 +54,7 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("Profiles");
+                DatabaseReference myRef = database.getReference("ProfilesSergei");
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String name = mNameField.getText().toString();
                 String email = mEmailField.getText().toString();
@@ -64,6 +66,10 @@ public class RegistrationActivity extends AppCompatActivity {
                     Profile profile = new Profile();
                     profile.setName(name);
                     profile.setEmail(email);
+                    ArrayList<String> likes = new ArrayList<>();
+                    likes.add("1");
+                    likes.add("2");
+                    profile.setLikes(likes);
 
                     myRef.child(user.getUid()).setValue(profile);
 

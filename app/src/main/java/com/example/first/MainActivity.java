@@ -3,15 +3,22 @@ package com.example.first;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -39,10 +46,13 @@ import static android.widget.GridLayout.HORIZONTAL;
 import static android.widget.GridLayout.LEFT;
 import static android.widget.GridLayout.RIGHT;
 
-public class MainActivity extends AppCompatActivity {
-    static final String INF = "information";
+public class MainActivity extends AppCompatActivity implements MainActivityService.ProfileListener {
+    public static final String INF = "information";
+    public static final String INFORMATION_PROCESS = "informationProgress";
+    private static final String SIGNAL_NEW_FRAGMENT = "signalNewFragment";
 
     private TextView textName;
+    private Button nextFragment;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -55,41 +65,75 @@ public class MainActivity extends AppCompatActivity {
     private String nameMyDog, idMyDog;
     private ArrayList<String> listLikes, listMatches;
     private Map<String, String> allDogs;
-    private ArrayList<Data> listData;
-    private MyAdapter adapter;
+    private MainActivityService mainService;
+
+    Intent intent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        nextFragment = findViewById(R.id.nextFragment);
+        intent = new Intent(this, MainActivityService.class);
+
+        bindService(intent, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mainService = ((MainActivityService.MyBinder)service).getService();
+                mainService.listenEvents(MainActivity.this);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        }, BIND_AUTO_CREATE);
+
+        Profile userProfile = new Profile();
+        userProfile.setName("Test");
+        userProfile.setAge("7");
+        userProfile.setCity("Moscow");
+
+        final DogFragment firstFragment = DogFragment.newInstance(R.drawable.dog_example2, userProfile);
+
+        if (savedInstanceState == null) {
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.dogFragment, firstFragment)
+                    .commit();
+
+
+        }
+
         // -----------init------------------
-        mAuth = FirebaseAuth.getInstance();
+        /*mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();*/
 
 
-        listData = new ArrayList<Data>();
+        /*listData = new ArrayList<Data>();
         adapter = new MyAdapter(listData);
         listData.add(new Data(R.drawable.dog));
-
         RecyclerView list = findViewById(R.id.recycle);
-
         list.setAdapter(adapter);
         list.setLayoutManager(new LinearLayoutManager(this));
-
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(list);
+        itemTouchHelper.attachToRecyclerView(list);*/
 
-        listLikes = new ArrayList<>();
+
+        //listLikes = new ArrayList<>();
 
 
 
         // ------------listeners--------------
 
 
-        if (user != null) {
+        /*if (user != null) {
             DatabaseReference childRef = myRef.child("ProfilesSergei").child(user.getUid()).child("seen");
             childRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -110,9 +154,9 @@ public class MainActivity extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-            });
+            });*/
 
-            myRef.child("ProfilesSergei").child(user.getUid()).child("likes")
+            /*myRef.child("ProfilesSergei").child(user.getUid()).child("likes")
                     .addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -131,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-            });
+            });*/
 
             /*myRef.child("ProfilesSergei").addValueEventListener(new ValueEventListener() {
                 @Override
@@ -149,8 +193,29 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });*/
-        }
+        //}
         // --------------------metods----------------
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
+    @Override
+    public void newProfile(Profile profile) {
+        if (profile != null) {
+            DogFragment newFragment = DogFragment.newInstance(R.drawable.dog_example2, profile);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.dogFragment, newFragment)
+                    .commit();
+        }
+        else {
+
+        }
     }
 
     /*class AllDog {
@@ -178,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    class MyAdapter extends RecyclerView.Adapter<MyHolder> {
+    /*class MyAdapter extends RecyclerView.Adapter<MyHolder> {
         private ArrayList<Data> listDataAdapter;
 
         public MyAdapter(ArrayList<Data> listDataAdapter) {
@@ -220,11 +285,11 @@ public class MainActivity extends AppCompatActivity {
         public Data(int imgId) {
             this.imgId = imgId;
         }
-    }
+    }*/
 
 
 
-    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0,
+    /*ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0,
             ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
         @Override
@@ -263,5 +328,6 @@ public class MainActivity extends AppCompatActivity {
             myRef.child("ProfilesSergei").child(user.getUid()).child("seen").child(idDog).removeValue();
             adapter.notifyDataSetChanged();
         }
-    };
+    };*/
+
 }
