@@ -36,8 +36,11 @@ import com.google.firebase.storage.StorageReference;
 public class AccountActivity extends AppCompatActivity {
     private ImageView imgSetting, imgExit, imgScroll, imgMatch, photoProfil;
     private TextView labName, labEmail, labPhone, labBreed, labAge, labCountry, labCity, labAddres;
-    private LinearLayout layoutPhone, layoutBreed, layoutAge, layoutCountry, layoutCity, layoutAddres;
+    private LinearLayout layoutPhone, layoutBreed, layoutAge, layoutCountry, layoutCity, layoutAddres, layoutMail;
     private boolean isImageScaled = false;
+    private String str = new String("");
+
+
 
     private DatabaseReference databaseProfile;
     private FirebaseUser user;
@@ -83,6 +86,7 @@ public class AccountActivity extends AppCompatActivity {
         layoutCountry = (LinearLayout) findViewById(R.id.layout_country);
         layoutCity = (LinearLayout) findViewById(R.id.layout_city);
         layoutAddres = (LinearLayout) findViewById(R.id.layout_addres);
+        layoutMail = (LinearLayout) findViewById(R.id.layout_mail);
 
         imgExit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,20 +133,35 @@ public class AccountActivity extends AppCompatActivity {
                 currentUserProfile = dataSnapshot.child(userId).getValue(Profile.class);
 
                 labName.setText(currentUserProfile.getName());
-                labEmail.setText(currentUserProfile.getEmail());
 
-                labBreed.setText(currentUserProfile.getBreed());
-
-                 labAge.setText(currentUserProfile.getAge());
-
-                labCountry.setText(currentUserProfile.getCountry());
+                if (currentUserProfile.getEmail().equals(str) || currentUserProfile.getEmail() == null){
+                    layoutMail.setVisibility(View.GONE);
+                } else labEmail.setText(currentUserProfile.getEmail());
 
 
-               labCity.setText(currentUserProfile.getCity());
+                if (currentUserProfile.getBreed().equals(str) || currentUserProfile.getBreed() == null){
+                    layoutBreed.setVisibility(View.GONE);
+                } else labBreed.setText(currentUserProfile.getBreed());
 
-                labAddres.setText(currentUserProfile.getAddress());
+                if (currentUserProfile.getAge().equals(str) || currentUserProfile.getAge() == null){
+                   layoutAge.setVisibility(View.GONE);
+                } else labAge.setText(currentUserProfile.getAge());
 
-                 labPhone.setText(currentUserProfile.getPhone());
+                if (currentUserProfile.getCountry().equals(str) || currentUserProfile.getCountry() == null){
+                    layoutCountry.setVisibility(View.GONE);
+                } else labCountry.setText(currentUserProfile.getCountry());
+
+                if (currentUserProfile.getCity().equals(str) || currentUserProfile.getCity() == null){
+                    layoutCity.setVisibility(View.GONE);
+                } else labCity.setText(currentUserProfile.getCity());
+
+                if (currentUserProfile.getAddress().equals(str) || currentUserProfile.getAddress() == null){
+                    layoutAddres.setVisibility(View.GONE);
+                } else labAddres.setText(currentUserProfile.getAddress());
+
+                if (currentUserProfile.getPhone().equals(str) || currentUserProfile.getPhone() == null){
+                    layoutPhone.setVisibility(View.GONE);
+                } else labPhone.setText(currentUserProfile.getPhone());
 
 
             }
@@ -153,7 +172,7 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
-        final long ONE_MEGABYTE = 1024*1024;
+        final long ONE_MEGABYTE = 3* 1024*1024;
         StorageReference avatarPhoto =  storageRef.child("Profiles").child(userId).child("AvatarImage"); //берем из storage
         avatarPhoto.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override

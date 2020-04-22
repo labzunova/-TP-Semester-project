@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="1000dp"
     tools:context=".AccountActivity">
 
     <RelativeLayout
@@ -54,10 +54,11 @@
             <ImageView
                 android:layout_width="250dp"
                 android:layout_height="250dp"
-                android:src="@drawable/dog"
+
                 android:layout_gravity="center"
                 android:layout_marginTop="35dp"
-                android:id="@+id/photo_profil"/>
+                android:id="@+id/photo_profil"
+                />
 
 
             <TextView
@@ -95,12 +96,13 @@
                     android:layout_width="50dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="15dp"
+
                     android:id="@+id/to_str_scroll"/>
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="15dp"
-
+android:src="@drawable/ic_img_match_love"
                     android:id="@+id/match"/>
                 <ImageView
                     android:layout_width="50dp"
@@ -116,7 +118,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginLeft="20dp">
+                android:layout_marginLeft="20dp"
+                android:id="@+id/layout_mail">
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
@@ -173,6 +176,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:src="@drawable/ic_img_breed"
                     />
                 <TextView
                     android:layout_width="wrap_content"
@@ -200,6 +204,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:src="@drawable/ic_img_age_love"
                     />
                 <TextView
                     android:layout_width="wrap_content"
