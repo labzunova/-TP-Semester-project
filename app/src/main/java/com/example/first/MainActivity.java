@@ -1,55 +1,29 @@
 package com.example.first;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.firebase.ui.database.FirebaseListAdapter;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
-
-import static android.widget.GridLayout.HORIZONTAL;
-import static android.widget.GridLayout.LEFT;
-import static android.widget.GridLayout.RIGHT;
 
 public class MainActivity extends AppCompatActivity implements MainActivityService.ProfileListener {
     public static final String INF = "information";
     public static final String INFORMATION_PROCESS = "informationProgress";
-    private static final String SIGNAL_NEW_FRAGMENT = "signalNewFragment";
 
     private TextView textName;
     private Button nextFragment;
@@ -97,9 +71,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityServi
         userProfile.setAge("7");
         userProfile.setCity("Moscow");
 
-        final DogFragment firstFragment = DogFragment.newInstance(R.drawable.dog_example2, userProfile);
+        //DogFragment firstFragment = DogFragment.newInstance(null, userProfile);
 
-        if (savedInstanceState == null) {
+        /*if (savedInstanceState == null) {
 
             getSupportFragmentManager()
                     .beginTransaction()
@@ -107,7 +81,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityServi
                     .commit();
 
 
-        }
+        }*/
+
+        findViewById(R.id.nextFragment).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainService.setNewProfile();
+            }
+        });
 
         // -----------init------------------
         /*mAuth = FirebaseAuth.getInstance();
@@ -204,14 +185,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityServi
     }
 
     @Override
-    public void newProfile(Profile profile) {
+    public void newProfile(Profile profile, Bitmap bmpImage) {
         if (profile != null) {
-            DogFragment newFragment = DogFragment.newInstance(R.drawable.dog_example2, profile);
+            Log.d(INFORMATION_PROCESS, "Transport data to fragment");
+
+            DogFragment newFragment = DogFragment.newInstance(bmpImage, profile);
 
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.dogFragment, newFragment)
                     .commit();
+
+            Log.d(INFORMATION_PROCESS, "Start fragment");
         }
         else {
 

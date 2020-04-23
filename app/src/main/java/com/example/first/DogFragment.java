@@ -2,12 +2,13 @@ package com.example.first;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.GestureDetector;
@@ -18,6 +19,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayOutputStream;
 
 public class DogFragment extends Fragment {
     private static final String ARG_ID_Photo = "idPhoto";
@@ -26,14 +34,14 @@ public class DogFragment extends Fragment {
     private ImageView imgDogMain;
     private TextView textMessenger;
     private View view;
-    private int idPhoto;
+    private Bitmap bmpImage;
     private String messenger;
 
     public DogFragment() {
     }
 
 
-    public static DogFragment newInstance(int idPhoto, Profile infUser) {
+    public static DogFragment newInstance(Bitmap bmpImage, Profile infUser) {
         DogFragment fragment = new DogFragment();
         Bundle args = new Bundle();
 
@@ -41,7 +49,10 @@ public class DogFragment extends Fragment {
                 + infUser.getAge() + "\n"
                 + infUser.getCity();
 
-        args.putInt(ARG_ID_Photo, idPhoto);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmpImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        args.putByteArray(ARG_ID_Photo, byteArray);
         args.putString(ARG_INF_DOG, inf);
 
         fragment.setArguments(args);
@@ -52,7 +63,10 @@ public class DogFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            idPhoto = getArguments().getInt(ARG_ID_Photo);
+            Log.d(MainActivity.INFORMATION_PROCESS, "set data in fragment");
+
+            byte[] byteArray = getArguments().getByteArray(ARG_ID_Photo);
+            bmpImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
             messenger = getArguments().getString(ARG_INF_DOG);
         }
     }
@@ -65,8 +79,14 @@ public class DogFragment extends Fragment {
         imgDogMain = v.findViewById(R.id.imgDogMain);
         textMessenger = v.findViewById(R.id.textInf);
 
-        imgDogMain.setImageResource(idPhoto);
+        if (bmpImage != null)
+            imgDogMain.setImageBitmap(bmpImage);
+        else {
+            imgDogMain.setImageResource(R.drawable.dog_example2);
+        }
         textMessenger.setText(messenger);
+
+        Log.d(MainActivity.INFORMATION_PROCESS, "we have new fragment");
         v.setOnTouchListener(new OnSwipeListener(getContext()));
 
         return v;
@@ -80,6 +100,8 @@ public class DogFragment extends Fragment {
         view.findViewById(R.id.rightButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(MainActivity.INFORMATION_PROCESS, "OnClick Right");
+
                 Intent intentService;
                 intentService = new Intent(getActivity(), MainActivityService.class);
                 intentService.setAction("right");
@@ -91,6 +113,8 @@ public class DogFragment extends Fragment {
         view.findViewById(R.id.leftButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(MainActivity.INFORMATION_PROCESS, "OnClick Left");
+
                 Intent intentService;
                 intentService = new Intent(getActivity(), MainActivityService.class);
                 intentService.setAction("left");
