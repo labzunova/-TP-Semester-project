@@ -135,34 +135,41 @@ public class AccountActivity extends AppCompatActivity {
 
                 labName.setText(currentUserProfile.getName());
 
-                if (currentUserProfile.getEmail().equals(str) || currentUserProfile.getEmail() == null){
-                    layoutMail.setVisibility(View.GONE);
-                } else labEmail.setText(currentUserProfile.getEmail());
+                if (currentUserProfile.getEmail() != null && !currentUserProfile.getEmail().equals(str) ){
+                    labEmail.setText(currentUserProfile.getEmail());
+                } else
+                      layoutMail.setVisibility(View.GONE);
 
 
-                if (currentUserProfile.getBreed().equals(str) || currentUserProfile.getBreed() == null){
-                    layoutBreed.setVisibility(View.GONE);
-                } else labBreed.setText(currentUserProfile.getBreed());
+                if ( currentUserProfile.getBreed() != null && !currentUserProfile.getBreed().equals(str) ){
+                    labBreed.setText(currentUserProfile.getBreed());
+                } else
+                         layoutBreed.setVisibility(View.GONE);
 
-                if (currentUserProfile.getAge().equals(str) || currentUserProfile.getAge() == null){
-                   layoutAge.setVisibility(View.GONE);
-                } else labAge.setText(currentUserProfile.getAge());
+                  if (currentUserProfile.getAge() != null && !currentUserProfile.getAge().equals(str) ){
+                  labAge.setText(currentUserProfile.getAge());
+                } else
+                      layoutAge.setVisibility(View.GONE);
 
-                if (currentUserProfile.getCountry().equals(str) || currentUserProfile.getCountry() == null){
-                    layoutCountry.setVisibility(View.GONE);
-                } else labCountry.setText(currentUserProfile.getCountry());
+                if (currentUserProfile.getCountry() != null && !currentUserProfile.getCountry().equals(str) ){
+                   labCountry.setText(currentUserProfile.getCountry());
+                } else
+                      layoutCountry.setVisibility(View.GONE);
 
-                if (currentUserProfile.getCity().equals(str) || currentUserProfile.getCity() == null){
+                if (currentUserProfile.getCity() != null && !currentUserProfile.getCity().equals(str) ){
+                   labCity.setText(currentUserProfile.getCity());
+                } else
                     layoutCity.setVisibility(View.GONE);
-                } else labCity.setText(currentUserProfile.getCity());
 
-                if (currentUserProfile.getAddress().equals(str) || currentUserProfile.getAddress() == null){
+                if (currentUserProfile.getAddress() != null && !currentUserProfile.getAddress().equals(str) ){
+                     labAddres.setText(currentUserProfile.getAddress());
+                } else
                     layoutAddres.setVisibility(View.GONE);
-                } else labAddres.setText(currentUserProfile.getAddress());
 
-                if (currentUserProfile.getPhone().equals(str) || currentUserProfile.getPhone() == null){
-                    layoutPhone.setVisibility(View.GONE);
-                } else labPhone.setText(currentUserProfile.getPhone());
+                if (currentUserProfile.getPhone() != null && !currentUserProfile.getPhone().equals(str) ){
+                  labPhone.setText(currentUserProfile.getPhone());
+               } else
+                layoutPhone.setVisibility(View.GONE);
 
 
             }
@@ -185,7 +192,7 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 photoProfil.setImageResource(R.drawable.dog);
-                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+
 
             }
         });

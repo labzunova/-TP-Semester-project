@@ -31,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:id="@+id/liner_layout"
             tools:ignore="MissingConstraints">
             <TextView
                 android:id="@+id/myProfile"
@@ -51,10 +52,10 @@
                 app:layout_constraintTop_toTopOf="parent"
                 />
 
+
             <ImageView
                 android:layout_width="250dp"
                 android:layout_height="250dp"
-
                 android:layout_gravity="center"
                 android:layout_marginTop="35dp"
                 android:id="@+id/photo_profil"
@@ -96,7 +97,7 @@
                     android:layout_width="50dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="15dp"
-
+                     android:src="@drawable/ic_swipe_versia4"
                     android:id="@+id/to_str_scroll"/>
                 <ImageView
                     android:layout_width="50dp"
@@ -308,7 +309,26 @@ android:src="@drawable/ic_img_match_love"
 
         </LinearLayout>
 
-
+        <TextView
+            android:id="@+id/citata"
+            android:layout_width="402dp"
+            android:layout_height="87dp"
+            android:layout_below="@id/liner_layout"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginRight="10dp"
+            android:fontFamily="casual"
+            android:gravity="center"
+            android:shadowColor="@color/customDarkPink"
+            android:shadowDx="-3"
+            android:shadowDy="-3"
+            android:shadowRadius="5"
+            android:text="@string/citata"
+            android:textColor="#000"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
 

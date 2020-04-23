@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="500dp"
+    android:layout_height="400dp"
     tools:context=".AccountActivity">
 
     <RelativeLayout
@@ -79,7 +79,7 @@
                     android:layout_width="50dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="15dp"
-
+                    android:src="@drawable/ic_swipe_versia4"
                     android:id="@+id/to_str_scroll"/>
                 <ImageView
                     android:layout_width="50dp"
@@ -318,7 +318,27 @@
         </LinearLayout>
 
 
-
+        <TextView
+            android:id="@+id/citata"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:shadowDy="-3"
+            android:shadowDx="-3"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@id/liner"
+            android:shadowColor="@color/customDarkPink"
+            android:shadowRadius="5"
+            android:fontFamily="casual"
+            android:gravity="center"
+            android:text="@string/citata"
+            android:textColor="#000"
+            android:textSize="25sp"
+            android:layout_marginTop="150dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
 
     </RelativeLayout>
