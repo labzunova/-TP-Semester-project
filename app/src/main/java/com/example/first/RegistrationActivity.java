@@ -80,8 +80,8 @@ public class RegistrationActivity extends AppCompatActivity {
                     // uploading default avatar to firebase storage
                     // Uri uri = Uri.parse("/Users/Ivan/AndroidStudioProjects/DashasFirebase/-TP-Semester-project/app/src/main/res/drawable/dog.jpg");
                     Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
-                            "://" + getResources().getResourcePackageName(R.drawable.dog)
-                            + '/' + getResources().getResourceTypeName(R.drawable.dog) + '/' + getResources().getResourceEntryName(R.drawable.dog) );
+                            "://" + getResources().getResourcePackageName(R.drawable.default_avatar)
+                            + '/' + getResources().getResourceTypeName(R.drawable.default_avatar) + '/' + getResources().getResourceEntryName(R.drawable.default_avatar) );
                     StorageReference ref = storageRef.child("Profiles").child(user.getUid()).child("AvatarImage");
                     ref.putFile(imageUri);
 
