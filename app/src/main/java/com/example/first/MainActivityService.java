@@ -27,7 +27,13 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 
 public class MainActivityService extends Service {
-    private static final String NAME_BRANCH = "ProfilesSergei";
+    public static final String INFORMATION_PROCESS_SERVICE = "infService";
+
+    public static final String NAME_BRANCH = "ProfilesSergei";
+    public static final String BRANCH_SEEN = "seen";
+    private static final String BRANCH_LIKES = "likes";
+    private static final String BRANCH_MATCHES = "matches";
+
     private final long ONE_MEGABYTE = 1024 * 1024;
 
     // For data
@@ -38,25 +44,37 @@ public class MainActivityService extends Service {
     private StorageReference storageRef;
     Bitmap bmpImage;
 
+    // For connection server with activity
+    private MyBinder mBinder = new MyBinder();
+    private ProfileListener listener = null;
+
+    // Copy of data from the server
     private Profile userProfile;
+    private Profile userNowSee;
     private ArrayList<String> idDogs;
+    private String idProfileHowSeeUser;
+
+    private ArrayList<String> likes;
+    private ArrayList<String> matches;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(MainActivity.INF, "ServiceOnCreate");
+        Log.d(INFORMATION_PROCESS_SERVICE, "ServiceOnCreate");
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        storageRef = FirebaseStorage.getInstance().getReference().child(NAME_BRANCH); //.child(user.getUid()).child("AvatarImage");
+        storageRef = FirebaseStorage.getInstance().getReference().child(NAME_BRANCH);
 
         idDogs = new ArrayList<>();
+        likes = new ArrayList<>();
+        matches = new ArrayList<>();
 
 
         if (user != null) {
-            Log.d(MainActivity.INFORMATION_PROCESS, "User +");
+            Log.d(INFORMATION_PROCESS_SERVICE, "User +");
             DatabaseReference childRef = myRef.child(NAME_BRANCH).child(user.getUid());
             childRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -66,43 +84,20 @@ public class MainActivityService extends Service {
 
                         idDogs = dataSnapshot.getValue(Profile.class).getSeen();
 
-                        Log.d(MainActivity.INFORMATION_PROCESS, "Id dog with seen in ArrayList");
-                        Log.d(MainActivity.INFORMATION_PROCESS, Integer.toString(idDogs.size()) + " In ArrayList Id");
+                        Log.d(INFORMATION_PROCESS_SERVICE, Integer.toString(idDogs.size()) + " In ArrayList Id");
 
-
-                        if (idDogs.size() != 0) {
-                            myRef.child(NAME_BRANCH).child(idDogs.get(0))
-                                    .addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            userProfile = dataSnapshot.getValue(Profile.class);
-
-                                            Log.d(MainActivity.INFORMATION_PROCESS, "First Profile We Have");
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-
-                            storageRef.child(idDogs.get(0)).child("AvatarImage").
-                                    getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                @Override
-                                public void onSuccess(byte[] bytes) {
-                                    bmpImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
-                                    Log.d(MainActivity.INFORMATION_PROCESS, "First Image in Bitmap");
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getApplicationContext(), "No Such file or Path found!!", Toast.LENGTH_LONG).show();
-                                }
-                            });
-
-                        }
+                        Log.d(INFORMATION_PROCESS_SERVICE, "Start readDataWithServer with Listener");
                     }
+
+                    // initialisation likes with server
+                    if(dataSnapshot.getValue(Profile.class).getLikes() != null)
+                        likes = dataSnapshot.getValue(Profile.class).getLikes();
+
+                    // initialisation matches with server
+                    if(dataSnapshot.getValue(Profile.class).getMatches() != null)
+                        matches = dataSnapshot.getValue(Profile.class).getMatches();
+
+                    readDataWithServer();
                 }
 
                 @Override
@@ -119,52 +114,118 @@ public class MainActivityService extends Service {
         String inf;
         inf = intent.getAction();
 
-        Log.d(MainActivity.INFORMATION_PROCESS, "New Service");
-
-        setNewProfile();
+        Log.d(INFORMATION_PROCESS_SERVICE, "New Service");
 
         if (inf != null) {
+            //
             Log.d(MainActivity.INF, inf);
+
             switch (inf) {
                 case "left": {
                     //remove with likes
-                    //Profile profile = getDataOfNewDog();
 
-                    Log.d(MainActivity.INFORMATION_PROCESS, "Stop Service");
+                    setNewProfile();
+                    Log.d(INFORMATION_PROCESS_SERVICE, "Stop Service Left");
                     stopSelf(startId);
+
+                    break;
                 }
 
                 case "right": {
                     //remove with likes, put in likes or matches
-                    //Profile profile = getDataOfNewDog();
 
-                    Log.d(MainActivity.INFORMATION_PROCESS, "Stop Service");
+                    Log.d(MainActivity.INF, Boolean.toString(likes.isEmpty()));
+                    if (likes.indexOf(idProfileHowSeeUser) == -1) {
+
+                        ArrayList<String> yourLikes = new ArrayList<>();
+                        if (userNowSee.getLikes() != null)
+                            yourLikes = userNowSee.getLikes();
+                        yourLikes.add(user.getUid());
+                        myRef.child(NAME_BRANCH).child(idProfileHowSeeUser).child(BRANCH_LIKES).
+                                setValue(yourLikes);
+                    }
+                    else {
+                        likes.remove(likes.indexOf(idProfileHowSeeUser));
+                        myRef.child(NAME_BRANCH).child(user.getUid()).child(BRANCH_LIKES).setValue(likes);
+
+                        // set Matches your profile
+                        ArrayList<String> yourMatches = new ArrayList<>();
+                        if (userNowSee.getMatches() != null)
+                            yourMatches = userNowSee.getLikes();
+                        yourMatches.add(user.getUid());
+                        myRef.child(NAME_BRANCH).child(idProfileHowSeeUser).child(BRANCH_MATCHES).
+                                setValue(yourMatches);
+
+                        // set Matches my profile
+                        matches.add(idProfileHowSeeUser);
+                        myRef.child(NAME_BRANCH).child(user.getUid()).child(BRANCH_MATCHES).
+                                setValue(matches);
+                    }
+
+                    setNewProfile();
+                    Log.d(INFORMATION_PROCESS_SERVICE, "Stop Service Right");
                     stopSelf(startId);
+
+                    break;
                 }
 
+                case "default": {
+                    setNewProfile();
+                    Log.d(INFORMATION_PROCESS_SERVICE, "Stop Service Default");
+                    stopSelf(startId);
+
+                    break;
+                }
                 default: {
+                    idProfileHowSeeUser = inf;
+                    myRef.child(NAME_BRANCH).child(idProfileHowSeeUser).
+                            addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    userNowSee = dataSnapshot.getValue(Profile.class);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                    break;
                 }
 
             }
+
+        }
+
+
+        else {
+
         }
 
         super.onStartCommand(intent, flags, startId);
         return START_REDELIVER_INTENT;
     }
 
-    private void getNewProfile() {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
-        if(idDogs.size() != 0) {
-            idDogs.remove(0);
-            myRef.child(NAME_BRANCH).child(user.getUid()).child("seen").setValue(idDogs);
+        Log.d(INFORMATION_PROCESS_SERVICE, "onDestroy Service");
+    }
 
+    private void readDataWithServer() {
+        Log.d(INFORMATION_PROCESS_SERVICE, "Start readDataWithServer");
+
+        userNowSee = userProfile;
+        if (idDogs.size() != 0) {
+            Log.d(INFORMATION_PROCESS_SERVICE, idDogs.get(0));
             myRef.child(NAME_BRANCH).child(idDogs.get(0))
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             userProfile = dataSnapshot.getValue(Profile.class);
 
-                            Log.d(MainActivity.INFORMATION_PROCESS, "We have new Profile");
+                            Log.d(INFORMATION_PROCESS_SERVICE, "Next Profile We Have in memory");
                         }
 
                         @Override
@@ -179,7 +240,7 @@ public class MainActivityService extends Service {
                 public void onSuccess(byte[] bytes) {
                     bmpImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-                    Log.d(MainActivity.INFORMATION_PROCESS, "Next Image in Bitmap");
+                    Log.d(INFORMATION_PROCESS_SERVICE, "Next Image in Bitmap");
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -192,12 +253,26 @@ public class MainActivityService extends Service {
         else {
             userProfile = null;
 
-            Log.d(MainActivity.INFORMATION_PROCESS, "Next Profile Not");
+            Log.d(INFORMATION_PROCESS_SERVICE, "Next Profile Not");
         }
     }
 
-    private MyBinder mBinder = new MyBinder();
-    private ProfileListener listener = null;
+    private void getNewProfile() {
+
+        // remove profile
+        if (idDogs.size() != 0) {
+            Log.d(INFORMATION_PROCESS_SERVICE, "Remove profile");
+            idProfileHowSeeUser = idDogs.get(0);
+            Log.d(MainActivity.INF, idProfileHowSeeUser);
+            idDogs.remove(0);
+            myRef.child(NAME_BRANCH).child(user.getUid()).child(BRANCH_SEEN).setValue(idDogs);
+        }
+
+        readDataWithServer();
+    }
+
+
+
 
     @Nullable
     @Override
@@ -220,16 +295,17 @@ public class MainActivityService extends Service {
     }
 
     public void setNewProfile () {
-        Log.d(MainActivity.INFORMATION_PROCESS, "Service Start New Profile");
+        Log.d(INFORMATION_PROCESS_SERVICE, "Service Start New Profile");
         if (userProfile != null) {
-            Log.d(MainActivity.INFORMATION_PROCESS, "Transport Profile");
 
-            listener.newProfile(userProfile, bmpImage);
         }
         else {
-            Log.d(MainActivity.INFORMATION_PROCESS, "Not Profile");
+            Log.d(INFORMATION_PROCESS_SERVICE, "Not Profile");
         }
-        //listener.newProfile(new Profile("Test2", "", "", "", "6", "", "city", "", null, null, null));
+
+        Log.d(INFORMATION_PROCESS_SERVICE, "Transport Profile");
+        listener.newProfile(userProfile, bmpImage);
+
         getNewProfile();
     }
 }

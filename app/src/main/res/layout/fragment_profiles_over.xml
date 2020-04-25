@@ -2,11 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_gravity="center"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".StartDogFragment"
-    android:id="@+id/fr">
+    tools:context=".ProfilesOverFragment">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -15,48 +13,38 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        app:cardCornerRadius="25dp">
+        app:cardCornerRadius="25dp"
+        app:cardBackgroundColor="#70E3B7D6"
+        app:boxBackgroundMode="filled">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:layout_gravity="center">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/imgDogMain"
-                android:src="@drawable/dog"/>
+
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Name, Age \n city"
+                android:text="All"
                 android:fontFamily="casual"
-                android:textSize="30sp"
-                android:id="@+id/textInf"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="35sp"
+                android:id="@+id/textStatic"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:textColor="@color/cardview_light_background"
+                android:textColor="@color/customDarkPink"
                 android:gravity="center"
-                android:layout_marginBottom="40dp" />
+                android:layout_marginTop="50dp" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@id/imgDogMain"
-                app:layout_constraintLeft_toLeftOf="@id/imgDogMain"
-                android:id="@+id/leftButton"
-                android:text="-"
-                android:layout_marginLeft="20dp"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@id/imgDogMain"
-                app:layout_constraintRight_toRightOf="@id/imgDogMain"
-                android:id="@+id/rightButton"
-                android:text="+"
-                android:layout_marginRight="20dp"/>
+                app:layout_constraintTop_toBottomOf="@id/textStatic"
+                android:layout_marginTop="100dp"
+                android:id="@+id/goProfile"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

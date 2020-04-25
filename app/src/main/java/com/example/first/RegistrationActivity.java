@@ -66,10 +66,9 @@ public class RegistrationActivity extends AppCompatActivity {
                     Profile profile = new Profile();
                     profile.setName(name);
                     profile.setEmail(email);
-                    ArrayList<String> likes = new ArrayList<>();
-                    likes.add("1");
-                    likes.add("2");
-                    profile.setLikes(likes);
+
+                    // add in seen new user
+
 
                     myRef.child(user.getUid()).setValue(profile);
 

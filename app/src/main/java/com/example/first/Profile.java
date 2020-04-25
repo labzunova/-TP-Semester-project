@@ -13,6 +13,7 @@ public class Profile {
     private String country;
     private String city;
     private String address;
+    private String key;
     private ArrayList<String> likes;
     private ArrayList<String> matches;
     private ArrayList<String> seen;
@@ -23,7 +24,7 @@ public class Profile {
 
     public Profile (String name, String email, String phone,
                     String breed, String age, String country,
-                    String city, String address,
+                    String city, String address, String key,
                     ArrayList<String> likes, ArrayList<String> matches, ArrayList<String> seen) {
         this.name = name;
         this.email = email;
@@ -33,6 +34,7 @@ public class Profile {
         this.country = country;
         this.city = city;
         this.address = address;
+        this.key = key;
         this.likes = likes;
         this.matches = matches;
         this.seen = seen;
@@ -70,6 +72,10 @@ public class Profile {
 
     public String getAddress() {
         return address;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public ArrayList<String> getLikes() { return likes; }
@@ -110,6 +116,10 @@ public class Profile {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public void setKey(String address) {
+        this.key = key;
     }
 
     public void setLikes(ArrayList<String> likes) { this.likes = likes; }

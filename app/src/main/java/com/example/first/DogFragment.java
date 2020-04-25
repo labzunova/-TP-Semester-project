@@ -1,6 +1,5 @@
 package com.example.first;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,59 +10,70 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 
 public class DogFragment extends Fragment {
+
+    private static final String INFORMATION_PROCESS_FRAGMENT = "infFragment";
+
     private static final String ARG_ID_Photo = "idPhoto";
     private static final String ARG_INF_DOG = "infDog";
+
+    private static final String DEFAULT_STRING = "Swipe\nleft or right";
 
     private ImageView imgDogMain;
     private TextView textMessenger;
     private View view;
     private Bitmap bmpImage;
-    private String messenger;
+    private String messenger = DEFAULT_STRING;
 
     public DogFragment() {
     }
 
 
     public static DogFragment newInstance(Bitmap bmpImage, Profile infUser) {
+        Log.d(INFORMATION_PROCESS_FRAGMENT, "Get data for initialisation");
+
         DogFragment fragment = new DogFragment();
         Bundle args = new Bundle();
 
-        String inf = infUser.getName() + ", "
-                + infUser.getAge() + "\n"
-                + infUser.getCity();
+        String inf;
+        if (infUser != null) {
+            Log.d(INFORMATION_PROCESS_FRAGMENT, "We have data for fragment");
 
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmpImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        args.putByteArray(ARG_ID_Photo, byteArray);
-        args.putString(ARG_INF_DOG, inf);
+            inf = infUser.getName() + ", "
+                    + infUser.getAge() + "\n"
+                    + infUser.getCity();
 
-        fragment.setArguments(args);
+            // put photo
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmpImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            args.putByteArray(ARG_ID_Photo, byteArray);
+
+            // put string
+            args.putString(ARG_INF_DOG, inf);
+            fragment.setArguments(args);
+        }
+        else {
+            Log.d(INFORMATION_PROCESS_FRAGMENT, "We don not have data for fragment");
+        }
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(INFORMATION_PROCESS_FRAGMENT, "onCreate start");
         if (getArguments() != null) {
-            Log.d(MainActivity.INFORMATION_PROCESS, "set data in fragment");
+            Log.d(INFORMATION_PROCESS_FRAGMENT, "Data initialisation fragment in onCrate");
 
             byte[] byteArray = getArguments().getByteArray(ARG_ID_Photo);
             bmpImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
@@ -73,7 +83,7 @@ public class DogFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_dog, container, false);
 
         imgDogMain = v.findViewById(R.id.imgDogMain);
@@ -86,8 +96,8 @@ public class DogFragment extends Fragment {
         }
         textMessenger.setText(messenger);
 
-        Log.d(MainActivity.INFORMATION_PROCESS, "we have new fragment");
-        v.setOnTouchListener(new OnSwipeListener(getContext()));
+        Log.d(INFORMATION_PROCESS_FRAGMENT, "we have new fragment in OoCreateView");
+        v.setOnTouchListener(new OnSwipeListener(getContext(), v));
 
         return v;
     }
@@ -100,7 +110,7 @@ public class DogFragment extends Fragment {
         view.findViewById(R.id.rightButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(MainActivity.INFORMATION_PROCESS, "OnClick Right");
+                Log.d(INFORMATION_PROCESS_FRAGMENT, "OnClick Right");
 
                 Intent intentService;
                 intentService = new Intent(getActivity(), MainActivityService.class);
@@ -113,7 +123,7 @@ public class DogFragment extends Fragment {
         view.findViewById(R.id.leftButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(MainActivity.INFORMATION_PROCESS, "OnClick Left");
+                Log.d(INFORMATION_PROCESS_FRAGMENT, "OnClick Left");
 
                 Intent intentService;
                 intentService = new Intent(getActivity(), MainActivityService.class);
@@ -123,133 +133,5 @@ public class DogFragment extends Fragment {
             }
         });
     }
-
-
-
-
-
-    public class OnSwipeListener implements View.OnTouchListener {
-
-        private final GestureDetector gestureDetector;
-        private int deltaRight = 10, deltaLeft = 10;
-
-        private static final int SWIPE_VELOCITY_THRESHOLD = 10;
-        private static final int SWIPE_THRESHOLD = 10;
-        private static final float DX = 0.00005f;
-
-        public OnSwipeListener(Context context) {
-            gestureDetector = new GestureDetector(context, new GestureListener());
-        }
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            return gestureDetector.onTouchEvent(event);
-        }
-
-        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
-
-            @Override
-            public boolean onDown(MotionEvent e) {
-                return true;
-            }
-
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                float diffX = e2.getX() - e1.getX();
-
-                if (Math.abs(diffX) > 0) {
-                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffX > 0) {
-                            onScrollRight(Math.abs(diffX));
-                        } else {
-                            onScrollLeft(Math.abs(diffX));
-                        }
-                    }
-                }
-
-                return true;
-            }
-
-            /*@Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                float diffY = e2.getY() - e1.getY();
-                float diffX = e2.getX() - e1.getX();
-
-                if (Math.abs(diffX) > Math.abs(diffY)) {
-                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffX > 0) {
-                            onSwipeRight();
-                        } else {
-                            onSwipeLeft();
-                        }
-                    }
-                } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (diffY > 0) {
-                        onSwipeBottom();
-                    } else {
-                        onSwipeTop();
-                    }
-                }
-
-                return true;
-            }*/
-
-        }
-
-        public void onScrollRight(float diffX) {
-            Log.d(MainActivity.INF, "Right");
-
-            LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            deltaLeft += diffX;
-            deltaRight -= diffX;
-            linearLay.leftMargin = deltaLeft;
-            linearLay.rightMargin = deltaRight;
-
-            view.setLayoutParams(linearLay);
-
-            if ((deltaRight > 0) && (view.getScaleX() + DX * diffX< 1)) {
-                view.setScaleX(view.getScaleX() + DX * diffX);
-                view.setScaleY(view.getScaleY() + DX * diffX);
-            }
-            else if ((view.getScaleX() - DX * diffX > 0.9f) && (deltaRight < 0)) {
-                view.setScaleX(view.getScaleX() - DX * diffX);
-                view.setScaleY(view.getScaleY() - DX * diffX);
-            }
-        }
-
-        public void onScrollLeft(float diffX) {
-            Log.d(MainActivity.INF, "Left");
-
-            LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            deltaLeft -= diffX;
-            deltaRight += diffX;
-            linearLay.leftMargin = deltaLeft;
-            linearLay.rightMargin = deltaRight;
-
-            view.setLayoutParams(linearLay);
-
-            if ((deltaLeft > 0) && (view.getScaleX() + DX * diffX < 1)) {
-                view.setScaleX(view.getScaleX() + DX * diffX);
-                view.setScaleY(view.getScaleY() + DX * diffX);
-            }
-            else if ((view.getScaleX() - DX * diffX > 0.9f) && (deltaLeft < 0)) {
-                view.setScaleX(view.getScaleX() - DX * diffX);
-                view.setScaleY(view.getScaleY() - DX * diffX);
-            }
-        }
-
-        public void onSwipeRight() {
-        }
-
-        public void onSwipeLeft() {
-
-        }
-
-        public void onSwipeTop() {
-        }
-
-        public void onSwipeBottom() {
-        }
-
-    }
 }
+
