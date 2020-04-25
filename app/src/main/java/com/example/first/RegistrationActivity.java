@@ -30,7 +30,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
+    private String str = new String("");
 
     @Override
     protected void onStart() {
@@ -66,6 +66,12 @@ public class RegistrationActivity extends AppCompatActivity {
                     Profile profile = new Profile();
                     profile.setName(name);
                     profile.setEmail(email);
+                    profile.setPhone(str);
+                    profile.setAddress(str);
+                    profile.setAge(str);
+                    profile.setCountry(str);
+                    profile.setCity(str);
+                    profile.setBreed(str);
 
                     // add in seen new user
 
