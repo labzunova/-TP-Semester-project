@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.first">
+    
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -9,12 +13,14 @@
         android:roundIcon="@drawable/dog"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name=".MainActivityService" />
+        <service android:name=".RegistrationService" />
         <activity android:name=".MatchesActivity"></activity>
         <activity android:name=".CurtainActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".AccountEditActivity" />
-        <activity android:name=".RegistrationActivity" />
         <activity android:name=".AccountActivity" />
+        <activity android:name=".AccountEditActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".RegistrationActivity" />
         <activity android:name=".AuthorizationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

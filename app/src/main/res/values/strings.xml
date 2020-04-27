@@ -14,4 +14,10 @@
     <string name="testBreed">testBreed</string>
     <string name="matchesText">Matches</string>
     <string name="noMatches">No matches yet :(</string>
+    <string name="profile_editing">Profile Editing</string>
+    <string name="saveBtn">Save changes</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="citata">look around, your love may be in the next kennel</string>
 </resources>
