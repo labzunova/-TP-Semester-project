@@ -121,11 +121,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityServi
     protected void onPause() {
         super.onPause();
 
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.dogFragment, new StartDogFragment())
-//                .commit();
-//
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.dogFragment, new StartDogFragment())
+                .commit();
+
 //        unbindService(sConn);
 
         Log.d(INFORMATION_PROCESS_ACTIVITY, "onPause Activity");
