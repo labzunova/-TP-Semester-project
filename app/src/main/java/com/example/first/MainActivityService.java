@@ -275,7 +275,7 @@ public class MainActivityService extends Service {
     private void getNewProfile() {
 
         // add profile in seen
-        if (idDogs.size() != 0) {
+        if ((idDogs.size() != 0) && (i < idDogs.size())) {
             Log.d(INFORMATION_PROCESS_SERVICE, "Add profile in seen");
             idProfileHowSeeUser = idDogs.get(i);
             Log.d(MainActivity.INF, idProfileHowSeeUser);

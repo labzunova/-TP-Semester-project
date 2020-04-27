@@ -233,7 +233,7 @@ public class AccountEditActivity extends AppCompatActivity {
                         .load(resizeBitmap(bitmap))
                         .centerCrop()
                         .into(imgPreview);
-                imgPreview.setRotation((float) 90.0);
+                // imgPreview.setRotation((float) 90.0);
             } catch (IOException e) {
                 e.printStackTrace();
             }
