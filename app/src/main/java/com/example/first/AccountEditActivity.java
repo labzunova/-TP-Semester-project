@@ -3,21 +3,26 @@ package com.example.first;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -81,17 +86,17 @@ public class AccountEditActivity extends AppCompatActivity {
         mAddressField = (TextInputEditText) findViewById(R.id.addressFieldInp);
         mPhoneField = (TextInputEditText) findViewById(R.id.phoneFieldInp);
         saveBtn = (Button) findViewById(R.id.saveBtn);
-        chooseBtn = (Button) findViewById(R.id.chooseBtn);
-        uploadBtn = (Button) findViewById(R.id.uploadBtn);
         imgPreview = (ImageView) findViewById(R.id.imageView);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveData();
+                uploadImage();
             }
         });
 
+        // получение текущих данных с Database
         databaseProfile.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -114,21 +119,67 @@ public class AccountEditActivity extends AppCompatActivity {
             }
         });
 
-        chooseBtn.setOnClickListener(new View.OnClickListener() {
+
+        // Загрузка фотки профиля со Storage
+        final long ONE_MEGABYTE = 1024 * 1024;
+        StorageReference avatarRef = storageRef.child("Profiles").child(userId).child("AvatarImage");
+        avatarRef.getBytes(5*ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                Glide
+                        .with(getApplicationContext())
+                        .load(resizeBitmap(bitmap))
+                        .centerCrop()
+                        .into(imgPreview);
+                imgPreview.setRotation((float) 90.0);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "No Such file or Path found!!", Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+
+
+
+        imgPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chooseImage();
             }
         });
 
-        uploadBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadImage();
+
+
+    }
+
+    private Bitmap resizeBitmap(Bitmap bitmap) {
+        float maxResolution = (float) 1000.0;    //edit 'maxResolution' to fit your need
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int newWidth = width;
+        int newHeight = height;
+        float rate;
+
+        if (width > height) {
+            if (maxResolution < width) {
+                rate = maxResolution / width;
+                newHeight = (int) (height * rate);
+                newWidth = (int) maxResolution;
             }
-        });
+        } else {
+            if (maxResolution < height) {
+                rate = maxResolution / height;
+                newWidth = (int) (width * rate);
+                newHeight = (int) maxResolution;
+            }
+        }
 
-
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 
     private void uploadImage() {
@@ -177,7 +228,11 @@ public class AccountEditActivity extends AppCompatActivity {
             filepath = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
-                imgPreview.setImageBitmap(bitmap);
+                Glide
+                        .with(getApplicationContext())
+                        .load(resizeBitmap(bitmap))
+                        .centerCrop()
+                        .into(imgPreview);
                 imgPreview.setRotation((float) 90.0);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -187,19 +242,6 @@ public class AccountEditActivity extends AppCompatActivity {
 
     private void saveData() {
         String name = mNameField.getText().toString();
-
-        /*
-        if (!TextUtils.isEmpty(name)) {
-            // Profile profile = new Profile();
-            currentUserProfile.setName(name);
-
-            //String id = databaseProfile.push().getKey();
-            databaseProfile.child(user.getUid()).setValue(currentUserProfile);
-
-        } else {
-            Toast.makeText(this, "Name field is empty", Toast.LENGTH_SHORT).show();
-        }
-         */
 
         if (!mNameField.getText().toString().equals(currentUserProfile.getName()))
             currentUserProfile.setName(mNameField.getText().toString());

@@ -2,6 +2,8 @@ package com.example.first;
 
 import android.widget.ProgressBar;
 
+import java.util.ArrayList;
+
 public class Profile {
     private String name;
     private String email;
@@ -11,12 +13,19 @@ public class Profile {
     private String country;
     private String city;
     private String address;
+    private String key;
+    private ArrayList<String> likes;
+    private ArrayList<Matches> matches;
+    private ArrayList<String> seen;
 
     Profile () {
 
     }
 
-    public Profile (String name, String email, String phone, String breed, String age, String country, String city, String address) {
+    public Profile (String name, String email, String phone,
+                    String breed, String age, String country,
+                    String city, String address, String key,
+                    ArrayList<String> likes, ArrayList<Matches> matches, ArrayList<String> seen) {
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -25,6 +34,10 @@ public class Profile {
         this.country = country;
         this.city = city;
         this.address = address;
+        this.key = key;
+        this.likes = likes;
+        this.matches = matches;
+        this.seen = seen;
     }
 
 
@@ -61,6 +74,16 @@ public class Profile {
         return address;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public ArrayList<String> getLikes() { return likes; }
+
+    public ArrayList<String> getSeen() { return seen; }
+
+    public ArrayList<Matches> getMatches() { return matches; }
+
 
     // setters
     public void setName(String name) {
@@ -93,5 +116,43 @@ public class Profile {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public void setKey(String address) {
+        this.key = key;
+    }
+
+    public void setLikes(ArrayList<String> likes) { this.likes = likes; }
+
+    public void setSeen(ArrayList<String> seen) { this.seen = seen; }
+
+    public void setMatches(ArrayList<Matches> matches) { this.matches = matches; }
+
+
+    static class Matches {
+        private String id;
+        private String name;
+        private String seen;
+
+        public void setId(String id) { this.id = id; }
+
+        public void setName(String name) { this.name = name; }
+
+        public void setSeen(String seen) { this.seen = seen; }
+
+        public Matches() {
+        }
+
+        public Matches(String id, String name, String seen) {
+            this.id = id;
+            this.name = name;
+            this.seen = seen;
+        }
+
+        public String getId() { return id; }
+
+        public String getName() { return name; }
+
+        public String getSeen() { return seen; }
     }
 }
