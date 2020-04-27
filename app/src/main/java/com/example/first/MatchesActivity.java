@@ -53,10 +53,10 @@ public class MatchesActivity extends AppCompatActivity {
     private TextView noMatches;
 
     public static class UserModel implements Serializable {
-        public String key, name, seen;
+        public String id, name, seen;
         public UserModel(){}
-        public UserModel(String key,  String name, String seen) {
-            this.key = key;
+        public UserModel(String id,  String name, String seen) {
+            this.id = id;
             this.name = name;
             this.seen = seen;
         }
@@ -125,7 +125,7 @@ public class MatchesActivity extends AppCompatActivity {
     private int getItemIndex(UserModel user){
         int index = -1;
         for(int i = 0; i< result.size(); i++) {
-            if(result.get(i).key.equals(user.key)) {
+            if(result.get(i).id.equals(user.id)) {
                 index = i;
                 break;
             }
@@ -141,7 +141,7 @@ public class MatchesActivity extends AppCompatActivity {
     }
 
     public void removeUser(int position){
-        mRef.child(result.get(position).key).removeValue();
+        mRef.child(result.get(position).id).removeValue();
     }
 
     class matchesAdapter extends RecyclerView.Adapter<myViewHolder> {
@@ -167,7 +167,7 @@ public class MatchesActivity extends AppCompatActivity {
             if (user.seen.equals("false")) holder.cardView.setCardBackgroundColor(Color.parseColor("#40DF38B1"));
 
             // photo adding
-            StorageReference myRef = storageRef.child("Profiles").child(user.key).child("AvatarImage");
+            StorageReference myRef = storageRef.child("Profiles").child(user.id).child("AvatarImage");
             myRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
