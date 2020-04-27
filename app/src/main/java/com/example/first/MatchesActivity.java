@@ -164,7 +164,7 @@ public class MatchesActivity extends AppCompatActivity {
 
             UserModel user = matches.get(position);
             holder.nameView.setText(user.name);
-            if (user.seen.equals("false")) holder.cardView.setBackgroundColor(Color.parseColor("#338A2B4B"));
+            if (user.seen.equals("false")) holder.cardView.setCardBackgroundColor(Color.parseColor("#40DF38B1"));
 
             // photo adding
             StorageReference myRef = storageRef.child("Profiles").child(user.key).child("AvatarImage");
