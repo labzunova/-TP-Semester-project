@@ -27,7 +27,7 @@
         android:shadowDx="-3"
         android:shadowColor="@color/customDarkPink"
         android:shadowRadius="5"
-        android:background="#808A2B4B"
+        android:background="@color/brightPinkOpacity"
         android:fontFamily="casual"
         android:gravity="center"
         android:text="@string/registrationPageName"

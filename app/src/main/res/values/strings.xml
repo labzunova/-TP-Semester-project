@@ -10,4 +10,8 @@
     <string name="nameHint">your name</string>
     <string name="registrateBtnText">Registrate</string>
     <string name="myProfileName">My profile</string>
+    <string name="testName">testName</string>
+    <string name="testBreed">testBreed</string>
+    <string name="matchesText">Matches</string>
+    <string name="noMatches">No matches yet :(</string>
 </resources>

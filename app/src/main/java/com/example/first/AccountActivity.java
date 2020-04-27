@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 public class AccountActivity extends AppCompatActivity {
 
     private Button mExitButton;
+    private Button mMatchesBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,14 @@ public class AccountActivity extends AppCompatActivity {
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(AccountActivity.this,AuthorizationActivity.class));
+            }
+        });
+
+        mMatchesBtn = (Button) findViewById(R.id.buttonMatches);
+        mMatchesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountActivity.this,MatchesActivity.class));
             }
         });
 
