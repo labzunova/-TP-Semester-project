@@ -29,10 +29,11 @@ import java.util.ArrayList;
 public class MainActivityService extends Service {
     public static final String INFORMATION_PROCESS_SERVICE = "infService";
 
-    public static final String NAME_BRANCH = "ProfilesSergei";
+    public static final String NAME_BRANCH = "Profiles";
     public static final String BRANCH_SEEN = "seen";
     private static final String BRANCH_LIKES = "likes";
     private static final String BRANCH_MATCHES = "matches";
+    private static final String BRANCH_ID_PROFILES = "IdProfiles";
 
     private final long ONE_MEGABYTE = 1024 * 1024;
 
@@ -51,11 +52,15 @@ public class MainActivityService extends Service {
     // Copy of data from the server
     private Profile userProfile;
     private Profile userNowSee;
+    private Profile myProfile;
     private ArrayList<String> idDogs;
     private String idProfileHowSeeUser;
 
     private ArrayList<String> likes;
-    private ArrayList<String> matches;
+    private ArrayList<String> seen;
+    private ArrayList<Profile.Matches> matches;
+
+    int i;
 
     @Override
     public void onCreate() {
@@ -70,23 +75,43 @@ public class MainActivityService extends Service {
 
         idDogs = new ArrayList<>();
         likes = new ArrayList<>();
+        seen = new ArrayList<>();
         matches = new ArrayList<>();
 
 
         if (user != null) {
             Log.d(INFORMATION_PROCESS_SERVICE, "User +");
+            myRef.child(BRANCH_ID_PROFILES).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Log.d(INFORMATION_PROCESS_SERVICE, dataSnapshot.getKey());
+
+                    idDogs.clear();
+                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren ()) {
+                        idDogs.add(postSnapshot.getValue(String.class));
+                    }
+
+                    Log.d(INFORMATION_PROCESS_SERVICE, Integer.toString(idDogs.size()) + " In ArrayList Id");
+
+                    Log.d(INFORMATION_PROCESS_SERVICE, "Start readDataWithServer with Listener");
+                    readDataWithServer();
+                }
+
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
             DatabaseReference childRef = myRef.child(NAME_BRANCH).child(user.getUid());
             childRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    if(dataSnapshot.getValue(Profile.class).getSeen() != null) {
+                    if(dataSnapshot.getValue(Profile.class) != null) {
 
-                        idDogs = dataSnapshot.getValue(Profile.class).getSeen();
-
-                        Log.d(INFORMATION_PROCESS_SERVICE, Integer.toString(idDogs.size()) + " In ArrayList Id");
-
-                        Log.d(INFORMATION_PROCESS_SERVICE, "Start readDataWithServer with Listener");
+                        myProfile = dataSnapshot.getValue(Profile.class);
                     }
 
                     // initialisation likes with server
@@ -97,7 +122,9 @@ public class MainActivityService extends Service {
                     if(dataSnapshot.getValue(Profile.class).getMatches() != null)
                         matches = dataSnapshot.getValue(Profile.class).getMatches();
 
-                    readDataWithServer();
+                    // initialisation seen with server
+                    if(dataSnapshot.getValue(Profile.class).getSeen() != null)
+                        seen = dataSnapshot.getValue(Profile.class).getSeen();
                 }
 
                 @Override
@@ -116,20 +143,11 @@ public class MainActivityService extends Service {
 
         Log.d(INFORMATION_PROCESS_SERVICE, "New Service");
 
-        if (inf != null) {
+        if ((inf != null) && (userNowSee != null)) {
             //
             Log.d(MainActivity.INF, inf);
 
             switch (inf) {
-                case "left": {
-                    //remove with likes
-
-                    setNewProfile();
-                    Log.d(INFORMATION_PROCESS_SERVICE, "Stop Service Left");
-                    stopSelf(startId);
-
-                    break;
-                }
 
                 case "right": {
                     //remove with likes, put in likes or matches
@@ -149,47 +167,36 @@ public class MainActivityService extends Service {
                         myRef.child(NAME_BRANCH).child(user.getUid()).child(BRANCH_LIKES).setValue(likes);
 
                         // set Matches your profile
-                        ArrayList<String> yourMatches = new ArrayList<>();
+                        ArrayList<Profile.Matches> yourMatches = new ArrayList<Profile.Matches>();
                         if (userNowSee.getMatches() != null)
-                            yourMatches = userNowSee.getLikes();
-                        yourMatches.add(user.getUid());
+                            yourMatches = userNowSee.getMatches();
+                        yourMatches.add(new Profile.Matches(user.getUid(), myProfile.getName(), "false"));
                         myRef.child(NAME_BRANCH).child(idProfileHowSeeUser).child(BRANCH_MATCHES).
                                 setValue(yourMatches);
 
                         // set Matches my profile
-                        matches.add(idProfileHowSeeUser);
+                        matches.add(new Profile.Matches(idProfileHowSeeUser, userNowSee.getName(), "false"));
                         myRef.child(NAME_BRANCH).child(user.getUid()).child(BRANCH_MATCHES).
                                 setValue(matches);
                     }
 
-                    setNewProfile();
-                    Log.d(INFORMATION_PROCESS_SERVICE, "Stop Service Right");
-                    stopSelf(startId);
-
                     break;
                 }
 
-                case "default": {
-                    setNewProfile();
-                    Log.d(INFORMATION_PROCESS_SERVICE, "Stop Service Default");
-                    stopSelf(startId);
-
-                    break;
-                }
                 default: {
-                    idProfileHowSeeUser = inf;
-                    myRef.child(NAME_BRANCH).child(idProfileHowSeeUser).
-                            addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    userNowSee = dataSnapshot.getValue(Profile.class);
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+//                    idProfileHowSeeUser = inf;
+//                    myRef.child(NAME_BRANCH).child(idProfileHowSeeUser).
+//                            addListenerForSingleValueEvent(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                    userNowSee = dataSnapshot.getValue(Profile.class);
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                                }
+//                            });
                     break;
                 }
 
@@ -201,6 +208,10 @@ public class MainActivityService extends Service {
         else {
 
         }
+
+        setNewProfile();
+        Log.d(INFORMATION_PROCESS_SERVICE, "Stop Service");
+        stopSelf(startId);
 
         super.onStartCommand(intent, flags, startId);
         return START_REDELIVER_INTENT;
@@ -217,24 +228,39 @@ public class MainActivityService extends Service {
         Log.d(INFORMATION_PROCESS_SERVICE, "Start readDataWithServer");
 
         userNowSee = userProfile;
-        if (idDogs.size() != 0) {
-            Log.d(INFORMATION_PROCESS_SERVICE, idDogs.get(0));
-            myRef.child(NAME_BRANCH).child(idDogs.get(0))
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            userProfile = dataSnapshot.getValue(Profile.class);
 
-                            Log.d(INFORMATION_PROCESS_SERVICE, "Next Profile We Have in memory");
-                        }
+        i = 0;
+        while ((i < idDogs.size()) && (seen.contains(idDogs.get(i))))
+            i++;
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+        if ((idDogs.size() == 0) || (i == idDogs.size())) {
+            userProfile = null;
 
-                        }
-                    });
+            Log.d(INFORMATION_PROCESS_SERVICE, "Next Profile Not");
+        }
+        else {
+            Log.d(INFORMATION_PROCESS_SERVICE, idDogs.get(i));
 
-            storageRef.child(idDogs.get(0)).child("AvatarImage").
+            // get dada
+                myRef.child(NAME_BRANCH).child(idDogs.get(i))
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Log.d(INFORMATION_PROCESS_SERVICE, "Next Profile We Have in memory");
+
+                                userProfile = dataSnapshot.getValue(Profile.class);
+
+                                Log.d(INFORMATION_PROCESS_SERVICE, "Next Profile We Have in memory");
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+            // get image
+            storageRef.child(idDogs.get(i)).child("AvatarImage").
                     getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
@@ -242,30 +268,19 @@ public class MainActivityService extends Service {
 
                     Log.d(INFORMATION_PROCESS_SERVICE, "Next Image in Bitmap");
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(), "No Such file or Path found!!", Toast.LENGTH_LONG).show();
-                }
             });
-
-        }
-        else {
-            userProfile = null;
-
-            Log.d(INFORMATION_PROCESS_SERVICE, "Next Profile Not");
         }
     }
 
     private void getNewProfile() {
 
-        // remove profile
+        // add profile in seen
         if (idDogs.size() != 0) {
-            Log.d(INFORMATION_PROCESS_SERVICE, "Remove profile");
-            idProfileHowSeeUser = idDogs.get(0);
+            Log.d(INFORMATION_PROCESS_SERVICE, "Add profile in seen");
+            idProfileHowSeeUser = idDogs.get(i);
             Log.d(MainActivity.INF, idProfileHowSeeUser);
-            idDogs.remove(0);
-            myRef.child(NAME_BRANCH).child(user.getUid()).child(BRANCH_SEEN).setValue(idDogs);
+            seen.add(idProfileHowSeeUser);
+            myRef.child(NAME_BRANCH).child(user.getUid()).child(BRANCH_SEEN).setValue(seen);
         }
 
         readDataWithServer();
@@ -305,6 +320,7 @@ public class MainActivityService extends Service {
 
         Log.d(INFORMATION_PROCESS_SERVICE, "Transport Profile");
         listener.newProfile(userProfile, bmpImage);
+        bmpImage = null;
 
         getNewProfile();
     }

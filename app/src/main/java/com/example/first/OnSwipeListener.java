@@ -1,6 +1,7 @@
 package com.example.first;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -18,10 +19,12 @@ public class OnSwipeListener implements View.OnTouchListener {
     private static final float DX = 0.00005f;
 
     View view;
+    Context context;
 
     public OnSwipeListener(Context context, View view) {
         gestureDetector = new GestureDetector(context, new OnSwipeListener.GestureListener());
         this.view = view;
+        this.context = context;
     }
 
     @Override
@@ -44,6 +47,17 @@ public class OnSwipeListener implements View.OnTouchListener {
                     view.setScaleY(1);
                 }
                 else if (deltaLeft < -400){
+                    // swipe left
+
+                    // transport information in service
+                    Log.d(DogFragment.INFORMATION_PROCESS_FRAGMENT, "OnCSwipe Left");
+
+                    Intent intentService;
+                    intentService = new Intent(context, MainActivityService.class);
+                    intentService.setAction("left");
+
+                    context.startService(intentService);
+
                     LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     deltaLeft = -1050;
                     deltaRight = 1050;
@@ -57,6 +71,17 @@ public class OnSwipeListener implements View.OnTouchListener {
                     view.setScaleY(1);
                 }
                 else {
+                    // swipe right
+
+                    // transport information in service
+                    Log.d(DogFragment.INFORMATION_PROCESS_FRAGMENT, "OnCSwipe Right");
+
+                    Intent intentService;
+                    intentService = new Intent(context, MainActivityService.class);
+                    intentService.setAction("right");
+
+                    context.startService(intentService);
+
                     LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     deltaLeft = 1050;
                     deltaRight = -1050;

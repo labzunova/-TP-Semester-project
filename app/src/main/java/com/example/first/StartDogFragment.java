@@ -1,6 +1,7 @@
 package com.example.first;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +22,7 @@ public class StartDogFragment extends Fragment {
 
     private ImageView imgDogMain;
     private TextView textMessenger;
-    protected View view;
+    private View view;
 
     public StartDogFragment() {
     }
@@ -34,6 +35,7 @@ public class StartDogFragment extends Fragment {
 
         return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,21 +68,6 @@ public class StartDogFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         this.view = view;
-        view.findViewById(R.id.rightButton).setOnClickListener(startDefaultClick);
-
-        view.findViewById(R.id.leftButton).setOnClickListener(startDefaultClick);
     }
 
-    View.OnClickListener startDefaultClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Log.d(INFORMATION_PROCESS_FRAGMENT, "OnClick Right");
-
-            Intent intentService;
-            intentService = new Intent(getActivity(), MainActivityService.class);
-            intentService.setAction("default");
-
-            getActivity().startService(intentService);
-        }
-    };
 }

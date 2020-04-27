@@ -15,7 +15,7 @@ public class Profile {
     private String address;
     private String key;
     private ArrayList<String> likes;
-    private ArrayList<String> matches;
+    private ArrayList<Matches> matches;
     private ArrayList<String> seen;
 
     Profile () {
@@ -25,7 +25,7 @@ public class Profile {
     public Profile (String name, String email, String phone,
                     String breed, String age, String country,
                     String city, String address, String key,
-                    ArrayList<String> likes, ArrayList<String> matches, ArrayList<String> seen) {
+                    ArrayList<String> likes, ArrayList<Matches> matches, ArrayList<String> seen) {
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -80,9 +80,9 @@ public class Profile {
 
     public ArrayList<String> getLikes() { return likes; }
 
-    public ArrayList<String> getMatches() { return matches; }
-
     public ArrayList<String> getSeen() { return seen; }
+
+    public ArrayList<Matches> getMatches() { return matches; }
 
 
     // setters
@@ -124,7 +124,35 @@ public class Profile {
 
     public void setLikes(ArrayList<String> likes) { this.likes = likes; }
 
-    public void setMatches(ArrayList<String> matches) { this.matches = matches; }
-
     public void setSeen(ArrayList<String> seen) { this.seen = seen; }
+
+    public void setMatches(ArrayList<Matches> matches) { this.matches = matches; }
+
+
+    static class Matches {
+        private String id;
+        private String name;
+        private String seen;
+
+        public void setId(String id) { this.id = id; }
+
+        public void setName(String name) { this.name = name; }
+
+        public void setSeen(String seen) { this.seen = seen; }
+
+        public Matches() {
+        }
+
+        public Matches(String id, String name, String seen) {
+            this.id = id;
+            this.name = name;
+            this.seen = seen;
+        }
+
+        public String getId() { return id; }
+
+        public String getName() { return name; }
+
+        public String getSeen() { return seen; }
+    }
 }

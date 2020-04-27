@@ -20,7 +20,7 @@ import java.io.ByteArrayOutputStream;
 
 public class DogFragment extends Fragment {
 
-    private static final String INFORMATION_PROCESS_FRAGMENT = "infFragment";
+    public static final String INFORMATION_PROCESS_FRAGMENT = "infFragment";
 
     private static final String ARG_ID_Photo = "idPhoto";
     private static final String ARG_INF_DOG = "infDog";
@@ -52,10 +52,8 @@ public class DogFragment extends Fragment {
                     + infUser.getCity();
 
             // put photo
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bmpImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] byteArray = stream.toByteArray();
-            args.putByteArray(ARG_ID_Photo, byteArray);
+
+            args.putParcelable(ARG_ID_Photo, bmpImage);
 
             // put string
             args.putString(ARG_INF_DOG, inf);
@@ -75,8 +73,7 @@ public class DogFragment extends Fragment {
         if (getArguments() != null) {
             Log.d(INFORMATION_PROCESS_FRAGMENT, "Data initialisation fragment in onCrate");
 
-            byte[] byteArray = getArguments().getByteArray(ARG_ID_Photo);
-            bmpImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            bmpImage = getArguments().getParcelable(ARG_ID_Photo);
             messenger = getArguments().getString(ARG_INF_DOG);
         }
     }
@@ -96,7 +93,7 @@ public class DogFragment extends Fragment {
         }
         textMessenger.setText(messenger);
 
-        Log.d(INFORMATION_PROCESS_FRAGMENT, "we have new fragment in OoCreateView");
+        Log.d(INFORMATION_PROCESS_FRAGMENT, "we have new fragment in OnCreateView");
         v.setOnTouchListener(new OnSwipeListener(getContext(), v));
 
         return v;
@@ -107,31 +104,13 @@ public class DogFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         this.view = view;
-        view.findViewById(R.id.rightButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(INFORMATION_PROCESS_FRAGMENT, "OnClick Right");
+    }
 
-                Intent intentService;
-                intentService = new Intent(getActivity(), MainActivityService.class);
-                intentService.setAction("right");
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
-                getActivity().startService(intentService);
-            }
-        });
-
-        view.findViewById(R.id.leftButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(INFORMATION_PROCESS_FRAGMENT, "OnClick Left");
-
-                Intent intentService;
-                intentService = new Intent(getActivity(), MainActivityService.class);
-                intentService.setAction("left");
-
-                getActivity().startService(intentService);
-            }
-        });
+        Log.d(INFORMATION_PROCESS_FRAGMENT, "onDestroy Fragment");
     }
 }
 

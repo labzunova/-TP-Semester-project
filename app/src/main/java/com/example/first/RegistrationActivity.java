@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -16,8 +17,11 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -54,8 +58,8 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("ProfilesSergei");
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                final DatabaseReference myRef = database.getReference();
+                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String name = mNameField.getText().toString();
                 String email = mEmailField.getText().toString();
 
@@ -72,11 +76,34 @@ public class RegistrationActivity extends AppCompatActivity {
                     profile.setCountry(str);
                     profile.setCity(str);
                     profile.setBreed(str);
+                    ArrayList<String> seen = new ArrayList<>();
+                    seen.add(user.getUid());
+                    profile.setSeen(seen);
 
                     // add in seen new user
+//                    Intent intentService;
+//                    intentService = new Intent(RegistrationActivity.this, RegistrationService.class);
+//
+//                    startService(intentService);
 
+                    myRef.child("Profiles").child(user.getUid()).setValue(profile);
 
-                    myRef.child(user.getUid()).setValue(profile);
+                    myRef.child("IdProfiles").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            ArrayList<String> idProfiles = new ArrayList<>();
+                            for (DataSnapshot postSnapshot: dataSnapshot.getChildren ()) {
+                                idProfiles.add(postSnapshot.getValue(String.class));
+                            }
+                            idProfiles.add(user.getUid());
+                            myRef.child("IdProfiles").setValue(idProfiles);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
 
 
                     startActivity(new Intent(RegistrationActivity.this, AccountActivity.class));

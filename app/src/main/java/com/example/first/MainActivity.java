@@ -12,6 +12,9 @@ import android.os.IBinder;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class MainActivity extends AppCompatActivity implements MainActivityService.ProfileListener {
@@ -24,12 +27,49 @@ public class MainActivity extends AppCompatActivity implements MainActivityServi
     private Intent intent;
     private ServiceConnection sConn;
 
+    // but of menu
+    ImageView editBut, profileBut, matchesBut, exitBut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.d(INFORMATION_PROCESS_ACTIVITY, "onCreate Activity");
+
+        editBut = findViewById(R.id.edit_but);
+        profileBut = findViewById(R.id.profile_but);
+        matchesBut = findViewById(R.id.matches_but);
+        exitBut = findViewById(R.id.exit_but);
+
+        editBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, AccountEditActivity.class));
+            }
+        });
+
+        profileBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, AccountActivity.class));
+            }
+        });
+
+        matchesBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, MatchesActivity.class));
+            }
+        });
+
+        exitBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(MainActivity.this, AccountActivity.class));
+            }
+        });
 
         intent = new Intent(this, MainActivityService.class);
 
@@ -65,13 +105,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityServi
 
         }
 
-        findViewById(R.id.nextFragment).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainService.setNewProfile();
-            }
-        });
-
     }
 
 
@@ -85,11 +118,33 @@ public class MainActivity extends AppCompatActivity implements MainActivityServi
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+//        getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.dogFragment, new StartDogFragment())
+//                .commit();
+//
+//        unbindService(sConn);
+
+        Log.d(INFORMATION_PROCESS_ACTIVITY, "onPause Activity");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        Log.d(INFORMATION_PROCESS_ACTIVITY, "onDestroy Activity");
         unbindService(sConn);
+
+        Log.d(INFORMATION_PROCESS_ACTIVITY, "onDestroy Activity");
     }
 
 

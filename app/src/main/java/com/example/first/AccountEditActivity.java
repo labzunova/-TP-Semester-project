@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -65,7 +64,7 @@ public class AccountEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account_edit);
 
         // firebase init
-        databaseProfile = FirebaseDatabase.getInstance().getReference("ProfilesSergei"); // Expected to be automatically created if Profiles node not yet created
+        databaseProfile = FirebaseDatabase.getInstance().getReference("Profiles"); // Expected to be automatically created if Profiles node not yet created
         user = FirebaseAuth.getInstance().getCurrentUser();
         userId = user.getUid();
         storage = FirebaseStorage.getInstance();
@@ -138,7 +137,7 @@ public class AccountEditActivity extends AppCompatActivity {
             progressDialog.setTitle("Uploading..");
             progressDialog.show();
 
-            StorageReference ref = storageRef.child("ProfilesSergei").child(userId).child("AvatarImage");
+            StorageReference ref = storageRef.child("Profiles").child(userId).child("AvatarImage");
             ref.putFile(filepath).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {

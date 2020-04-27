@@ -3,6 +3,7 @@ package com.example.first;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,16 +46,9 @@ public class RegistrationService extends Service {
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot snapshotNode: dataSnapshot.getChildren()) {
-                        // add all id in my profile
-                        mySeen.add(snapshotNode.getKey());
-
-                        // add my id in all profile
-
-                    }
-
                     myProfile = dataSnapshot.child(user.getUid()).getValue(Profile.class);
                     myProfile.setSeen(mySeen);
+                    mySeen.add(user.getUid());
                     myRef.child(user.getUid()).setValue(myProfile);
                 }
 
@@ -65,5 +59,13 @@ public class RegistrationService extends Service {
             });
 
         }
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        stopSelf(startId);
+
+        Log.d(MainActivity.INF, "stop Service");
+        return super.onStartCommand(intent, flags, startId);
     }
 }
