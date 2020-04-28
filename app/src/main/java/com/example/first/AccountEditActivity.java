@@ -14,9 +14,12 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -37,11 +40,13 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class AccountEditActivity extends AppCompatActivity {
     // constants
     private final static int PICK_IMAGE_REQUEST = 71;
+    private final static String PHOTO_EDITING = "photoEditing";
 
     // layout references
     private TextInputEditText mNameField;
@@ -69,6 +74,85 @@ public class AccountEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_edit);
 
+        UISetup();
+        listenersSetup();
+        gettingDataFromFirebase();
+
+    }
+
+    private void uploadImageToFirebaseStorage() {
+        Log.d(PHOTO_EDITING, "uploadInage() started");
+        if (filepath != null) {
+            Log.d(PHOTO_EDITING, "filepath != null");
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading..");
+            progressDialog.show();
+
+            StorageReference ref = storageRef.child("Profiles").child(userId).child("AvatarImage");
+
+            byte[] bytes = compressImageFromDevise(filepath);
+
+            // ref.putFile(filepath).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            ref.putBytes(bytes).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    progressDialog.dismiss();
+                    Toast.makeText(AccountEditActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(AccountEditActivity.this, AccountActivity.class));
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(AccountEditActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            })
+            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                    progressDialog.setMessage("Uploaded " + (int)progress + "%");
+                }
+            });
+        } else {
+            Log.d(PHOTO_EDITING, "filepath is null");
+            // if new photo was not chosen - start AccountActivity anyway
+            startActivity(new Intent(AccountEditActivity.this, AccountActivity.class));
+        }
+    }
+
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select picture"), PICK_IMAGE_REQUEST);
+        // When user chose photo - onActivityResult() is called
+    }
+
+    // result from image chooser activity
+    // set chosen photo to imageview
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            filepath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+                Glide
+                        .with(getApplicationContext())
+                        .load(resizeBitmap(bitmap, 600.0f))
+                        .centerCrop()
+                        .into(imgPreview);
+                 // imgPreview.setRotation((float) 90.0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void UISetup() {
         // firebase init
         databaseProfile = FirebaseDatabase.getInstance().getReference("Profiles"); // Expected to be automatically created if Profiles node not yet created
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -87,15 +171,26 @@ public class AccountEditActivity extends AppCompatActivity {
         mPhoneField = (TextInputEditText) findViewById(R.id.phoneFieldInp);
         saveBtn = (Button) findViewById(R.id.saveBtn);
         imgPreview = (ImageView) findViewById(R.id.imageView);
+    }
 
+    private void listenersSetup() {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveData();
-                uploadImage();
+                uploadDataToDatabase();
+                uploadImageToFirebaseStorage();
             }
         });
 
+        imgPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
+    }
+
+    private void gettingDataFromFirebase() {
         // получение текущих данных с Database
         databaseProfile.addValueEventListener(new ValueEventListener() {
             @Override
@@ -119,20 +214,19 @@ public class AccountEditActivity extends AppCompatActivity {
             }
         });
 
-
         // Загрузка фотки профиля со Storage
         final long ONE_MEGABYTE = 1024 * 1024;
         StorageReference avatarRef = storageRef.child("Profiles").child(userId).child("AvatarImage");
-        avatarRef.getBytes(5*ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        avatarRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 Glide
                         .with(getApplicationContext())
-                        .load(resizeBitmap(bitmap))
+                        .load(resizeBitmap(bitmap, 600.0f))
                         .centerCrop()
                         .into(imgPreview);
-                imgPreview.setRotation((float) 90.0);
+                // imgPreview.setRotation((float) 90.0);
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -141,24 +235,28 @@ public class AccountEditActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "No Such file or Path found!!", Toast.LENGTH_LONG).show();
             }
         });
-
-
-
-
-
-        imgPreview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage();
-            }
-        });
-
-
-
     }
 
-    private Bitmap resizeBitmap(Bitmap bitmap) {
-        float maxResolution = (float) 1000.0;    //edit 'maxResolution' to fit your need
+    private byte[] compressImageFromDevise(Uri filepath) {
+        byte[] bytes = null;
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            // requlate quality to change size of image, uploading to firebase storage
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+            bytes = baos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (bytes == null)
+            Log.d(PHOTO_EDITING, "bytes is null in compressImageFromDevise()");
+
+        return bytes;
+    }
+
+    public static Bitmap resizeBitmap(Bitmap bitmap, float maxResolution) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         int newWidth = width;
@@ -182,67 +280,7 @@ public class AccountEditActivity extends AppCompatActivity {
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 
-    private void uploadImage() {
-        if (filepath != null) {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading..");
-            progressDialog.show();
-
-            StorageReference ref = storageRef.child("Profiles").child(userId).child("AvatarImage");
-            ref.putFile(filepath).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    progressDialog.dismiss();
-                    Toast.makeText(AccountEditActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
-                    Toast.makeText(AccountEditActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            })
-            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    progressDialog.setMessage("Uploaded " + (int)progress + "%");
-                }
-            });
-        }
-    }
-
-    private void chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select picture"), PICK_IMAGE_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
-            filepath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
-                Glide
-                        .with(getApplicationContext())
-                        .load(resizeBitmap(bitmap))
-                        .centerCrop()
-                        .into(imgPreview);
-                imgPreview.setRotation((float) 90.0);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void saveData() {
-        String name = mNameField.getText().toString();
-
+    private void uploadDataToDatabase() {
         if (!mNameField.getText().toString().equals(currentUserProfile.getName()))
             currentUserProfile.setName(mNameField.getText().toString());
 

@@ -180,13 +180,13 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
-        final long ONE_MEGABYTE = 3* 1024*1024;
+        final long ONE_MEGABYTE = 1024*1024;
         StorageReference avatarPhoto =  storageRef.child("Profiles").child(userId).child("AvatarImage"); //берем из storage
         avatarPhoto.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                photoProfil.setImageBitmap(bitmap);
+                photoProfil.setImageBitmap(AccountEditActivity.resizeBitmap(bitmap, 1000.0f));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

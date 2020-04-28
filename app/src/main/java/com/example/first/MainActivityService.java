@@ -103,6 +103,7 @@ public class MainActivityService extends Service {
 
                 }
             });
+            Log.d(INFORMATION_PROCESS_SERVICE, "Start readDataWithServer with Listener");
 
             DatabaseReference childRef = myRef.child(NAME_BRANCH).child(user.getUid());
             childRef.addValueEventListener(new ValueEventListener() {
