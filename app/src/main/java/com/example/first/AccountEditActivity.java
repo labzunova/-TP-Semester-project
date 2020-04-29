@@ -45,7 +45,7 @@ import java.io.IOException;
 
 public class AccountEditActivity extends AppCompatActivity {
     // constants
-    private final static int PICK_IMAGE_REQUEST = 71;
+    public final static int PICK_IMAGE_REQUEST = 71;
     private final static String PHOTO_EDITING = "photoEditing";
 
     // layout references
@@ -57,7 +57,7 @@ public class AccountEditActivity extends AppCompatActivity {
     private TextInputEditText mCityField;
     private TextInputEditText mAddressField;
     private TextInputEditText mPhoneField;
-    private Button saveBtn, chooseBtn, uploadBtn;
+    private Button saveBtn, editGalleryBtn;
     private ImageView imgPreview;
 
     // firebase
@@ -75,7 +75,7 @@ public class AccountEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account_edit);
 
         UISetup();
-        listenersSetup();
+        listenersSetup(savedInstanceState);
         gettingDataFromFirebase();
 
     }
@@ -171,9 +171,10 @@ public class AccountEditActivity extends AppCompatActivity {
         mPhoneField = (TextInputEditText) findViewById(R.id.phoneFieldInp);
         saveBtn = (Button) findViewById(R.id.saveBtn);
         imgPreview = (ImageView) findViewById(R.id.imageView);
+        editGalleryBtn = (Button) findViewById(R.id.editGalleryBtn);
     }
 
-    private void listenersSetup() {
+    private void listenersSetup(final Bundle savedInstanceState) {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,6 +187,18 @@ public class AccountEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 chooseImage();
+            }
+        });
+
+        editGalleryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (savedInstanceState == null) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .add(R.id.galleryFragment, new GalleryFragment())
+                            .commit();
+                }
             }
         });
     }
