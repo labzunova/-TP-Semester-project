@@ -17,8 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0.7"
-        android:scaleType="centerCrop"
         android:src="@drawable/bg"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -53,46 +53,19 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="150dp"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
+            android:layout_height="match_parent" />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/saveBtn"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/imageView"
-            android:orientation="vertical">
-            <Button
-                android:id="@+id/chooseBtn"
-                android:text="CHOOSE"
-                android:background="#808A2B4B"
-                android:fontFamily="casual"
-                android:textSize="20sp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_margin="5dp"/>
-
-            <Button
-                android:id="@+id/uploadBtn"
-                android:text="UPLOAD"
-                android:background="#808A2B4B"
-                android:fontFamily="casual"
-                android:textSize="20sp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_margin="5dp"/>
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/textEdits"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/imageSettingLayout"
-        android:gravity="center">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="8dp"
+            android:background="#808A2B4B"
+            android:fontFamily="casual"
+            android:text="@string/saveBtn"
+            android:textSize="20sp"
+            android:layout_toRightOf="@+id/imageView"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/nameField"
@@ -107,9 +80,8 @@
             app:boxCornerRadiusBottomStart="10dp"
             app:boxCornerRadiusTopEnd="10dp"
             app:boxCornerRadiusTopStart="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/myProfile">
+            android:layout_below="@+id/saveBtn"
+            android:layout_toRightOf="@+id/imageView">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nameFieldInp"
@@ -118,6 +90,17 @@
                 android:fontFamily="casual"
                 android:hint="Name" />
         </com.google.android.material.textfield.TextInputLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/textEdits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/imageSettingLayout"
+        android:gravity="center">
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/emailField"
@@ -134,7 +117,7 @@
             app:boxCornerRadiusTopStart="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameField">
+            app:layout_constraintTop_toBottomOf="@+id/myProfile">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/emailFieldInp"
@@ -297,20 +280,7 @@
 </LinearLayout>
 
 
-    <Button
-        android:id="@+id/saveBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="8dp"
-        android:background="#808A2B4B"
-        android:fontFamily="casual"
-        android:text="@string/saveBtn"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textEdits" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
