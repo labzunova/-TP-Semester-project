@@ -93,6 +93,7 @@ public class AccountEditActivity extends AppCompatActivity {
             public void onClick(View v) {
                 saveData();
                 uploadImage();
+                startActivity(new Intent(AccountEditActivity.this, AccountActivity.class));
             }
         });
 
