@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+   >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:textSize="30sp"
+        android:text="Want to get out?"
+        android:textStyle="bold"
+        android:id="@+id/title_dialog"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Yes"
+        android:id="@+id/btn_yes"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="90dp"
+        android:textSize="20sp"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+        android:layout_below="@+id/title_dialog"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No"
+        android:id="@+id/btn_no"
+        android:textSize="20sp"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/title_dialog"
+      android:layout_marginLeft="170dp"/>
+
+
+</RelativeLayout>

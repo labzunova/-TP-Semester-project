@@ -2,6 +2,7 @@ package com.example.first;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -22,7 +23,8 @@ public class OnSwipeListener implements View.OnTouchListener {
     Context context;
 
     public OnSwipeListener(Context context, View view) {
-        gestureDetector = new GestureDetector(context, new OnSwipeListener.GestureListener());
+        gestureDetector = new GestureDetector(context, new GestureListener());
+
         this.view = view;
         this.context = context;
     }

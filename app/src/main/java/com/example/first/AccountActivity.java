@@ -3,18 +3,22 @@ package com.example.first;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 //import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 //import android.widget.Button;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,10 +40,12 @@ import com.google.firebase.storage.StorageReference;
 
 public class AccountActivity extends AppCompatActivity {
     private ImageView imgSetting, imgExit, imgScroll, imgMatch, photoProfil;
-    private TextView labName, labEmail, labPhone, labBreed, labAge, labCountry, labCity, labAddres;
+    private TextView labName, labEmail, labPhone, labBreed, labAge, labCountry, labCity, labAddres, progressText;
+    private ProgressBar progressBar;
     private LinearLayout layoutPhone, layoutBreed, layoutAge, layoutCountry, layoutCity, layoutAddres, layoutMail;
     private boolean isImageScaled = false;
     private String str = new String("");
+    private MediaPlayer dog;
 
 
 
@@ -80,6 +86,9 @@ public class AccountActivity extends AppCompatActivity {
         labAddres = findViewById(R.id.i_addres);
 
         photoProfil = findViewById(R.id.photo_profil);
+        dog = MediaPlayer.create(this,R.raw.dog_lay);
+        progressBar = findViewById(R.id.progress);
+        progressText = findViewById(R.id.progress_text);
 
         layoutPhone = (LinearLayout) findViewById(R.id.layout_telephone);
         layoutBreed = (LinearLayout) findViewById(R.id.layout_breed);
@@ -92,18 +101,41 @@ public class AccountActivity extends AppCompatActivity {
         imgExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(AccountActivity.this,AuthorizationActivity.class));
+               /* FirebaseAuth.getInstance().signOut();
+               // startActivity(new Intent(AccountActivity.this,AuthorizationActivity.class));
+                Intent intent = new Intent(AccountActivity.this, AuthorizationActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent); */
+
+                final Dialog dialog = new Dialog(AccountActivity.this);
+                dialog.setContentView(R.layout.exit_dialog);
+                Button btYes = dialog.findViewById(R.id.btn_yes);
+                Button btNo = dialog.findViewById(R.id.btn_no);
+                btNo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                btYes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FirebaseAuth.getInstance().signOut();
+                        // startActivity(new Intent(AccountActivity.this,AuthorizationActivity.class));
+                        Intent intent = new Intent(AccountActivity.this, AuthorizationActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                });
+                dialog.show();
             }
         });
 
         photoProfil.setOnClickListener(new View.OnClickListener() {
              @Override
                public void onClick(View v) {
-               if(!isImageScaled) v.animate().scaleX(1.4f).scaleY(1.4f).setDuration(500);
-                if (isImageScaled) v.animate().scaleX(1f).scaleY(1f).setDuration(500);
-
-                isImageScaled = !isImageScaled;
+                 startActivity(new Intent(AccountActivity.this, Albom.class));
+                 soundPlay();
                 }
              });
 
@@ -171,6 +203,17 @@ public class AccountActivity extends AppCompatActivity {
                } else
                 layoutPhone.setVisibility(View.GONE);
 
+                     if (currentUserProfile.getLikes().size()<5){
+                         progressBar.setProgress(35);
+                         progressText.setText("низкая популярность");
+                       } else
+                     if(currentUserProfile.getLikes().size()<11){
+                         progressBar.setProgress(55);
+                         progressText.setText("средняя популярность");
+                       } else {
+                         progressBar.setProgress(85);
+                         progressText.setText("высокая популярность");
+                     }
 
             }
 
@@ -199,4 +242,7 @@ public class AccountActivity extends AppCompatActivity {
     }
 
 
+    public void soundPlay(){
+        dog.start();
+    }
 }

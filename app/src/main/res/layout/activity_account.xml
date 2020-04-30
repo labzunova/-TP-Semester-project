@@ -79,12 +79,10 @@
                 android:id="@+id/i_name"
                 />
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="43dp"
                 android:background="@drawable/rounded"
                 android:layout_marginTop="20dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginLeft="50dp"
                 android:layout_gravity="center"
                 android:gravity="center">
 
@@ -93,6 +91,7 @@
                     android:layout_height="40dp"
                     android:src="@drawable/ic_settings_black_24dp"
                     android:id="@+id/edit"/>
+
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="40dp"
@@ -308,6 +307,34 @@ android:src="@drawable/ic_img_match_love"
 
 
         </LinearLayout>
+        <ProgressBar
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_below="@id/liner_layout"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="25dp"
+            android:progress="80"
+            android:id="@+id/progress"
+            android:progressDrawable="@drawable/circle_out"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:background="@drawable/circle_in"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/progress"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:text="низкая популярность"
+            android:layout_marginTop="2dp"
+            android:textSize="15sp"
+            android:shadowDy="-3"
+            android:shadowDx="-3"
+            android:shadowRadius="5"
+            android:textColor="#000"
+            android:textStyle="italic"
+            android:id="@+id/progress_text"/>
 
         <TextView
             android:id="@+id/citata"
@@ -315,7 +342,7 @@ android:src="@drawable/ic_img_match_love"
             android:layout_height="87dp"
             android:layout_below="@id/liner_layout"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="120dp"
             android:layout_marginRight="10dp"
             android:fontFamily="casual"
             android:gravity="center"

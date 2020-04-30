@@ -140,7 +140,7 @@ public class AccountEditActivity extends AppCompatActivity {
             filepath = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
-                Glide
+               Glide
                         .with(getApplicationContext())
                         .load(resizeBitmap(bitmap, 600.0f))
                         .centerCrop()
@@ -234,7 +234,7 @@ public class AccountEditActivity extends AppCompatActivity {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                Glide
+               Glide
                         .with(getApplicationContext())
                         .load(resizeBitmap(bitmap, 600.0f))
                         .centerCrop()
