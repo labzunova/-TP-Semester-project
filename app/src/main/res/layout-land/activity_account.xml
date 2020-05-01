@@ -316,6 +316,34 @@
 
 
         </LinearLayout>
+        <ProgressBar
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_below="@+id/liner"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="25dp"
+            android:progress="80"
+            android:id="@+id/progress"
+            android:progressDrawable="@drawable/circle_out"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:background="@drawable/circle_in"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/progress"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:text="низкая популярность"
+            android:layout_marginTop="2dp"
+            android:textSize="15sp"
+            android:shadowDy="-3"
+            android:shadowDx="-3"
+            android:shadowRadius="5"
+            android:textColor="#000"
+            android:textStyle="italic"
+            android:id="@+id/progress_text"/>
 
 
         <TextView

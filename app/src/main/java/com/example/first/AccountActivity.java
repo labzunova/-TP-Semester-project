@@ -45,7 +45,7 @@ public class AccountActivity extends AppCompatActivity {
     private LinearLayout layoutPhone, layoutBreed, layoutAge, layoutCountry, layoutCity, layoutAddres, layoutMail;
     private boolean isImageScaled = false;
     private String str = new String("");
-    private MediaPlayer dog;
+
 
 
 
@@ -86,7 +86,7 @@ public class AccountActivity extends AppCompatActivity {
         labAddres = findViewById(R.id.i_addres);
 
         photoProfil = findViewById(R.id.photo_profil);
-        dog = MediaPlayer.create(this,R.raw.dog_lay);
+
         progressBar = findViewById(R.id.progress);
         progressText = findViewById(R.id.progress_text);
 
@@ -135,7 +135,7 @@ public class AccountActivity extends AppCompatActivity {
              @Override
                public void onClick(View v) {
                  startActivity(new Intent(AccountActivity.this, Albom.class));
-                 soundPlay();
+
                 }
              });
 
@@ -242,7 +242,5 @@ public class AccountActivity extends AppCompatActivity {
     }
 
 
-    public void soundPlay(){
-        dog.start();
-    }
+
 }
