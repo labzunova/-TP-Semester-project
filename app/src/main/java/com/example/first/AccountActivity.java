@@ -8,13 +8,11 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-//import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-//import android.widget.Button;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,9 +20,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import com.facebook.drawee.backends.pipeline.Fresco;
-//import com.facebook.drawee.view.SimpleDraweeView;
-//import com.facebook.imagepipeline.request.ImageRequest;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +32,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-
 public class AccountActivity extends AppCompatActivity {
     private ImageView imgSetting, imgExit, imgScroll, imgMatch, photoProfil;
     private TextView labName, labEmail, labPhone, labBreed, labAge, labCountry, labCity, labAddres, progressText;
@@ -46,9 +40,6 @@ public class AccountActivity extends AppCompatActivity {
     private boolean isImageScaled = false;
     private String str = new String("");
 
-
-
-
     private DatabaseReference databaseProfile;
     private FirebaseUser user;
     private String userId;
@@ -56,7 +47,6 @@ public class AccountActivity extends AppCompatActivity {
     private Uri filepath;
     FirebaseStorage storage;
     StorageReference storageRef;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,7 +162,6 @@ public class AccountActivity extends AppCompatActivity {
                 } else
                       layoutMail.setVisibility(View.GONE);
 
-
                 if ( currentUserProfile.getBreed() != null && !currentUserProfile.getBreed().equals(str) ){
                     labBreed.setText(currentUserProfile.getBreed());
                 } else
@@ -214,7 +203,6 @@ public class AccountActivity extends AppCompatActivity {
                          progressBar.setProgress(85);
                          progressText.setText("высокая популярность");
                      }
-
             }
 
             @Override
@@ -223,9 +211,9 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
-        final long ONE_MEGABYTE = 1024*1024;
+        final long THREE_MEGABYTE = 1024*1024;
         StorageReference avatarPhoto =  storageRef.child("Profiles").child(userId).child("AvatarImage"); //берем из storage
-        avatarPhoto.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        avatarPhoto.getBytes(THREE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -235,12 +223,7 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 photoProfil.setImageResource(R.drawable.dog);
-
-
             }
         });
     }
-
-
-
 }

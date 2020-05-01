@@ -44,7 +44,6 @@ public class Albom extends AppCompatActivity {
     private int allCount;
     private List<StorageReference> galleryList;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +58,6 @@ public class Albom extends AppCompatActivity {
                 startActivity(new Intent(Albom.this, AccountActivity.class));
             }
         });
-
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         storage = FirebaseStorage.getInstance();
@@ -78,15 +76,11 @@ public class Albom extends AppCompatActivity {
          displayingPhotos(count);
     }
 
-
     class OnSwipeListener implements View.OnTouchListener {
 
         private  final GestureDetector gestureDetector;
         private static final int SWIPE_VELOCITY_THRESHOLD = 10;
         private static final int SWIPE_THRESHOLD = 10;
-
-
-
 
         public OnSwipeListener(Context context) {
 
