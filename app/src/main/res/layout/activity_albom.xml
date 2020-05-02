@@ -52,6 +52,13 @@ tools:context=".Albom">
         android:layout_marginLeft="20dp"
         android:id="@+id/photo_albom"
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:textSize="20sp"
+        android:id="@+id/counter"/>
 
 </LinearLayout>
 

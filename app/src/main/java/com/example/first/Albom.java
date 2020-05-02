@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,6 +36,7 @@ import java.util.List;
 public class Albom extends AppCompatActivity {
 
     private ImageView img;
+    private TextView txtCounter;
 
     private FirebaseUser user;
     FirebaseStorage storage;
@@ -42,6 +44,7 @@ public class Albom extends AppCompatActivity {
     private int count = 0;
     private int allCount;
     private List<StorageReference> galleryList;
+    private String message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class Albom extends AppCompatActivity {
         setContentView(R.layout.activity_albom);
 
         img = findViewById(R.id.photo_albom);
+        txtCounter = findViewById(R.id.counter);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         storage = FirebaseStorage.getInstance();
@@ -61,6 +65,8 @@ public class Albom extends AppCompatActivity {
             public void onSuccess(ListResult listResult) {
                 galleryList = listResult.getItems();
                 allCount = galleryList.size();
+                message = Integer.toString(count+1) +"/"+ Integer.toString(allCount);
+                txtCounter.setText(message);
                 displayingPhotos(count);
             }
         });
@@ -107,6 +113,8 @@ public class Albom extends AppCompatActivity {
             public void onSwipeRight() {
                 if (count >0) {
                     count--;
+                    message = Integer.toString(count+1) +"/"+ Integer.toString(allCount);
+                    txtCounter.setText(message);
                     displayingPhotos(count);
                 }
 
@@ -115,6 +123,8 @@ public class Albom extends AppCompatActivity {
             public void onSwipeLeft() {
                 if (count <(allCount - 1)) {
                     count++;
+                    message = Integer.toString(count+1) +"/"+ Integer.toString(allCount);
+                    txtCounter.setText(message);
                     displayingPhotos(count);
                 }
             }
