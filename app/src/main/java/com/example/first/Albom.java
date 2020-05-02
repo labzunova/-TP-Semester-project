@@ -70,10 +70,9 @@ public class Albom extends AppCompatActivity {
             public void onSuccess(ListResult listResult) {
                 galleryList = listResult.getItems();
                 allCount = galleryList.size();
+                displayingPhotos(count);
             }
         });
-
-         displayingPhotos(count);
     }
 
     class OnSwipeListener implements View.OnTouchListener {
@@ -115,7 +114,7 @@ public class Albom extends AppCompatActivity {
             }
 
             public void onSwipeRight() {
-                if (count <allCount) {
+                if (count <(allCount - 1)) {
                     count++;
                     displayingPhotos(count);
                 }
@@ -133,9 +132,9 @@ public class Albom extends AppCompatActivity {
     }
 
     public void displayingPhotos(int counter){
-        final long ONE_MEGABYTE = 3 * 1024 * 1024;
+        final long THREE_MEGABYTE = 3 * 1024 * 1024;
         StorageReference photo = galleryList.get(counter);
-        photo.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        photo.getBytes(THREE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
