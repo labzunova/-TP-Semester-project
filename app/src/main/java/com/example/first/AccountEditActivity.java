@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.fragment.app.Fragment;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -42,9 +43,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
-public class AccountEditActivity extends AppCompatActivity {
-    // constants
+public class AccountEditActivity extends AppCompatActivity implements itemClickListener{
     public final static int PICK_IMAGE_REQUEST = 71;
     private final static String PHOTO_EDITING = "photoEditing";
 
@@ -81,7 +82,7 @@ public class AccountEditActivity extends AppCompatActivity {
     }
 
     private void uploadImageToFirebaseStorage() {
-        Log.d(PHOTO_EDITING, "uploadInage() started");
+        Log.d(PHOTO_EDITING, "uploadImage() started");
         if (filepath != null) {
             Log.d(PHOTO_EDITING, "filepath != null");
             final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -228,9 +229,9 @@ public class AccountEditActivity extends AppCompatActivity {
         });
 
         // Загрузка фотки профиля со Storage
-        final long ONE_MEGABYTE = 1024 * 1024;
+        final long BATCH_SIZE = 1024 * 1024; // 1 mb
         StorageReference avatarRef = storageRef.child("Profiles").child(userId).child("AvatarImage");
-        avatarRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        avatarRef.getBytes(BATCH_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -320,5 +321,15 @@ public class AccountEditActivity extends AppCompatActivity {
 
         databaseProfile.child(user.getUid()).setValue(currentUserProfile);
 
+    }
+
+    @Override
+    public void onPicClicked(List<StorageReference> imagesRefs, int position) {
+        Fragment pictureBrowser = PictureBrowser.newInstance(imagesRefs, position);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fr_place, pictureBrowser)
+                .addToBackStack("Fragment pictureBrowser")
+                .commit();
     }
 }

@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GalleryFragment extends Fragment {
-    private static final String FRAGMENT_TAG = "FragmentTag";
+    private static final String FRAGMENT_TAG = "GalleryFragmentTag";
     private static final int VERTICAL_SPAN_COUNT = 4;
     private static final int RESULT_OK = -1;
     private static final String ITEM_ADD_IMAGE = "Open chooser";
@@ -62,7 +62,7 @@ public class GalleryFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Log.d(FRAGMENT_TAG, "onViewCreated()");
 
@@ -82,7 +82,7 @@ public class GalleryFragment extends Fragment {
                 Log.d(FRAGMENT_TAG, "lastAll() onSuccess() called");
                 galleryList = listResult.getItems();
                 galleryList.add(0, null);
-                previewImages.setAdapter(new previewImagesAdapter(galleryList));
+                previewImages.setAdapter(new previewImagesAdapter(galleryList, savedInstanceState));
                 }
             });
 
@@ -101,9 +101,11 @@ public class GalleryFragment extends Fragment {
     class previewImagesAdapter extends RecyclerView.Adapter<previewImagesHolder> {
 
         List<StorageReference> imagesRefs;
+        Bundle savedInstanceState;
 
-        public previewImagesAdapter(List<StorageReference> imagesRefs) {
+        public previewImagesAdapter(List<StorageReference> imagesRefs, Bundle savedInstanceState) {
             this.imagesRefs = imagesRefs;
+            this.savedInstanceState = savedInstanceState;
         }
 
         @NonNull
@@ -139,7 +141,7 @@ public class GalleryFragment extends Fragment {
                     public void onClick(View v) {
                         Log.d(FRAGMENT_TAG, "item image onClickListener()");
                         // implement image scaling
-
+                        ((itemClickListener) activity).onPicClicked(imagesRefs, position);
                     }
                 });
             } else {
@@ -158,8 +160,6 @@ public class GalleryFragment extends Fragment {
                     }
                 });
             }
-
-
         }
 
 
