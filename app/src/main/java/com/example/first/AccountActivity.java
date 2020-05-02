@@ -39,6 +39,7 @@ public class AccountActivity extends AppCompatActivity {
     private LinearLayout layoutPhone, layoutBreed, layoutAge, layoutCountry, layoutCity, layoutAddres, layoutMail;
     private boolean isImageScaled = false;
     private String str = new String("");
+    private MediaPlayer dog;
 
     private DatabaseReference databaseProfile;
     private FirebaseUser user;
@@ -76,6 +77,7 @@ public class AccountActivity extends AppCompatActivity {
         labAddres = findViewById(R.id.i_addres);
 
         photoProfil = findViewById(R.id.photo_profil);
+        dog = MediaPlayer.create(this,R.raw.dog_lay);
 
         progressBar = findViewById(R.id.progress);
         progressText = findViewById(R.id.progress_text);
@@ -88,15 +90,16 @@ public class AccountActivity extends AppCompatActivity {
         layoutAddres = (LinearLayout) findViewById(R.id.layout_addres);
         layoutMail = (LinearLayout) findViewById(R.id.layout_mail);
 
+        progressBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                soundPlay();
+            }
+        });
+
         imgExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* FirebaseAuth.getInstance().signOut();
-               // startActivity(new Intent(AccountActivity.this,AuthorizationActivity.class));
-                Intent intent = new Intent(AccountActivity.this, AuthorizationActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent); */
-
                 final Dialog dialog = new Dialog(AccountActivity.this);
                 dialog.setContentView(R.layout.exit_dialog);
                 Button btYes = dialog.findViewById(R.id.btn_yes);
@@ -111,7 +114,6 @@ public class AccountActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         FirebaseAuth.getInstance().signOut();
-                        // startActivity(new Intent(AccountActivity.this,AuthorizationActivity.class));
                         Intent intent = new Intent(AccountActivity.this, AuthorizationActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -225,5 +227,9 @@ public class AccountActivity extends AppCompatActivity {
                 photoProfil.setImageResource(R.drawable.dog);
             }
         });
+    }
+
+    public void soundPlay(){
+        dog.start();
     }
 }

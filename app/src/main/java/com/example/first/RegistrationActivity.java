@@ -126,8 +126,6 @@ public class RegistrationActivity extends AppCompatActivity {
                     StorageReference ref = storageRef.child("Profiles").child(user.getUid()).child("AvatarImage");
                     ref.putFile(imageUri);
 
-
-                  //  startActivity(new Intent(RegistrationActivity.this, AccountActivity.class));
                     Intent intent = new Intent(RegistrationActivity.this, AccountActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);

@@ -35,7 +35,6 @@ import java.util.List;
 public class Albom extends AppCompatActivity {
 
     private ImageView img;
-    private ImageButton btn;
 
     private FirebaseUser user;
     FirebaseStorage storage;
@@ -50,14 +49,6 @@ public class Albom extends AppCompatActivity {
         setContentView(R.layout.activity_albom);
 
         img = findViewById(R.id.photo_albom);
-        btn = findViewById(R.id.to_profil);
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Albom.this, AccountActivity.class));
-            }
-        });
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         storage = FirebaseStorage.getInstance();
@@ -114,16 +105,16 @@ public class Albom extends AppCompatActivity {
             }
 
             public void onSwipeRight() {
-                if (count <(allCount - 1)) {
-                    count++;
+                if (count >0) {
+                    count--;
                     displayingPhotos(count);
                 }
 
             }
 
             public void onSwipeLeft() {
-                if (count >0) {
-                    count--;
+                if (count <(allCount - 1)) {
+                    count++;
                     displayingPhotos(count);
                 }
             }

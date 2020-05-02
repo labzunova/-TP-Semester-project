@@ -52,14 +52,7 @@ tools:context=".Albom">
         android:layout_marginLeft="20dp"
         android:id="@+id/photo_albom"
         />
-    <ImageButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/rounded"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_account_circle_black_24dp"
-        android:layout_marginTop="60dp"
-        android:id="@+id/to_profil"/>
+
 </LinearLayout>
 
 
