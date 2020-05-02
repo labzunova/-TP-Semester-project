@@ -8,6 +8,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.first.mainScreen.ConstValue;
+import com.example.first.mainScreen.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -65,7 +67,7 @@ public class RegistrationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         stopSelf(startId);
 
-        Log.d(MainActivity.INF, "stop Service");
+        Log.d(ConstValue.INF, "stop Service");
         return super.onStartCommand(intent, flags, startId);
     }
 }

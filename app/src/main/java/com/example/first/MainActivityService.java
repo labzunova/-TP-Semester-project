@@ -7,12 +7,12 @@ import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnFailureListener;
+import com.example.first.mainScreen.ConstValue;
+import com.example.first.mainScreen.MainActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -145,14 +145,14 @@ public class MainActivityService extends Service {
 
         if ((inf != null) && (userNowSee != null)) {
             //
-            Log.d(MainActivity.INF, inf);
+            Log.d(ConstValue.INF, inf);
 
             switch (inf) {
 
                 case "right": {
                     //remove with likes, put in likes or matches
 
-                    Log.d(MainActivity.INF, Boolean.toString(likes.isEmpty()));
+                    Log.d(ConstValue.INF, Boolean.toString(likes.isEmpty()));
                     if (likes.indexOf(idProfileHowSeeUser) == -1) {
 
                         ArrayList<String> yourLikes = new ArrayList<>();
@@ -278,7 +278,7 @@ public class MainActivityService extends Service {
         if ((idDogs.size() != 0) && (i < idDogs.size())) {
             Log.d(INFORMATION_PROCESS_SERVICE, "Add profile in seen");
             idProfileHowSeeUser = idDogs.get(i);
-            Log.d(MainActivity.INF, idProfileHowSeeUser);
+            Log.d(ConstValue.INF, idProfileHowSeeUser);
             seen.add(idProfileHowSeeUser);
             myRef.child(NAME_BRANCH).child(user.getUid()).child(BRANCH_SEEN).setValue(seen);
         }

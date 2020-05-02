@@ -1,4 +1,4 @@
-package com.example.first;
+package com.example.first.mainScreen;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.example.first.MainActivityService;
 
 public class OnSwipeListener implements View.OnTouchListener {
 
@@ -20,11 +22,13 @@ public class OnSwipeListener implements View.OnTouchListener {
 
     View view;
     Context context;
+    MainViewModel mViewModel;
 
-    public OnSwipeListener(Context context, View view) {
+    public OnSwipeListener(Context context, View view, MainViewModel mViewModel) {
         gestureDetector = new GestureDetector(context, new OnSwipeListener.GestureListener());
         this.view = view;
         this.context = context;
+        this.mViewModel = mViewModel;
     }
 
     @Override
@@ -49,14 +53,10 @@ public class OnSwipeListener implements View.OnTouchListener {
                 else if (deltaLeft < -400){
                     // swipe left
 
-                    // transport information in service
-                    Log.d(DogFragment.INFORMATION_PROCESS_FRAGMENT, "OnCSwipe Left");
+                    // transport information in ViewModel
+                    Log.d(DogFragment.INFORMATION_PROCESS_FRAGMENT, "OnSwipe Left");
 
-                    Intent intentService;
-                    intentService = new Intent(context, MainActivityService.class);
-                    intentService.setAction("left");
-
-                    context.startService(intentService);
+                    mViewModel.swipe(ConstValue.SIDE_LEFT);
 
                     LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     deltaLeft = -1050;
@@ -73,14 +73,10 @@ public class OnSwipeListener implements View.OnTouchListener {
                 else {
                     // swipe right
 
-                    // transport information in service
+                    // transport information in ViewModel
                     Log.d(DogFragment.INFORMATION_PROCESS_FRAGMENT, "OnCSwipe Right");
 
-                    Intent intentService;
-                    intentService = new Intent(context, MainActivityService.class);
-                    intentService.setAction("right");
-
-                    context.startService(intentService);
+                    mViewModel.swipe(ConstValue.SIDE_RIGHT);
 
                     LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     deltaLeft = 1050;
@@ -151,7 +147,7 @@ public class OnSwipeListener implements View.OnTouchListener {
     }
 
     public void onScrollRight(float diffX) {
-        Log.d(MainActivity.INF, "Right");
+        Log.d(ConstValue.INF, "Right");
 
         LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         deltaLeft += diffX;
@@ -172,7 +168,7 @@ public class OnSwipeListener implements View.OnTouchListener {
     }
 
     public void onScrollLeft(float diffX) {
-        Log.d(MainActivity.INF, "Left");
+        Log.d(ConstValue.INF, "Left");
 
         LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         deltaLeft -= diffX;
