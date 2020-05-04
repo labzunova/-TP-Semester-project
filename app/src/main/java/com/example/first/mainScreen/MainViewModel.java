@@ -10,10 +10,12 @@ import androidx.lifecycle.Observer;
 
 public class MainViewModel extends AndroidViewModel {
     private MediatorLiveData<DataProfile> currentUser = new MediatorLiveData<DataProfile>();
+    private boolean isProfile;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
-        currentUser.setValue(new DataProfile("Default", null));
+        isProfile = false;
+        swipe(ConstValue.DEFAULT);
     }
 
     public LiveData<DataProfile> getProfile() {
@@ -21,6 +23,8 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void swipe(int side) {
+        if (!isProfile)
+            side = ConstValue.DEFAULT;
         final LiveData<InfRepo.UserInformation> informationLiveData = InfRepo.getInstance(getApplication()).swipe(side);
 
         currentUser.addSource(informationLiveData, new Observer<InfRepo.UserInformation>() {
@@ -32,17 +36,19 @@ public class MainViewModel extends AndroidViewModel {
                 if (userInformation == null) {
                     infUser = "Default";
                     bitmap = null;
+                    isProfile = false;
                 }
-
                 else {
-                    if (userInformation.getProfile().getName() != null)
-                        infUser += userInformation.getProfile().getName();
-                    if (userInformation.getProfile().getAge() != null)
-                        infUser += userInformation.getProfile().getAge();
-                    if (userInformation.getProfile().getCity() != null)
-                        infUser += userInformation.getProfile().getCity();
+                    isProfile = true;
 
-                    bitmap = userInformation.getBitmap();
+                    if (userInformation.profile.getName() != null)
+                        infUser += userInformation.profile.getName();
+                    if (userInformation.profile.getAge() != null)
+                        infUser += userInformation.profile.getAge();
+                    if (userInformation.profile.getCity() != null)
+                        infUser += userInformation.profile.getCity();
+
+                    bitmap = userInformation.bitmap;
                 }
 
                 currentUser.postValue(new DataProfile(infUser,bitmap));

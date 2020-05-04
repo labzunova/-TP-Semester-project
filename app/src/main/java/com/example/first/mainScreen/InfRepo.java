@@ -14,24 +14,29 @@ import com.example.first.mainScreen.Storage.NetworkData;
 
 import java.util.ArrayList;
 
-public class InfRepo {
+public class InfRepo implements NetworkData.InfListener {
     private NetworkData networkData;
-    private MainProfileInf newUserInf;
-    private MainProfileInf lastUserInf;
-    private Profile myUser;
+    private UserInformation newUserInf;
+    private UserInformation lastUserInf;
+    private UserInformation myUser;
     private ArrayList<String> idProfiles;
 
-    public InfRepo() {
+    public InfRepo(NetworkData networkData) {
         idProfiles = new ArrayList<>();
-        myUser = null;
+        myUser = new UserInformation();
+        newUserInf = new UserInformation();
+        lastUserInf = new UserInformation();
 
-        this.networkData = new NetworkData(this);
+        this.networkData = networkData;
+        networkData.Connect(this);
     }
 
-    public void setMyProfile(Profile profile) {
-        this.myUser = profile;
+    @Override
+    public void setMyProfile(UserInformation user) {
+        this.myUser = user;
     }
 
+    @Override
     public void setIdProfiles(ArrayList<String> idProfiles) {
         this.idProfiles = idProfiles;
     }
@@ -48,53 +53,54 @@ public class InfRepo {
     public LiveData<UserInformation> swipe(int side) {
         userInf = new MediatorLiveData<>();
         lastUserInf = newUserInf;
-        if (lastUserInf == null)
-            lastUserInf = new MainProfileInf();
 
         if (side == ConstValue.SIDE_LEFT) {
-            swipeRLeft();
+            newUserInformation();
         }
         else if (side == ConstValue.SIDE_RIGHT) {
             swipeRight();
+            newUserInformation();
         }
         else if (side == ConstValue.DEFAULT) {
-            swipeDefault();
+            if (newUserInf.profile == null)
+                newUserInformation();
+            else {
+                userInf.postValue(newUserInf);
+            }
+
         }
 
         // TODO go local storage
-
-        newUserInformation();
 
         return userInf;
     }
 
     private void newUserInformation() {
-        newUserInf = new MainProfileInf();
+        newUserInf = new UserInformation();
         ArrayList<String> seen = new ArrayList<>();
-        if ((myUser != null) && (myUser.getSeen() != null))
-            seen = myUser.getSeen();
+        if ((myUser != null) && (myUser.profile.getSeen() != null))
+            seen = myUser.profile.getSeen();
 
-        seen.add(lastUserInf.getId());
+        seen.add(lastUserInf.id);
 
-        networkData.addSeenById(null, lastUserInf.getId());
+        networkData.addSeenById(myUser.id, lastUserInf.id);
         int i = 0;
-        while (i < idProfiles.size() && (newUserInf.getId() == null)) {
+        while (i < idProfiles.size() && (newUserInf.id == null)) {
             if (seen.indexOf(idProfiles.get(i)) == -1) {
-                newUserInf.setId(idProfiles.get(i));
+                newUserInf.id = idProfiles.get(i);
             }
             i++;
         }
 
-        if (newUserInf == null)
+        if (newUserInf.id == null)
             userInf.postValue(null);
         else {
-            final LiveData<InfRepo.UserInformation> newInf = networkData.getNewProfile(newUserInf.getId());
+            final LiveData<InfRepo.UserInformation> newInf = networkData.getNewProfile(newUserInf.id);
 
             userInf.addSource(newInf, new Observer<UserInformation>() {
                 @Override
                 public void onChanged(UserInformation userInformation) {
-                    newUserInf.setName(userInformation.getProfile().getName());
-
+                    newUserInf = userInformation;
                     userInf.postValue(userInformation);
                     userInf.removeSource(newInf);
                 }
@@ -103,84 +109,38 @@ public class InfRepo {
     }
 
     private void swipeRight() {
-        if (myUser.getLikes().indexOf(lastUserInf.getId()) == -1) {
+        if (myUser.profile.getLikes().indexOf(lastUserInf.id) == -1) {
 
-            networkData.addLikeById(lastUserInf.getId());
+            networkData.addLikeById(lastUserInf.id, myUser.id);
         }
         else {
-            networkData.removeLike(null, lastUserInf.getId());
+            networkData.removeLike(myUser.id, lastUserInf.id);
 
-            networkData.addMatchesById(null, lastUserInf);
-            MainProfileInf mInf = new MainProfileInf();
-            mInf.setName(myUser.getName());
-            networkData.addMatchesById(lastUserInf.getId(), mInf);
+            Profile.Matches myMatch = new Profile.Matches(lastUserInf.id, lastUserInf.name, "false");
+            networkData.addMatchesById(myUser.id, myMatch);
+
+            Profile.Matches youMatch = new Profile.Matches(myUser.id, myUser.name, "false");
+            networkData.addMatchesById(lastUserInf.id, youMatch);
         }
-    }
-
-    private void swipeRLeft() {
-
-    }
-
-    private void swipeDefault() {
-
     }
 
 
     public static class UserInformation {
-        private Profile profile;
-        private Bitmap bitmap;
+        public Profile profile;
+        public Bitmap bitmap;
+        public String name;
+        public String id;
 
-        public UserInformation() {}
+        public UserInformation() {
+            profile = null;
+            bitmap = null;
+            name = null;
+            id = null;
+        }
+
         public UserInformation(Profile profile, Bitmap bitmap) {
             this.profile = profile;
             this.bitmap = bitmap;
-        }
-
-        public Profile getProfile() {
-            return profile;
-        }
-
-        public void setProfile(Profile profile) {
-            this.profile = profile;
-        }
-
-        public Bitmap getBitmap() {
-            return bitmap;
-        }
-
-        public void setBitmap(Bitmap bitmap) {
-            this.bitmap = bitmap;
-        }
-    }
-
-    public static class MainProfileInf {
-        private String name;
-        private String id;
-
-        MainProfileInf (String name, String id) {
-            this.name = name;
-            this.id = id;
-        }
-
-        public MainProfileInf() {
-            this.name = null;
-            this.id = null;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public void setId(String id) {
-            this.id = id;
         }
     }
 }

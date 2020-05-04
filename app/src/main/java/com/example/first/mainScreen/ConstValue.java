@@ -12,4 +12,7 @@ public class ConstValue {
 
     public static final String NAME_BRANCH = "Profiles";
     public static final String BRANCH_ID_PROFILES = "IdProfiles";
+    public static final String BRANCH_SEEN = "seen";
+    public static final String BRANCH_LIKES = "likes";
+    public static final String BRANCH_MATCHES = "matches";
 }

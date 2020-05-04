@@ -1,18 +1,22 @@
 package com.example.first.mainScreen.Storage;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.bumptech.glide.Glide;
 import com.example.first.Profile;
 import com.example.first.mainScreen.ConstValue;
 import com.example.first.mainScreen.InfRepo;
 import com.example.first.mainScreen.MainViewModel;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,31 +32,42 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class NetworkData {
-    private InfRepo repo;
 
     private DatabaseReference myRef;
     private FirebaseUser user;
     private StorageReference storageRef;
+    private Context context;
 
-    private final long ONE_MEGABYTE = 3 * 1024 * 1024;
+    private final long ONE_MEGABYTE = 1024 * 1024;
 
     private MutableLiveData<InfRepo.UserInformation> newUserProfile;
 
-    public NetworkData(@NonNull final InfRepo repo){
+    public NetworkData(Context context){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        this.context = context;
         myRef = database.getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
         storageRef = FirebaseStorage.getInstance().getReference().child(ConstValue.NAME_BRANCH);
+    }
 
-        this.repo = repo;
+    public interface InfListener {
+        void setMyProfile(InfRepo.UserInformation user);
+        void setIdProfiles(ArrayList<String> idProfiles);
+    }
 
+    public void Connect(@NonNull final InfListener repo) {
         if (user != null) {
             // get myProfile
             myRef.child(ConstValue.NAME_BRANCH).child(user.getUid())
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            repo.setMyProfile(dataSnapshot.getValue(Profile.class));
+                            InfRepo.UserInformation inf = new InfRepo.UserInformation();
+                            inf.id = user.getUid();
+                            inf.profile = dataSnapshot.getValue(Profile.class);
+                            if (inf.profile != null)
+                                inf.name = inf.profile.getName();
+                            repo.setMyProfile(inf);
                         }
 
                         @Override
@@ -79,32 +94,40 @@ public class NetworkData {
                         }
                     });
         }
-
-
     }
 
     public LiveData<InfRepo.UserInformation> getNewProfile(@NonNull final String idProfile) {
         newUserProfile = new MutableLiveData<>();
         final InfRepo.UserInformation newInf = new InfRepo.UserInformation();
-
-        storageRef.child(idProfile).child("AvatarImage").
-                getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bmpImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                newInf.setBitmap(bmpImage);
-            }
-        });
-
+        newInf.id = idProfile;
 
         myRef.child(ConstValue.NAME_BRANCH).child(idProfile)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Profile profile = dataSnapshot.getValue(Profile.class);
-                        newInf.setProfile(profile);
+                        newInf.profile = profile;
+                        if (profile != null)
+                            newInf.name = newInf.profile.getName();
 
-                        newUserProfile.postValue(newInf);
+                        storageRef.child(idProfile).child("AvatarImage").
+                                getBytes(5 * ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                Bitmap bmpImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                bmpImage = resizeBitmap(bmpImage);
+
+                                newInf.bitmap = bmpImage;
+
+                                newUserProfile.postValue(newInf);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                newUserProfile.postValue(newInf);
+                            }
+                        });
+
                         myRef.child(ConstValue.NAME_BRANCH).child(idProfile).removeEventListener(this);
                     }
 
@@ -117,11 +140,35 @@ public class NetworkData {
         return newUserProfile;
     }
 
-    public void addSeenById (String id, final String newSeen) {
-        if (id == null)
-            id = user.getUid();
 
-        final String finalId = id;
+    private Bitmap resizeBitmap(Bitmap bitmap) {
+        float maxResolution = (float) 400.0;    //edit 'maxResolution' to fit your need
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int newWidth = width;
+        int newHeight = height;
+        float rate;
+
+        if (width > height) {
+            if (maxResolution < width) {
+                rate = maxResolution / width;
+                newHeight = (int) (height * rate);
+                newWidth = (int) maxResolution;
+            }
+        } else {
+            if (maxResolution < height) {
+                rate = maxResolution / height;
+                newWidth = (int) (width * rate);
+                newHeight = (int) maxResolution;
+            }
+        }
+
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+    }
+
+
+
+    public void addSeenById (@NonNull final String id, final String newSeen) {
         myRef.child(ConstValue.NAME_BRANCH).child(id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -131,10 +178,9 @@ public class NetworkData {
                         if (seen == null)
                             seen = new ArrayList<>();
                         seen.add(newSeen);
-                        profile.setSeen(seen);
 
-                        myRef.child(ConstValue.NAME_BRANCH).child(finalId).setValue(profile);
-                        myRef.child(ConstValue.NAME_BRANCH).child(finalId).removeEventListener(this);
+                        myRef.child(ConstValue.NAME_BRANCH).child(id).child(ConstValue.BRANCH_SEEN).setValue(seen);
+                        myRef.child(ConstValue.NAME_BRANCH).child(id).removeEventListener(this);
                     }
 
                     @Override
@@ -144,8 +190,7 @@ public class NetworkData {
                 });
     }
 
-    public void addLikeById(String id) {
-        final String finalId = id;
+    public void addLikeById(@NonNull final String id, final String newLike) {
         myRef.child(ConstValue.NAME_BRANCH).child(id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -154,11 +199,10 @@ public class NetworkData {
                         ArrayList<String> likes = profile.getLikes();
                         if (likes == null)
                             likes = new ArrayList<>();
-                        likes.add(user.getUid());
-                        profile.setLikes(likes);
+                        likes.add(newLike);
 
-                        myRef.child(ConstValue.NAME_BRANCH).child(finalId).setValue(profile);
-                        myRef.child(ConstValue.NAME_BRANCH).child(finalId).removeEventListener(this);
+                        myRef.child(ConstValue.NAME_BRANCH).child(id).child(ConstValue.BRANCH_LIKES).setValue(likes);
+                        myRef.child(ConstValue.NAME_BRANCH).child(id).removeEventListener(this);
                     }
 
                     @Override
@@ -168,13 +212,7 @@ public class NetworkData {
                 });
     }
 
-    public  void addMatchesById (String id, final InfRepo.MainProfileInf newMatches) {
-        if (id == null)
-            id = user.getUid();
-        if (newMatches.getId() == null)
-            newMatches.setId(user.getUid());
-
-        final String finalId = id;
+    public  void addMatchesById (@NonNull final String id, final Profile.Matches newMatche) {
         myRef.child(ConstValue.NAME_BRANCH).child(id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -184,11 +222,10 @@ public class NetworkData {
                         ArrayList<Profile.Matches> matches = profile.getMatches();
                         if (matches == null)
                             matches = new ArrayList<>();
-                        matches.add(new Profile.Matches(newMatches.getId(), newMatches.getName(), "false"));
-                        profile.setMatches(matches);
+                        matches.add(newMatche);
 
-                        myRef.child(ConstValue.NAME_BRANCH).child(finalId).setValue(profile);
-                        myRef.child(ConstValue.NAME_BRANCH).child(finalId).removeEventListener(this);
+                        myRef.child(ConstValue.NAME_BRANCH).child(id).child(ConstValue.BRANCH_MATCHES).setValue(matches);
+                        myRef.child(ConstValue.NAME_BRANCH).child(id).removeEventListener(this);
                     }
 
                     @Override
@@ -198,22 +235,20 @@ public class NetworkData {
                 });
     }
 
-    public void removeLike (String id, final String removeLike) {
-        if (id == null)
-            id = user.getUid();
-        final String finalId = id;
+    public void removeLike (@NonNull final String id, final String removeLike) {
         myRef.child(ConstValue.NAME_BRANCH).child(id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Profile profile = dataSnapshot.getValue(Profile.class);
                         ArrayList<String> likes = profile.getLikes();
+                        if (likes == null)
+                            likes = new ArrayList<>();
                         if (likes.indexOf(removeLike) != -1)
                             likes.remove(likes.indexOf(removeLike));
-                        profile.setLikes(likes);
 
-                        myRef.child(ConstValue.NAME_BRANCH).child(finalId).setValue(profile);
-                        myRef.child(ConstValue.NAME_BRANCH).child(finalId).removeEventListener(this);
+                        myRef.child(ConstValue.NAME_BRANCH).child(id).child(ConstValue.BRANCH_LIKES).setValue(likes);
+                        myRef.child(ConstValue.NAME_BRANCH).child(id).removeEventListener(this);
                     }
 
                     @Override

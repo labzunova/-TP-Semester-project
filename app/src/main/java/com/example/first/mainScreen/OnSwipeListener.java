@@ -1,15 +1,14 @@
 package com.example.first.mainScreen;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
-import com.example.first.MainActivityService;
 
 public class OnSwipeListener implements View.OnTouchListener {
 
@@ -18,7 +17,8 @@ public class OnSwipeListener implements View.OnTouchListener {
 
     private static final int SWIPE_VELOCITY_THRESHOLD = 10;
     private static final int SWIPE_THRESHOLD = 10;
-    private static final float DX = 0.00005f;
+    private static final long SPEED_SWIPE = 150L;
+    private static final int MIN_DELTA_SWIPE = 150;
 
     View view;
     Context context;
@@ -35,65 +35,56 @@ public class OnSwipeListener implements View.OnTouchListener {
     public boolean onTouch(View v, MotionEvent event) {
 
         switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+
+                break;
             case MotionEvent.ACTION_UP: // отпускание
             case MotionEvent.ACTION_CANCEL:
-                if ((deltaLeft < 400) && (deltaRight < 400)) {
-                    LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    deltaLeft = 0;
-                    deltaRight = 0;
-                    linearLay.leftMargin = deltaLeft;
-                    linearLay.rightMargin = deltaRight;
-
-                    view.setLayoutParams(linearLay);
-
-
-                    view.setScaleX(1);
-                    view.setScaleY(1);
+                if ((deltaLeft < MIN_DELTA_SWIPE) && (deltaRight < MIN_DELTA_SWIPE)) {
+                    onNotSwipe();
                 }
-                else if (deltaLeft < -400){
-                    // swipe left
-
-                    // transport information in ViewModel
-                    Log.d(DogFragment.INFORMATION_PROCESS_FRAGMENT, "OnSwipe Left");
-
-                    mViewModel.swipe(ConstValue.SIDE_LEFT);
-
-                    LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    deltaLeft = -1050;
-                    deltaRight = 1050;
-                    linearLay.leftMargin = deltaLeft;
-                    linearLay.rightMargin = deltaRight;
-
-                    view.setLayoutParams(linearLay);
-
-
-                    view.setScaleX(1);
-                    view.setScaleY(1);
+                else if (deltaLeft < -MIN_DELTA_SWIPE){
+                    onSwipeLeft();
                 }
                 else {
-                    // swipe right
-
-                    // transport information in ViewModel
-                    Log.d(DogFragment.INFORMATION_PROCESS_FRAGMENT, "OnCSwipe Right");
-
-                    mViewModel.swipe(ConstValue.SIDE_RIGHT);
-
-                    LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    deltaLeft = 1050;
-                    deltaRight = -1050;
-                    linearLay.leftMargin = deltaLeft;
-                    linearLay.rightMargin = deltaRight;
-
-                    view.setLayoutParams(linearLay);
-
-
-                    view.setScaleX(1);
-                    view.setScaleY(1);
+                    onSwipeRight();
                 }
                 break;
         }
 
         return gestureDetector.onTouchEvent(event);
+    }
+
+    private void onNotSwipe() {
+        LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        deltaLeft = 0;
+        deltaRight = 0;
+        linearLay.leftMargin = deltaLeft;
+        linearLay.rightMargin = deltaRight;
+
+        view.setLayoutParams(linearLay);
+    }
+
+    private void onSwipeLeft() {
+        final long duration = SPEED_SWIPE;
+        final AnimatorSet all = new AnimatorSet();
+        all.playSequentially(ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 0, -1000).setDuration(duration));
+        all.start();
+
+        view = null;
+
+        mViewModel.swipe(ConstValue.SIDE_LEFT);
+    }
+
+    private void onSwipeRight() {
+        final long duration = SPEED_SWIPE;
+        final AnimatorSet all = new AnimatorSet();
+        all.playSequentially(ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 0, 1000).setDuration(duration));
+        all.start();
+
+        view = null;
+
+        mViewModel.swipe(ConstValue.SIDE_RIGHT);
     }
 
     final class GestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -120,30 +111,6 @@ public class OnSwipeListener implements View.OnTouchListener {
             return true;
         }
 
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                float diffY = e2.getY() - e1.getY();
-                float diffX = e2.getX() - e1.getX();
-
-                if (Math.abs(diffX) > Math.abs(diffY)) {
-                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffX > 0) {
-                            onSwipeRight();
-                        } else {
-                            onSwipeLeft();
-                        }
-                    }
-                } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (diffY > 0) {
-                        onSwipeBottom();
-                    } else {
-                        onSwipeTop();
-                    }
-                }
-
-                return true;
-            }
-
     }
 
     public void onScrollRight(float diffX) {
@@ -156,15 +123,6 @@ public class OnSwipeListener implements View.OnTouchListener {
         linearLay.rightMargin = deltaRight;
 
         view.setLayoutParams(linearLay);
-
-        if ((deltaRight > 0) && (view.getScaleX() + DX * diffX< 1)) {
-            view.setScaleX(view.getScaleX() + DX * diffX);
-            view.setScaleY(view.getScaleY() + DX * diffX);
-        }
-        else if ((view.getScaleX() - DX * diffX > 0.9f) && (deltaRight < 0)) {
-            view.setScaleX(view.getScaleX() - DX * diffX);
-            view.setScaleY(view.getScaleY() - DX * diffX);
-        }
     }
 
     public void onScrollLeft(float diffX) {
@@ -177,31 +135,6 @@ public class OnSwipeListener implements View.OnTouchListener {
         linearLay.rightMargin = deltaRight;
 
         view.setLayoutParams(linearLay);
-
-        if ((deltaLeft > 0) && (view.getScaleX() + DX * diffX < 1)) {
-            view.setScaleX(view.getScaleX() + DX * diffX);
-            view.setScaleY(view.getScaleY() + DX * diffX);
-        }
-        else if ((view.getScaleX() - DX * diffX > 0.9f) && (deltaLeft < 0)) {
-            view.setScaleX(view.getScaleX() - DX * diffX);
-            view.setScaleY(view.getScaleY() - DX * diffX);
-        }
-    }
-
-    public void onSwipeRight() {
-        deltaRight = 550;
-        deltaLeft = -550;
-    }
-
-    public void onSwipeLeft() {
-        deltaRight = -550;
-        deltaLeft = 550;
-    }
-
-    public void onSwipeTop() {
-    }
-
-    public void onSwipeBottom() {
     }
 
 }

@@ -3,18 +3,21 @@ package com.example.first.mainScreen;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.example.first.Profile;
+import com.example.first.AccountActivity;
+import com.example.first.AccountEditActivity;
+import com.example.first.MatchesActivity;
 import com.example.first.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    private MainViewModel mViewModel;
 
     // but of menu
     ImageView editBut, profileBut, matchesBut, exitBut;
@@ -28,35 +31,29 @@ public class MainActivity extends AppCompatActivity {
         editBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(MainActivity.this, AccountEditActivity.class));
-
-                mViewModel.swipe(ConstValue.SIDE_LEFT);
+                startActivity(new Intent(MainActivity.this, AccountEditActivity.class));
             }
         });
 
         profileBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(MainActivity.this, AccountActivity.class));
-
-                mViewModel.swipe(ConstValue.SIDE_RIGHT);
+                startActivity(new Intent(MainActivity.this, AccountActivity.class));
             }
         });
 
         matchesBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(MainActivity.this, MatchesActivity.class));
-
-                mViewModel.swipe(ConstValue.DEFAULT);
+                startActivity(new Intent(MainActivity.this, MatchesActivity.class));
             }
         });
 
         exitBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //FirebaseAuth.getInstance().signOut();
-                //startActivity(new Intent(MainActivity.this, AccountActivity.class));
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(MainActivity.this, AccountActivity.class));
             }
         });
     }
@@ -71,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         InitView();
 
-        mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        MainViewModel mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         mViewModel.getProfile().observe(this, new Observer<MainViewModel.DataProfile>() {
             @Override

@@ -1,5 +1,8 @@
 package com.example.first.mainScreen;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -15,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.first.Profile;
 import com.example.first.R;
 
@@ -31,7 +35,6 @@ public class DogFragment extends Fragment {
 
     private ImageView imgDogMain;
     private TextView textMessenger;
-    private View view;
     private Bitmap bmpImage;
     private String messenger = DEFAULT_STRING;
 
@@ -71,8 +74,6 @@ public class DogFragment extends Fragment {
 
             bmpImage = getArguments().getParcelable(ARG_ID_PHOTO);
             messenger = getArguments().getString(ARG_INF_DOG);
-            if (bmpImage != null)
-                messenger = "NNNNNNNNNNNNNNNN";
         }
 
     }
@@ -90,7 +91,7 @@ public class DogFragment extends Fragment {
         else {
             imgDogMain.setImageResource(R.drawable.dog_example2);
         }
-        imgDogMain.setImageResource(R.drawable.dog_example2);
+
         textMessenger.setText(messenger);
 
         Log.d(INFORMATION_PROCESS_FRAGMENT, "we have new fragment in OnCreateView");
@@ -99,11 +100,22 @@ public class DogFragment extends Fragment {
         return v;
     }
 
+
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        this.view = view;
+        ValueAnimator animator;
+        animator = ValueAnimator.ofFloat(0.5f, 1f);
+        animator.setDuration(300L);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(final ValueAnimator animation) {
+                view.setScaleX((float) animation.getAnimatedValue());
+                view.setScaleY((float) animation.getAnimatedValue());
+            }
+        });
+        animator.start();
     }
 
     @Override
