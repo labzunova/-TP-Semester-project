@@ -1,21 +1,13 @@
 package com.example.first.mainScreen.Storage;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
-import com.bumptech.glide.Glide;
 import com.example.first.Profile;
 import com.example.first.mainScreen.ConstValue;
 import com.example.first.mainScreen.InfRepo;
-import com.example.first.mainScreen.MainViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,22 +21,19 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class NetworkData {
 
     private DatabaseReference myRef;
     private FirebaseUser user;
     private StorageReference storageRef;
-    private Context context;
 
     private final long ONE_MEGABYTE = 1024 * 1024;
 
     private MutableLiveData<InfRepo.UserInformation> newUserProfile;
 
-    public NetworkData(Context context){
+    public NetworkData(){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        this.context = context;
         myRef = database.getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
         storageRef = FirebaseStorage.getInstance().getReference().child(ConstValue.NAME_BRANCH);
@@ -133,7 +122,6 @@ public class NetworkData {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        return;
                     }
                 });
 
@@ -212,7 +200,7 @@ public class NetworkData {
                 });
     }
 
-    public  void addMatchesById (@NonNull final String id, final Profile.Matches newMatche) {
+    public  void addMatchesById (@NonNull final String id, final Profile.Matches newMatch) {
         myRef.child(ConstValue.NAME_BRANCH).child(id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -222,7 +210,7 @@ public class NetworkData {
                         ArrayList<Profile.Matches> matches = profile.getMatches();
                         if (matches == null)
                             matches = new ArrayList<>();
-                        matches.add(newMatche);
+                        matches.add(newMatch);
 
                         myRef.child(ConstValue.NAME_BRANCH).child(id).child(ConstValue.BRANCH_MATCHES).setValue(matches);
                         myRef.child(ConstValue.NAME_BRANCH).child(id).removeEventListener(this);

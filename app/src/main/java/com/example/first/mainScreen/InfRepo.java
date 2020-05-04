@@ -1,8 +1,6 @@
 package com.example.first.mainScreen;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -101,7 +99,7 @@ public class InfRepo implements NetworkData.InfListener {
                 @Override
                 public void onChanged(UserInformation userInformation) {
                     newUserInf = userInformation;
-                    userInf.postValue(userInformation);
+                    userInf.postValue(newUserInf);
                     userInf.removeSource(newInf);
                 }
             });
@@ -109,7 +107,7 @@ public class InfRepo implements NetworkData.InfListener {
     }
 
     private void swipeRight() {
-        if (myUser.profile.getLikes().indexOf(lastUserInf.id) == -1) {
+        if ((myUser.profile.getLikes() == null) || (myUser.profile.getLikes().indexOf(lastUserInf.id) == -1)) {
 
             networkData.addLikeById(lastUserInf.id, myUser.id);
         }
@@ -136,11 +134,6 @@ public class InfRepo implements NetworkData.InfListener {
             bitmap = null;
             name = null;
             id = null;
-        }
-
-        public UserInformation(Profile profile, Bitmap bitmap) {
-            this.profile = profile;
-            this.bitmap = bitmap;
         }
     }
 }

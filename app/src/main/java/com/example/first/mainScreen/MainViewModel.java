@@ -9,7 +9,7 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
 
 public class MainViewModel extends AndroidViewModel {
-    private MediatorLiveData<DataProfile> currentUser = new MediatorLiveData<DataProfile>();
+    private MediatorLiveData<DataProfile> currentUser = new MediatorLiveData<>();
     private boolean isProfile;
 
     public MainViewModel(@NonNull Application application) {
@@ -30,7 +30,7 @@ public class MainViewModel extends AndroidViewModel {
         currentUser.addSource(informationLiveData, new Observer<InfRepo.UserInformation>() {
             @Override
             public void onChanged(InfRepo.UserInformation userInformation) {
-                String infUser = new String();
+                String infUser = "";
                 Bitmap bitmap;
 
                 if (userInformation == null) {
@@ -51,13 +51,13 @@ public class MainViewModel extends AndroidViewModel {
                     bitmap = userInformation.bitmap;
                 }
 
-                currentUser.postValue(new DataProfile(infUser,bitmap));
+                currentUser.postValue(new DataProfile(infUser, bitmap));
                 currentUser.removeSource(informationLiveData);
             }
         });
     }
 
-    class DataProfile {
+    static class DataProfile {
         private String infProfile;
         private Bitmap mainImageUser;
 

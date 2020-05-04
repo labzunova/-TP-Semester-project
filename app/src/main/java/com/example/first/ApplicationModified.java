@@ -13,7 +13,7 @@ public class ApplicationModified extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        networkData = new NetworkData(getApplicationContext());
+        networkData = new NetworkData();
         mInfRepo = new InfRepo(networkData);
     }
 
