@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -45,6 +46,7 @@ public class Albom extends AppCompatActivity {
     private int allCount;
     private List<StorageReference> galleryList;
     private String message;
+    private final String KEY = "counter";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,10 @@ public class Albom extends AppCompatActivity {
 
         img.setOnTouchListener(new OnSwipeListener(Albom.this));
 
+        if (savedInstanceState != null){
+            count = savedInstanceState.getInt(KEY);
+        }
+
         storageRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
@@ -70,6 +76,12 @@ public class Albom extends AppCompatActivity {
                 displayingPhotos(count);
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putInt(KEY, count);
     }
 
     class OnSwipeListener implements View.OnTouchListener {
