@@ -48,7 +48,7 @@ public class MatchesActivity extends AppCompatActivity {
     private List<UserModel> result; // matches array
     FirebaseStorage storage;
     StorageReference storageRef;
-    final long ONE_MEGABYTE = 1024 * 1024;
+    final long BATCH_SIZE = 1024 * 1024;
 
     private TextView noMatches;
 
@@ -61,7 +61,6 @@ public class MatchesActivity extends AppCompatActivity {
             this.seen = seen;
         }
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +82,6 @@ public class MatchesActivity extends AppCompatActivity {
         mRef = FirebaseDatabase.getInstance().getReference("Profiles").child(user.getUid()).child("matches");
 
         UpdateList();
-
     }
 
     private void UpdateList(){
@@ -164,11 +162,11 @@ public class MatchesActivity extends AppCompatActivity {
 
             UserModel user = matches.get(position);
             holder.nameView.setText(user.name);
-            if (user.seen.equals("false")) holder.cardView.setCardBackgroundColor(Color.parseColor("#40DF38B1"));
+            if (user.seen.equals("false")) holder.cardView.setCardBackgroundColor(Color.parseColor("#70F8BBD0"));
 
             // photo adding
             StorageReference myRef = storageRef.child("Profiles").child(user.id).child("AvatarImage");
-            myRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            myRef.getBytes(BATCH_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
@@ -195,9 +193,7 @@ public class MatchesActivity extends AppCompatActivity {
         }
     }
 
-
     class myViewHolder extends RecyclerView.ViewHolder {
-
         TextView nameView;
         CardView cardView;
         ImageView photoView;

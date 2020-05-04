@@ -7,4 +7,9 @@
     <color name="brightPinkOpacity">#50DF38B1</color>
     <color name="customPink">#9F7281</color>
     <color name="customPinkLight">#E1D5DD</color>
+    <color name="textFields">#70F8BBD0</color>
+    <color name="pageTitle">#60E91E63</color>
+    <color name="black">#000</color>
+    <color name="seenDogInList">#20BDBDBD</color>
+    <color name="opacity0">#00000000</color>
 </resources>

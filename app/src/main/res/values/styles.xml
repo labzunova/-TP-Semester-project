@@ -10,6 +10,39 @@
 
     <style name="editsStyle">
         <item name="colorAccent">@color/customDarkPink</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:textColorHint">@color/customDarkPink</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="fontFamily">@font/roboto_light</item>
+        <item name="boxBackgroundColor">@color/textFields</item>
+        <item name="boxBackgroundMode">filled</item>
     </style>
+
+    <style name="pageTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">70dp</item>
+        <item name="android:background">@color/pageTitle</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:gravity">center</item>
+        <!--<item name="android:shadowColor">@color/customDarkPink</item>
+        <item name="android:shadowDx">-3</item>
+        <item name="android:shadowDy">-3</item>
+        <item name="android:shadowRadius">5</item>-->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="backgroundStyle">
+        <item name="android:src">@drawable/bg</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:alpha">0.2</item>
+    </style>
+
+
 
 </resources>
