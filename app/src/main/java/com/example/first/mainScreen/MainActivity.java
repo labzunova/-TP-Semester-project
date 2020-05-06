@@ -19,11 +19,7 @@ import com.example.first.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
-
 public class MainActivity extends AppCompatActivity {
-
-    // but of menu
-    ImageView editBut, profileBut, matchesBut, exitBut;
 
     private void InitView() {
 

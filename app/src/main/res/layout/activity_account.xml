@@ -48,16 +48,17 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="60"
-                android:text="TinDog"
+                android:text="@string/myProfileName"
                 style="@style/pageTitle"
                 android:background="@color/opacity0"/>
 
-            <ImageView
+            <Button
+                android:id="@+id/accountEdit"
+                android:layout_weight="14"
                 android:layout_width="0dp"
-                android:layout_margin="8dp"
+                android:layout_margin="5dp"
                 android:layout_height="match_parent"
-                android:layout_weight="20"
-                android:src="@drawable/edit5"/>
+                android:background="@drawable/edit5" />
 
         </LinearLayout>
 

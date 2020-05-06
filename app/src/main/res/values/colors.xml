@@ -12,4 +12,6 @@
     <color name="black">#000</color>
     <color name="seenDogInList">#20BDBDBD</color>
     <color name="opacity0">#00000000</color>
+    <color name="toLike">#9CCC65</color>
+    <color name="toDislike">#ef5350</color>
 </resources>

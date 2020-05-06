@@ -1,37 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_gravity="center"
-    android:layout_height="match_parent"
+    android:layout_height="440dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".mainScreen.DogFragment"
     android:id="@+id/fr">
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:layout_gravity="center">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/imgDogMain"
-                android:src="@drawable/dog"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_margin="4dp"
+        android:id="@+id/imgDogMain"
+        android:src="@drawable/dog"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/textInf"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Name, Age \n city"
-                android:background="#40E91E63"
-                style="@style/TextViewStyle"
-                android:textSize="30sp"
-                android:id="@+id/textInf"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:gravity="center" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name, Age \n city"
+        android:layout_marginBottom="4dp"
+        android:background="@color/pageTitle"
+        style="@style/TextViewStyle"
+        android:textSize="24sp"
+        android:fontFamily="@font/roboto_thin"
+        android:id="@+id/textInf"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgDogMain"
+        android:gravity="center" />
 
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

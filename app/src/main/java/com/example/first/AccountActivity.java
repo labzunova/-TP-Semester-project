@@ -42,8 +42,6 @@ public class AccountActivity extends AppCompatActivity {
     private boolean isImageScaled = false;
     private String str = new String("");
 
-
-
     private DatabaseReference databaseProfile;
     private FirebaseUser user;
     private String userId;
@@ -87,6 +85,13 @@ public class AccountActivity extends AppCompatActivity {
                 }
             });
 
+        Button accountEdit = (Button) findViewById(R.id.accountEdit);
+            accountEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(AccountActivity.this,AccountEditActivity.class));
+                }
+            });
        /* imgSetting = findViewById(R.id.edit);
         imgExit = findViewById(R.id.exit);
         imgScroll = findViewById(R.id.cards);
