@@ -25,4 +25,10 @@
     <string name="addressHint">Address</string>
     <string name="phoneHint">Phone number</string>
     <string name="done_editing">Done</string>
+    <string name="matches">matches</string>
+    <string name="cards">cards</string>
+    <string name="profile">profile</string>
+    <string name="swipe">SWIPE</string>
+    <string name="left_to_dislike">left to dislike</string>
+    <string name="right_to_like">right to like</string>
 </resources>

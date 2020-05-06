@@ -7,21 +7,21 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
+        android:name=".ApplicationModified"
         android:allowBackup="true"
         android:icon="@drawable/dog"
         android:label="@string/app_name"
         android:roundIcon="@drawable/dog"
         android:supportsRtl="true"
+
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-        <service android:name=".MainActivityService" />
-        <service android:name=".RegistrationService" />
-        <activity android:name=".MatchesActivity"></activity>
+        <activity android:name=".MatchesActivity"/>
         <activity android:name=".CurtainActivity" />
-        <activity android:name=".AccountActivity" />
+        <activity android:name=".mainScreen.MainActivity" />
         <activity android:name=".AccountEditActivity" />
-        <activity android:name=".MainActivity" />
         <activity android:name=".RegistrationActivity" />
-        <activity android:name=".AuthorizationActivity">
+        <activity android:name=".AuthorizationActivity"/>
+        <activity android:name=".AccountActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

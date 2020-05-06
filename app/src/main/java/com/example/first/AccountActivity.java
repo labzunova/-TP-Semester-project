@@ -4,25 +4,26 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 //import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 //import android.widget.Button;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 //import com.facebook.drawee.backends.pipeline.Fresco;
 //import com.facebook.drawee.view.SimpleDraweeView;
 //import com.facebook.imagepipeline.request.ImageRequest;
+import com.example.first.mainScreen.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -51,6 +52,7 @@ public class AccountActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageRef;
 
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +67,30 @@ public class AccountActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
 
-        imgSetting = findViewById(R.id.edit);
+            BottomNavigationView bottomNavigationView;
+            bottomNavigationView = findViewById(R.id.testNavigation);
+            bottomNavigationView.setSelectedItemId(R.id.profile);
+            bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.profile:
+                            return true;
+                        case R.id.matches:
+                            startActivity(new Intent(AccountActivity.this, MatchesActivity.class));
+                            return true;
+                        case R.id.cards:
+                            startActivity(new Intent(AccountActivity.this,MainActivity.class));
+                            return true;
+                    }
+                    return false;
+                }
+            });
+
+       /* imgSetting = findViewById(R.id.edit);
         imgExit = findViewById(R.id.exit);
-        imgScroll = findViewById(R.id.to_str_scroll);
-        imgMatch = findViewById(R.id.match);
+        imgScroll = findViewById(R.id.cards);
+        imgMatch = findViewById(R.id.matches);
 
         labName = findViewById(R.id.i_name);
         labEmail = findViewById(R.id.i_email);
@@ -107,7 +129,7 @@ public class AccountActivity extends AppCompatActivity {
                 }
              });
 
-        imgSetting.setOnClickListener(new View.OnClickListener() {
+       imgSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AccountActivity.this, AccountEditActivity.class));
@@ -195,7 +217,7 @@ public class AccountActivity extends AppCompatActivity {
 
 
             }
-        });
+        });*/
     }
 
 
