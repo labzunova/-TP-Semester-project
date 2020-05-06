@@ -52,6 +52,17 @@
                 app:layout_constraintTop_toTopOf="parent"
                 />
 
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottomNavigation"
+                android:background="@color/pageTitle"
+                android:layout_marginTop="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                app:itemIconTint="@color/nav_icons_color"
+                app:itemTextColor="@color/nav_icons_color"
+                android:layout_gravity="bottom"
+                app:menu="@menu/menu"/>
+
 
             <ImageView
                 android:layout_width="250dp"
@@ -315,7 +326,7 @@ android:src="@drawable/ic_img_match_love"
             android:layout_height="87dp"
             android:layout_below="@id/liner_layout"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="1dp"
             android:layout_marginRight="10dp"
             android:fontFamily="casual"
             android:gravity="center"
@@ -329,6 +340,8 @@ android:src="@drawable/ic_img_match_love"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
 
 
 

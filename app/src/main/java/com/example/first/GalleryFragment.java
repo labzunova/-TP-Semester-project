@@ -124,7 +124,7 @@ public class GalleryFragment extends Fragment {
                     @Override
                     public void onSuccess(byte[] bytes) {
                         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        holder.image.setImageBitmap(AccountEditActivity.resizeBitmap(bitmap, 500.0f));
+                        holder.image.setImageBitmap(AccountEditActivity.resizeBitmap(bitmap, 200.0f));
                         Log.d(FRAGMENT_TAG, "getButes onSuccess() listener on element " + position);
                     }
                 }).addOnFailureListener(new OnFailureListener() {

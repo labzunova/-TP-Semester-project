@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 //import android.widget.Button;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 //import com.facebook.imagepipeline.request.ImageRequest;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -51,6 +53,8 @@ public class AccountActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageRef;
 
+    BottomNavigationView bottomNavigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,30 @@ public class AccountActivity extends AppCompatActivity {
         imgExit = findViewById(R.id.exit);
         imgScroll = findViewById(R.id.to_str_scroll);
         imgMatch = findViewById(R.id.match);
+
+        /*
+        bottomNavigationView = findViewById(R.id.bottomNavigation);
+        bottomNavigationView.setSelectedItemId(R.id.profile);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.profile:
+                        return true;
+                    case R.id.matches:
+                        startActivity(new Intent(AccountActivity.this, MatchesActivity.class));
+                        return true;
+                    case R.id.cards:
+                        startActivity(new Intent(AccountActivity.this, MainActivity.class));
+                        return true;
+                }
+
+
+                return false;
+            }
+        });
+
+         */
 
         labName = findViewById(R.id.i_name);
         labEmail = findViewById(R.id.i_email);
@@ -186,16 +214,20 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                photoProfil.setImageBitmap(AccountEditActivity.resizeBitmap(bitmap, 1000.0f));
+                photoProfil.setImageBitmap(AccountEditActivity.resizeBitmap(bitmap, 800.0f));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 photoProfil.setImageResource(R.drawable.dog);
-
-
             }
         });
+
+        /*
+
+
+
+         */
     }
 
 

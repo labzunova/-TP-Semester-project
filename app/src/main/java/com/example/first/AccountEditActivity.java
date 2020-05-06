@@ -197,7 +197,7 @@ public class AccountEditActivity extends AppCompatActivity implements itemClickL
                 if (savedInstanceState == null) {
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .add(R.id.galleryFragment, new GalleryFragment())
+                            .replace(R.id.galleryFragment, new GalleryFragment())
                             .commit();
                 }
             }
@@ -231,21 +231,27 @@ public class AccountEditActivity extends AppCompatActivity implements itemClickL
         // Загрузка фотки профиля со Storage
         final long BATCH_SIZE = 1024 * 1024; // 1 mb
         StorageReference avatarRef = storageRef.child("Profiles").child(userId).child("AvatarImage");
+        Log.d("LeakMemory", "before getBytes: ");
         avatarRef.getBytes(BATCH_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
+                Log.d("LeakMemory", "onSuccess: ");
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                imgPreview.setImageBitmap(resizeBitmap(bitmap, 600.0f));
+                /*
                 Glide
                         .with(getApplicationContext())
                         .load(resizeBitmap(bitmap, 600.0f))
                         .centerCrop()
                         .into(imgPreview);
+                 */
                 // imgPreview.setRotation((float) 90.0);
 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                Log.d("LeakMemory", "onFailure: ");
                 Toast.makeText(getApplicationContext(), "No Such file or Path found!!", Toast.LENGTH_LONG).show();
             }
         });

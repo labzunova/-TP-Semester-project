@@ -22,8 +22,8 @@ import com.google.firebase.storage.StorageReference;
 public class ViewPagerItemFragment extends Fragment {
     private static final String FRAGMENT_TAG = "PictureBrowseFragTag";
 
-    StorageReference imageRef;
-    ImageView image;
+    private StorageReference imageRef;
+    private ImageView image;
 
     public ViewPagerItemFragment() { }
 

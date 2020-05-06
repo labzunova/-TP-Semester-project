@@ -33,10 +33,8 @@ public class PictureBrowser extends Fragment {
     private List<StorageReference> imagesRefs;
     private int position;
 
-    private Activity activity;
     private ViewPager imagePager;
     private ImagesPagerAdapter imagePagerAdapter;
-    private ImageView image;
 
     public PictureBrowser() { }
 
@@ -60,7 +58,7 @@ public class PictureBrowser extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        imagePager = (ViewPager) view.findViewById(R.id.imagePager);
+        imagePager = view.findViewById(R.id.imagePager);
 
         ArrayList<Fragment> fragments = new ArrayList<>();
         for (int i = 0; i < imagesRefs.size(); i++) {
@@ -76,12 +74,9 @@ public class PictureBrowser extends Fragment {
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof Activity) {
-            activity = (Activity)context;
-        }
+    public void onDestroyView() {
+        // imagePagerAdapter = null;
+        super.onDestroyView();
+
     }
-
-
 }
