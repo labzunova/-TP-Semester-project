@@ -7,10 +7,12 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,9 +38,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
     // layout references
     private Button mRegisterBtn;
+    private Button mBackButton;
     private TextInputEditText mEmailField;
     private TextInputEditText mPasswordField;
-    private TextInputEditText mNameField;
 
     // firebase
     private FirebaseAuth mAuth;
@@ -65,8 +67,10 @@ public class RegistrationActivity extends AppCompatActivity {
 
         mEmailField = (TextInputEditText) findViewById(R.id.emailFieldInp);
         mPasswordField = (TextInputEditText) findViewById(R.id.passwordFieldInp);
+        mPasswordField.setTransformationMethod(new PasswordTransformationMethod()); // for font family
+        mPasswordField.setTypeface(Typeface.DEFAULT);
         mRegisterBtn = (Button) findViewById(R.id.registerBtn);
-        mNameField = (TextInputEditText) findViewById(R.id.nameFieldInp);
+        mBackButton = (Button) findViewById(R.id.backToAuthBtn);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -74,13 +78,12 @@ public class RegistrationActivity extends AppCompatActivity {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 final DatabaseReference myRef = database.getReference();
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                String name = mNameField.getText().toString();
                 String email = mEmailField.getText().toString();
 
                 if (firebaseAuth.getCurrentUser() != null) {
 
                     Profile profile = new Profile();
-                    profile.setName(name);
+                    profile.setName(str);
                     profile.setEmail(email);
                     profile.setPhone(str);
                     profile.setAddress(str);
@@ -117,7 +120,6 @@ public class RegistrationActivity extends AppCompatActivity {
                         }
                     });
 
-
                     // uploading default avatar to firebase storage
                     // Uri uri = Uri.parse("/Users/Ivan/AndroidStudioProjects/DashasFirebase/-TP-Semester-project/app/src/main/res/drawable/dog.jpg");
                     Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
@@ -136,6 +138,13 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startRegister();
+            }
+        });
+
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegistrationActivity.this, AuthorizationActivity.class));
             }
         });
     }

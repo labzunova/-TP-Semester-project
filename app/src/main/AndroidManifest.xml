@@ -16,7 +16,6 @@
 
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         <activity android:name=".MatchesActivity"/>
-        <activity android:name=".CurtainActivity" />
         <activity android:name=".mainScreen.MainActivity" />
         <activity android:name=".AccountEditActivity" />
         <activity android:name=".RegistrationActivity" />

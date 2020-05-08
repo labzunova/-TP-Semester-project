@@ -47,6 +47,7 @@ public class AccountActivity extends AppCompatActivity {
     private String userId;
     private Profile currentUserProfile;
     private Uri filepath;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     FirebaseStorage storage;
     StorageReference storageRef;
 
@@ -59,13 +60,16 @@ public class AccountActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
 
+
         databaseProfile = FirebaseDatabase.getInstance().getReference("Profiles");
         user = FirebaseAuth.getInstance().getCurrentUser();
-        userId = user.getUid();
+        if (user == null)         //back to auth if currentUser = null
+            startActivity(new Intent(AccountActivity.this, AuthorizationActivity.class));
+        if (user != null) userId = user.getUid();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
 
-            BottomNavigationView bottomNavigationView;
+        BottomNavigationView bottomNavigationView;
             bottomNavigationView = findViewById(R.id.testNavigation);
             bottomNavigationView.setSelectedItemId(R.id.profile);
             bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -85,7 +89,7 @@ public class AccountActivity extends AppCompatActivity {
                 }
             });
 
-        Button accountEdit = (Button) findViewById(R.id.accountEdit);
+      /*     Button accountEdit = (Button) findViewById(R.id.accountEdit);
             accountEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

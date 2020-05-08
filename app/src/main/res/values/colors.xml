@@ -10,8 +10,8 @@
     <color name="textFields">#70F8BBD0</color>
     <color name="pageTitle">#60E91E63</color>
     <color name="black">#000</color>
-    <color name="seenDogInList">#20BDBDBD</color>
     <color name="opacity0">#00000000</color>
     <color name="toLike">#9CCC65</color>
     <color name="toDislike">#ef5350</color>
+    <color name="buttonColor">#9E9E9E</color>
 </resources>

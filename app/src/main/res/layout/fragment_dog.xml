@@ -7,30 +7,24 @@
     tools:context=".mainScreen.DogFragment"
     android:id="@+id/fr">
 
-
     <ImageView
         android:layout_width="match_parent"
-        android:maxHeight="400dp"
-        android:layout_height="400dp"
+        android:layout_height="376dp"
         android:layout_margin="4dp"
         android:id="@+id/imgDogMain"
         android:src="@drawable/dog"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/textInf"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/textInf"
+        style="@style/TextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="Name, Age \n city"
         android:layout_marginBottom="4dp"
-        android:background="@color/pageTitle"
-        style="@style/TextViewStyle"
+        android:gravity="left"
         android:textSize="24sp"
-        android:fontFamily="@font/roboto_thin"
-        android:id="@+id/textInf"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgDogMain"
-        android:gravity="center" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

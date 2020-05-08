@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:background="?attr/selectableItemBackground"
-    android:padding="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -14,9 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="4dp"
-        app:cardBackgroundColor="@color/seenDogInList"
-        app:cardCornerRadius="10dp"
+        android:background="@android:color/transparent"
         app:cardElevation="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -24,8 +21,8 @@
         <ImageView
             android:id="@+id/photo"
             tools:src="@color/customDarkPink"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_margin="4dp"

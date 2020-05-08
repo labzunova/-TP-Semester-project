@@ -6,7 +6,7 @@
     <string name="loginPageName">Authorization</string>
     <string name="registrationBtnName">Are you new?</string>
     <string name="registrationPageName">Registration</string>
-    <string name="nameHint">your name</string>
+    <string name="nameHint">Your name</string>
     <string name="registrateBtnText">Registrate</string>
     <string name="myProfileName">My Profile</string>
     <string name="testName">testName</string>
@@ -24,11 +24,12 @@
     <string name="cityHint">City</string>
     <string name="addressHint">Address</string>
     <string name="phoneHint">Phone number</string>
-    <string name="done_editing">Done</string>
+    <string name="done_editing">Save</string>
     <string name="matches">matches</string>
     <string name="cards">cards</string>
     <string name="profile">profile</string>
     <string name="swipe">SWIPE</string>
     <string name="left_to_dislike">left to dislike</string>
     <string name="right_to_like">right to like</string>
+    <string name="back_to_authorization">Back to authorization</string>
 </resources>
