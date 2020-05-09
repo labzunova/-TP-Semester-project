@@ -7,6 +7,7 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
 
 import com.example.first.ApplicationModified;
+import com.example.first.Matches;
 import com.example.first.Profile;
 import com.example.first.mainScreen.Storage.NetworkData;
 
@@ -14,16 +15,16 @@ import java.util.ArrayList;
 
 public class InfRepo implements NetworkData.InfListener {
     private NetworkData networkData;
-    private UserInformation newUserInf;
-    private UserInformation lastUserInf;
+    private UserInformation newUserInfo;
+
     private UserInformation myUser;
     private ArrayList<String> idProfiles;
+    private MediatorLiveData<UserInformation> userInfo;
 
     public InfRepo(NetworkData networkData) {
         idProfiles = new ArrayList<>();
         myUser = new UserInformation();
-        newUserInf = new UserInformation();
-        lastUserInf = new UserInformation();
+        newUserInfo = null;
 
         this.networkData = networkData;
         networkData.Connect(this);
@@ -45,68 +46,64 @@ public class InfRepo implements NetworkData.InfListener {
         return ApplicationModified.from(context).getInfRepo();
     }
 
-    private MediatorLiveData<UserInformation> userInf;
 
+    public LiveData<UserInformation> firstProfile() {
+        userInfo = new MediatorLiveData<>();
 
-    public LiveData<UserInformation> swipe(int side) {
-        userInf = new MediatorLiveData<>();
-        lastUserInf = newUserInf;
-
-        if (side == ConstValue.SIDE_LEFT) {
+        if (newUserInfo == null)
             newUserInformation();
-        }
-        else if (side == ConstValue.SIDE_RIGHT) {
-            swipeRight();
-            newUserInformation();
-        }
-        else if (side == ConstValue.DEFAULT) {
-            if (newUserInf.profile == null)
-                newUserInformation();
-            else {
-                userInf.postValue(newUserInf);
-            }
+        else
+            userInfo.setValue(newUserInfo);
 
-        }
-
-        // TODO go local storage
-
-        return userInf;
+        return userInfo;
     }
 
     private void newUserInformation() {
-        newUserInf = new UserInformation();
+        UserInformation lastUserInf = newUserInfo;
+        newUserInfo = null;
+
         ArrayList<String> seen = new ArrayList<>();
         if ((myUser != null) && (myUser.profile.getSeen() != null))
             seen = myUser.profile.getSeen();
 
-        seen.add(lastUserInf.id);
+        if (lastUserInf != null) {
+            seen.add(lastUserInf.id);
+            networkData.addSeenById(myUser.id, lastUserInf.id);
+        }
 
-        networkData.addSeenById(myUser.id, lastUserInf.id);
         int i = 0;
-        while (i < idProfiles.size() && (newUserInf.id == null)) {
+        while (i < idProfiles.size() && (newUserInfo == null)) {
             if (seen.indexOf(idProfiles.get(i)) == -1) {
-                newUserInf.id = idProfiles.get(i);
+                newUserInfo = new UserInformation();
+                newUserInfo.id = idProfiles.get(i);
             }
             i++;
         }
 
-        if (newUserInf.id == null)
-            userInf.postValue(null);
+        if (newUserInfo == null)
+            userInfo.setValue(null);
         else {
-            final LiveData<InfRepo.UserInformation> newInf = networkData.getNewProfile(newUserInf.id);
+            final LiveData<InfRepo.UserInformation> newInf = networkData.getNewProfile(newUserInfo.id);
 
-            userInf.addSource(newInf, new Observer<UserInformation>() {
+            userInfo.addSource(newInf, new Observer<UserInformation>() {
                 @Override
                 public void onChanged(UserInformation userInformation) {
-                    newUserInf = userInformation;
-                    userInf.postValue(newUserInf);
-                    userInf.removeSource(newInf);
+                    newUserInfo = userInformation;
+                    userInfo.postValue(newUserInfo);
+                    userInfo.removeSource(newInf);
                 }
             });
         }
     }
 
-    private void swipeRight() {
+    public LiveData<UserInformation> swipeRight() {
+        userInfo = new MediatorLiveData<>();
+        UserInformation lastUserInf = newUserInfo;
+        newUserInformation();
+
+        if (lastUserInf == null)
+            return userInfo;
+
         if ((myUser.profile.getLikes() == null) || (myUser.profile.getLikes().indexOf(lastUserInf.id) == -1)) {
 
             networkData.addLikeById(lastUserInf.id, myUser.id);
@@ -114,12 +111,21 @@ public class InfRepo implements NetworkData.InfListener {
         else {
             networkData.removeLike(myUser.id, lastUserInf.id);
 
-            Profile.Matches myMatch = new Profile.Matches(lastUserInf.id, lastUserInf.name, "false");
+            Matches myMatch = new Matches(lastUserInf.id, lastUserInf.name, "false");
             networkData.addMatchesById(myUser.id, myMatch);
 
-            Profile.Matches youMatch = new Profile.Matches(myUser.id, myUser.name, "false");
+            Matches youMatch = new Matches(myUser.id, myUser.name, "false");
             networkData.addMatchesById(lastUserInf.id, youMatch);
         }
+
+        return userInfo;
+    }
+
+    public LiveData<UserInformation> swipeLeft() {
+        userInfo = new MediatorLiveData<>();
+
+        newUserInformation();
+        return userInfo;
     }
 
 

@@ -1,37 +1,28 @@
 package com.example.first.mainScreen;
-
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.example.first.Profile;
 import com.example.first.R;
 
 public class DogFragment extends Fragment {
-
-    public static final String INFORMATION_PROCESS_FRAGMENT = "infFragment";
-
     private static final String ARG_ID_PHOTO = "idPhoto";
     private static final String ARG_INF_DOG = "infDog";
 
     private static final String DEFAULT_STRING = "Default";
 
-    MainViewModel mViewModel;
+    onListener mActivity;
 
     private ImageView imgDogMain;
     private TextView textMessenger;
@@ -41,37 +32,35 @@ public class DogFragment extends Fragment {
     public DogFragment() {
     }
 
+    interface onListener{
+        void swipeLeft();
+        void swipeRight();
+    }
 
     public static DogFragment newInstance(String infUser, Bitmap bmpImage) {
-        Log.d(INFORMATION_PROCESS_FRAGMENT, "Get data for initialisation");
-
         DogFragment fragment = new DogFragment();
         Bundle args = new Bundle();
 
         if (infUser != null) {
-            Log.d(INFORMATION_PROCESS_FRAGMENT, "We have data for fragment");
-
             args.putParcelable(ARG_ID_PHOTO, bmpImage);
             args.putString(ARG_INF_DOG, infUser);
             fragment.setArguments(args);
-        }
-        else {
-            Log.d(INFORMATION_PROCESS_FRAGMENT, "We don not have data for fragment");
         }
 
         return fragment;
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        mActivity = (onListener) getActivity();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(INFORMATION_PROCESS_FRAGMENT, "onCreate start");
-
-        mViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
-
         if (getArguments() != null) {
-            Log.d(INFORMATION_PROCESS_FRAGMENT, "Data initialisation fragment in onCrate");
-
             bmpImage = getArguments().getParcelable(ARG_ID_PHOTO);
             messenger = getArguments().getString(ARG_INF_DOG);
         }
@@ -93,9 +82,7 @@ public class DogFragment extends Fragment {
         }
 
         textMessenger.setText(messenger);
-
-        Log.d(INFORMATION_PROCESS_FRAGMENT, "we have new fragment in OnCreateView");
-        v.setOnTouchListener(new OnSwipeListener(getContext(), v, mViewModel));
+        v.setOnTouchListener(new OnSwipeListener(getContext(), v, mActivity));
 
         return v;
     }
@@ -105,24 +92,9 @@ public class DogFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ValueAnimator animator;
-        animator = ValueAnimator.ofFloat(0.5f, 1f);
-        animator.setDuration(300L);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(final ValueAnimator animation) {
-                view.setScaleX((float) animation.getAnimatedValue());
-                view.setScaleY((float) animation.getAnimatedValue());
-            }
-        });
-        animator.start();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        Log.d(INFORMATION_PROCESS_FRAGMENT, "onDestroy Fragment");
+        Animation sunRiseAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_screen);
+        // Подключаем анимацию к нужному View
+        view.startAnimation(sunRiseAnimation);
     }
 }
 

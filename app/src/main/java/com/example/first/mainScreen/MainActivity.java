@@ -17,10 +17,11 @@ import com.example.first.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DogFragment.onListener {
 
     // but of menu
     ImageView editBut, profileBut, matchesBut, exitBut;
+    MainViewModel mViewModel;
 
     private void InitView() {
         editBut = findViewById(R.id.edit_but);
@@ -64,16 +65,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.d(ConstValue.INFORMATION_PROCESS_ACTIVITY, "onCreate Activity");
-
         InitView();
 
-        MainViewModel mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         mViewModel.getProfile().observe(this, new Observer<MainViewModel.DataProfile>() {
             @Override
             public void onChanged(MainViewModel.DataProfile dataProfile) {
-                Log.d(ConstValue.INFORMATION_PROCESS_ACTIVITY, "Create first fragment in activity");
                 String infUser = dataProfile.getInfProfile();
 
                 getSupportFragmentManager()
@@ -85,13 +83,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        Log.d(ConstValue.INFORMATION_PROCESS_ACTIVITY, "onDestroy Activity");
+    public void swipeLeft() {
+        mViewModel.swipeLeft();
     }
 
-
+    @Override
+    public void swipeRight() {
+        mViewModel.swipeRight();
+    }
 }
