@@ -30,7 +30,7 @@
             android:layout_height="60dp"
             android:orientation="horizontal"
             android:weightSum="100"
-            android:background="@color/pageTitle"
+            android:background="@color/colorPrimary"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -50,7 +50,7 @@
                 android:layout_weight="60"
                 android:text="@string/myProfileName"
                 style="@style/pageTitle"
-                android:background="@color/opacity0"/>
+                android:background="@android:color/transparent"/>
 
             <Button
                 android:id="@+id/accountEdit"
@@ -92,7 +92,7 @@
                 style="@style/pageTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/opacity0"
+                android:background="@android:color/transparent"
                 android:text="Bobik"
                 android:textSize="40sp" />
 
@@ -125,7 +125,7 @@
                     android:layout_height="match_parent"
                     android:text="bulldog"
                     style="@style/pageTitle"
-                    android:background="@color/opacity0"
+                    android:background="@android:color/transparent"
                     android:layout_marginLeft="8dp" />
 
             </LinearLayout>
@@ -146,7 +146,7 @@
             <com.google.android.material.bottomnavigation.BottomNavigationView
 
                 android:id="@+id/testNavigation"
-                android:background="@color/pageTitle"
+                android:background="@color/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:itemIconTint="@color/nav_icons_color"

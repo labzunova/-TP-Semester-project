@@ -89,7 +89,7 @@ public class AccountActivity extends AppCompatActivity {
                 }
             });
 
-      /*     Button accountEdit = (Button) findViewById(R.id.accountEdit);
+           Button accountEdit = (Button) findViewById(R.id.accountEdit);
             accountEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

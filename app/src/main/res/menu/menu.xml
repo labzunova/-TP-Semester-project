@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/cards"
-        android:title="@string/cards"
+        android:title="@string/dogs"
         android:icon="@drawable/search"/>
 
     <item

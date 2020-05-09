@@ -16,19 +16,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/matches"
-        style="@style/pageTitle"
-        android:text="@string/matchesText"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/authPageName"
+            style="@style/pageTitle"
+            android:text="@string/matchesText" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/matchesRecycler"
-        android:layout_marginTop="75dp"
-        app:layout_constraintTop_toBottomOf="@+id/matches"
+        android:layout_marginTop="56dp"
+        app:layout_constraintTop_toBottomOf="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -40,7 +45,7 @@
         android:gravity="center"
         android:textSize="30sp"
         android:fontFamily="@font/roboto_thin"
-        android:textColor="@color/customDarkPink"
+        android:textColor="@color/colorPrimaryDark"
         android:text="@string/noMatches"
         app:layout_constraintBottom_toBottomOf="@+id/background"
         app:layout_constraintTop_toTopOf="parent" />
@@ -57,7 +62,7 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigation"
-            android:background="@color/pageTitle"
+            android:background="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:itemIconTint="@color/nav_icons_color"

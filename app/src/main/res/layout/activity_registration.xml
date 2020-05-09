@@ -6,15 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".RegistrationActivity">
 
-    <TextView
-        android:id="@+id/authPageName"
-        style="@style/pageTitle"
-        android:text="@string/registrationPageName"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            style="@style/pageTitle"
+            android:text="@string/registrationPageName" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailField"
@@ -57,16 +59,7 @@
             android:hint="@string/passwordHint" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-
-        android:layout_height="wrap_content"
-        android:hint="ввпвапвпвап"
-        android:layout_width="300dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backToAuthBtn"/>
-
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/registerBtn"
         style="@style/button"
         android:layout_marginTop="24dp"

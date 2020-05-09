@@ -12,6 +12,7 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:layout_gravity="center"
         android:background="@android:color/transparent"
         app:cardElevation="2dp"
@@ -20,7 +21,7 @@
 
         <ImageView
             android:id="@+id/photo"
-            tools:src="@color/customDarkPink"
+            tools:src="@color/colorPrimaryDark"
             android:layout_width="96dp"
             android:layout_height="96dp"
             app:layout_constraintStart_toStartOf="parent"

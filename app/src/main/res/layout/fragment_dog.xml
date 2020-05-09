@@ -7,24 +7,32 @@
     tools:context=".mainScreen.DogFragment"
     android:id="@+id/fr">
 
-    <ImageView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="376dp"
-        android:layout_margin="4dp"
-        android:id="@+id/imgDogMain"
-        android:src="@drawable/dog"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="16dp">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="368dp"
+                android:layout_margin="4dp"
+                android:id="@+id/imgDogMain"
+                android:src="@drawable/dog"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textInf"
-        style="@style/TextViewStyle"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:text="Name, Age \n city"
-        android:layout_marginBottom="4dp"
-        android:gravity="left"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+             <TextView
+                 android:id="@+id/textInf"
+                 style="@style/TextViewStyle"
+                 android:layout_width="match_parent"
+                 android:layout_height="40dp"
+                 android:text="Name, Age \n city"
+                 android:layout_marginBottom="16dp"
+                 android:gravity="start"
+                 android:textSize="24sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
