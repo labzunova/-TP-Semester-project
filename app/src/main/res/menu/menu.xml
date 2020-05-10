@@ -9,7 +9,7 @@
     <item
         android:id="@+id/cards"
         android:title="@string/dogs"
-        android:icon="@drawable/search"/>
+        android:icon="@drawable/ic_pets_black_24dp"/>
 
     <item
         android:id="@+id/profile"

@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_gravity="center"
-    android:layout_height="440dp"
+    android:layout_height="488dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".mainScreen.DogFragment"
     android:id="@+id/fr">
@@ -10,19 +10,25 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="16dp">
+        android:elevation="2dp">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="352dp"
+                android:layout_height="352dp"
+                android:layout_gravity="center_horizontal"
+                android:padding="16dp">
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="368dp"
-                android:layout_margin="4dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerCrop"
                 android:id="@+id/imgDogMain"
                 android:src="@drawable/dog"
                 app:layout_constraintTop_toTopOf="parent" />
-
+            </LinearLayout>
              <TextView
                  android:id="@+id/textInf"
                  style="@style/TextViewStyle"
