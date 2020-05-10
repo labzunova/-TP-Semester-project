@@ -1,4 +1,4 @@
-package com.example.first;
+package com.example.first.AccountEdit;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -22,7 +22,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.example.first.AccountEdit.AccountEditActivity;
+import com.example.first.AccountEdit.itemClickListener;
+import com.example.first.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,11 +39,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GalleryFragment extends Fragment {
-    private static final String FRAGMENT_TAG = "GalleryFragmentTag";
+    private static final String TAG = "GalleryFragmentTag";
     private static final int VERTICAL_SPAN_COUNT = 4;
     private static final int RESULT_OK = -1;
     private static final String ITEM_ADD_IMAGE = "Open chooser";
@@ -57,14 +58,14 @@ public class GalleryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(FRAGMENT_TAG, "onCreateView()");
+        Log.d(TAG, "onCreateView()");
         return inflater.inflate(R.layout.fragment_gallery, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(FRAGMENT_TAG, "onViewCreated()");
+        Log.d(TAG, "onViewCreated()");
 
         // views init
         previewImages = view.findViewById(R.id.photoPreviewList);
@@ -79,7 +80,7 @@ public class GalleryFragment extends Fragment {
         storageRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
-                Log.d(FRAGMENT_TAG, "lastAll() onSuccess() called");
+                Log.d(TAG, "lastAll() onSuccess() called");
                 galleryList = listResult.getItems();
                 galleryList.add(0, null);
                 previewImages.setAdapter(new previewImagesAdapter(galleryList, savedInstanceState));
@@ -124,8 +125,8 @@ public class GalleryFragment extends Fragment {
                     @Override
                     public void onSuccess(byte[] bytes) {
                         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        holder.image.setImageBitmap(AccountEditActivity.resizeBitmap(bitmap, 200.0f));
-                        Log.d(FRAGMENT_TAG, "getButes onSuccess() listener on element " + position);
+                        holder.image.setImageBitmap(AccountEditActivity.resizeBitmap(bitmap, 1000.0f));
+                        Log.d(TAG, "getButes onSuccess() listener on element " + position);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -139,13 +140,13 @@ public class GalleryFragment extends Fragment {
                 holder.image.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d(FRAGMENT_TAG, "item image onClickListener()");
+                        Log.d(TAG, "item image onClickListener()");
                         // implement image scaling
                         ((itemClickListener) activity).onPicClicked(imagesRefs, position);
                     }
                 });
             } else {
-                Log.d(FRAGMENT_TAG, "Chooser element of the list");
+                Log.d(TAG, "Chooser element of the list");
 
                 holder.image.setImageResource(R.drawable.unnamed);
 
@@ -174,7 +175,7 @@ public class GalleryFragment extends Fragment {
 
         previewImagesHolder(@NonNull View itemView) {
             super(itemView);
-            Log.d(FRAGMENT_TAG, "View Holder constructor called successfully");
+            Log.d(TAG, "View Holder constructor called successfully");
 
             image = (ImageView) itemView.findViewById(R.id.galleryListItemImage); // (ImageView)
         }
@@ -184,20 +185,20 @@ public class GalleryFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // upload to storage, add to list and update Recycler
-        Log.d(FRAGMENT_TAG, "Fragment onActivityResult() started");
+        Log.d(TAG, "Fragment onActivityResult() started");
 
         // get Uri
         Uri filepath = null;
         if (requestCode == AccountEditActivity.PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
-            Log.d(FRAGMENT_TAG, "onActivityResult() condition is true, data.getData() called");
+            Log.d(TAG, "onActivityResult() condition is true, data.getData() called");
             filepath = data.getData();
         }
 
         // upload to storage
         StorageReference imageRef = null;
         if (filepath != null) {
-            Log.d(FRAGMENT_TAG, "filepath != null");
+            Log.d(TAG, "filepath != null");
             final ProgressDialog progressDialog = new ProgressDialog(getContext());
             progressDialog.setTitle("Uploading..");
             progressDialog.show();
@@ -233,7 +234,7 @@ public class GalleryFragment extends Fragment {
                         }
                     });
         } else {
-            Log.d(FRAGMENT_TAG, "filepath is null");
+            Log.d(TAG, "filepath is null");
         }
 
 
@@ -255,8 +256,45 @@ public class GalleryFragment extends Fragment {
         }
 
         if (bytes == null)
-            Log.d(FRAGMENT_TAG, "bytes is null in compressImageFromDevise()");
+            Log.d(TAG, "bytes is null in compressImageFromDevise()");
 
         return bytes;
+    }
+
+    @Override
+    public void onStop() {
+        Log.d(TAG, "onStop: ");
+        super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "onPause: ");
+        super.onPause();
+    }
+
+    @Override
+    public void onLowMemory() {
+        Log.d(TAG, "onLowMemory: ");
+        super.onLowMemory();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG, "onDestroyView: ");
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy: ");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        Log.d(TAG, "onDetach: ");
+        activity = null;
+        super.onDetach();
     }
 }
