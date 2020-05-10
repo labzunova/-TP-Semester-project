@@ -43,7 +43,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-public class AccountEditActivity extends AppCompatActivity implements itemClickListener {
+public class AccountEditActivity extends AppCompatActivity {
     public final static int PICK_IMAGE_REQUEST = 71;
     private final static String PHOTO_EDITING = "photoEditing";
 
@@ -74,7 +74,7 @@ public class AccountEditActivity extends AppCompatActivity implements itemClickL
         setContentView(R.layout.activity_account_edit);
 
         UISetup();
-        listenersSetup(savedInstanceState);
+
         gettingDataFromFirebase();
 
     }
@@ -171,9 +171,7 @@ public class AccountEditActivity extends AppCompatActivity implements itemClickL
         saveBtn = (Button) findViewById(R.id.saveBtn);
         imgPreview = (ImageView) findViewById(R.id.imageView);
         editGalleryBtn = (Button) findViewById(R.id.editGalleryBtn);
-    }
 
-    private void listenersSetup(final Bundle savedInstanceState) {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,17 +187,18 @@ public class AccountEditActivity extends AppCompatActivity implements itemClickL
             }
         });
 
+        // убрал вызов фрагмента на время внедрения архитектуры
+        /*
         editGalleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (savedInstanceState == null) {
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.galleryFragment, new GalleryFragment())
                             .commit();
-                }
             }
         });
+         */
     }
 
     private void gettingDataFromFirebase() {
@@ -236,14 +235,6 @@ public class AccountEditActivity extends AppCompatActivity implements itemClickL
                 Log.d("LeakMemory", "onSuccess: ");
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 imgPreview.setImageBitmap(resizeBitmap(bitmap, 600.0f));
-                /*
-                Glide
-                        .with(getApplicationContext())
-                        .load(resizeBitmap(bitmap, 600.0f))
-                        .centerCrop()
-                        .into(imgPreview);
-                 */
-                // imgPreview.setRotation((float) 90.0);
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -327,13 +318,4 @@ public class AccountEditActivity extends AppCompatActivity implements itemClickL
 
     }
 
-    @Override
-    public void onPicClicked(List<StorageReference> imagesRefs, int position) {
-        Fragment pictureBrowser = PictureBrowser.newInstance(imagesRefs, position);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fr_place, pictureBrowser)
-                .addToBackStack("Fragment pictureBrowser")
-                .commit();
-    }
 }
