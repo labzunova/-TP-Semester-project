@@ -9,15 +9,14 @@
     </style>
 
     <style name="editsStyle">
+        <item name="colorControlActivated">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
-        <item name="android:textColorHint">@color/colorPrimaryDark</item>
         <item name="android:layout_margin">4dp</item>
-        <item name="fontFamily">@font/roboto_light</item>
-        <item name="boxBackgroundColor">@color/textFields</item>
+        <item name="fontFamily">@font/roboto</item>
         <item name="boxBackgroundMode">filled</item>
     </style>
 
-    <style name="pageTitle">
+    <!--<style name="pageTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">56dp</item>
         <item name="android:background">@color/colorPrimary</item>
@@ -25,6 +24,18 @@
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">30sp</item>
+    </style>-->
+
+    <style name="appBarText">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="topAppBar" parent="@style/Widget.MaterialComponents.Toolbar.Primary">
+        <item name="titleTextColor">@color/black</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
     </style>
 
     <style name="backgroundStyle">
@@ -39,6 +50,8 @@
         <item name="android:fontFamily">@font/roboto_light</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:layout_margin">16dp</item>
+        <item name="layout_constraintLeft_toLeftOf">parent</item>
+        <item name="layout_constraintRight_toRightOf">parent</item>
     </style>
 
     <style name="button" parent="@style/Widget.AppCompat.Button">

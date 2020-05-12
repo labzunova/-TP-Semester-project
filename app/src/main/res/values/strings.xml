@@ -1,19 +1,19 @@
 <resources>
     <string name="app_name">Tindog</string>
+    <string name="matchesTitle">Matches</string>
+    <string name="registrationTitle">Registration</string>
+    <string name="authTitle">Authorization</string>
+    <string name="profileEditingTitle">Edit Profile</string>
     <string name="emailHint">email</string>
     <string name="passwordHint">password</string>
     <string name="loginBtnText">Log in</string>
-    <string name="loginPageName">Authorization</string>
     <string name="registrationBtnName">Are you new?</string>
-    <string name="registrationPageName">Registration</string>
     <string name="nameHint">Your name</string>
     <string name="registrateBtnText">Registrate</string>
     <string name="myProfileName">My Profile</string>
     <string name="testName">testName</string>
     <string name="testBreed">testBreed</string>
-    <string name="matchesText">Matches</string>
     <string name="noMatches">No matches yet :(</string>
-    <string name="profile_editing">Edit Profile</string>
     <string name="saveBtn">Save changes</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="citata">look around, your love may be in the next kennel</string>
@@ -33,4 +33,5 @@
     <string name="right_to_like">right to like</string>
     <string name="back_to_authorization">Back to authorization</string>
     <string name="newMatch">NEW</string>
+    <string name="cancel">cancel</string>
 </resources>

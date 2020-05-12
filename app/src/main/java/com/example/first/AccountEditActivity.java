@@ -14,10 +14,12 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -120,7 +122,6 @@ public class AccountEditActivity extends AppCompatActivity {
             }
         });
 
-
         // Загрузка фотки профиля со Storage
         final long ONE_MEGABYTE = 1024 * 1024;
         StorageReference avatarRef = storageRef.child("Profiles").child(userId).child("AvatarImage");
@@ -143,18 +144,12 @@ public class AccountEditActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
         imgPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chooseImage();
             }
         });
-
-
 
     }
 

@@ -21,13 +21,12 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <TextView
-            style="@style/pageTitle"
-            android:text="@string/loginPageName" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            app:titleTextAppearance="@style/appBarText"
+            app:title="@string/app_name"
+            style="@style/topAppBar" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
