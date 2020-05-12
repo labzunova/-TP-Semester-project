@@ -18,12 +18,17 @@ public class OnSwipeListener implements View.OnTouchListener {
     private static final int MIN_DELTA_SWIPE = 150;
 
     private View view;
-    private DogFragment.onListener activity;
+    private OnListener onListener;
 
-    public OnSwipeListener(Context context, View view, DogFragment.onListener activity) {
+    interface OnListener {
+        void swipeLeft();
+        void swipeRight();
+    }
+
+    public OnSwipeListener(Context context, View view, OnListener onListener) {
         gestureDetector = new GestureDetector(context, new OnSwipeListener.GestureListener());
         this.view = view;
-        this.activity = activity;
+        this.onListener = onListener;
     }
 
     @Override
@@ -67,7 +72,7 @@ public class OnSwipeListener implements View.OnTouchListener {
 
         view = null;
 
-        activity.swipeLeft();
+        onListener.swipeLeft();
     }
 
     private void onSwipeRight() {
@@ -77,7 +82,7 @@ public class OnSwipeListener implements View.OnTouchListener {
 
         view = null;
 
-        activity.swipeRight();
+        onListener.swipeRight();
     }
 
     final class GestureListener extends GestureDetector.SimpleOnGestureListener {

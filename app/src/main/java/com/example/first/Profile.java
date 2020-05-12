@@ -127,5 +127,33 @@ public class Profile {
     public void setSeen(ArrayList<String> seen) { this.seen = seen; }
 
     public void setMatches(ArrayList<Matches> matches) { this.matches = matches; }
+
+
+    public static class Matches {
+        private String id;
+        private String name;
+        private String seen;
+
+        public void setId(String id) { this.id = id; }
+
+        public void setName(String name) { this.name = name; }
+
+        public void setSeen(String seen) { this.seen = seen; }
+
+        public Matches() {
+        }
+
+        public Matches(String id, String name, String seen) {
+            this.id = id;
+            this.name = name;
+            this.seen = seen;
+        }
+
+        public String getId() { return id; }
+
+        public String getName() { return name; }
+
+        public String getSeen() { return seen; }
+    }
 }
 

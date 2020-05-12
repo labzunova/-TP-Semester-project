@@ -9,40 +9,39 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
 
 public class MainViewModel extends AndroidViewModel {
-    private static final String DEFAULT_INFO = "Default";
-
-    private MediatorLiveData<DataProfile> currentUser = new MediatorLiveData<>();
-    private LiveData<InfRepo.UserInformation> informationLiveData;
+    private MediatorLiveData<UIInfo> currentUser = new MediatorLiveData<>();
+    private LiveData<InfRepo.TransportCase> informationLiveData;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
-        informationLiveData = InfRepo.getInstance(getApplication()).firstProfile();
+        informationLiveData = InfRepo.getInstance(getApplication()).getFirstCase();
         currentUser.addSource(informationLiveData, observer);
     }
 
-    public LiveData<DataProfile> getProfile() {
+    public LiveData<UIInfo> getProfile() {
         return currentUser;
     }
 
-    public void swipeLeft() {
-        informationLiveData = InfRepo.getInstance(getApplication()).swipeLeft();
+    public void dislike() {
+        informationLiveData = InfRepo.getInstance(getApplication()).getCase();
         currentUser.addSource(informationLiveData, observer);
     }
 
-    public void swipeRight() {
-        informationLiveData = InfRepo.getInstance(getApplication()).swipeRight();
+    public void like() {
+        InfRepo.getInstance(getApplication()).processInformation();
+        informationLiveData = InfRepo.getInstance(getApplication()).getCase();
         currentUser.addSource(informationLiveData, observer);
     }
 
-    private Observer<InfRepo.UserInformation> observer = new Observer<InfRepo.UserInformation>() {
+    private Observer<InfRepo.TransportCase> observer = new Observer<InfRepo.TransportCase>() {
         @Override
-        public void onChanged(InfRepo.UserInformation userInformation) {
+        public void onChanged(InfRepo.TransportCase userInformation) {
             String infoUser = "";
             Bitmap bitmap;
+            UIInfo uiInfo;
 
             if ((userInformation == null) || (userInformation.profile == null)) {
-                infoUser = DEFAULT_INFO;
-                bitmap = null;
+                uiInfo = new UIInfo(null, null);
             }
             else {
                 if (userInformation.profile.getName() != null)
@@ -53,32 +52,22 @@ public class MainViewModel extends AndroidViewModel {
                     infoUser += userInformation.profile.getCity();
 
                 bitmap = userInformation.bitmap;
+
+                uiInfo = new UIInfo(infoUser, bitmap);
             }
 
-            currentUser.postValue(new DataProfile(infoUser, bitmap));
+            currentUser.postValue(uiInfo);
             currentUser.removeSource(informationLiveData);
         }
     };
 
-    static class DataProfile {
-        private String infoProfile;
-        private Bitmap mainImageUser;
+    static class UIInfo {
+        public String infoProfile;
+        public Bitmap mainImageUser;
 
-        public DataProfile(String infoProfile, Bitmap mainImageUser) {
+        public UIInfo(String infoProfile, Bitmap mainImageUser) {
             this.infoProfile = infoProfile;
             this.mainImageUser = mainImageUser;
-        }
-
-        public String getInfProfile() {
-            return infoProfile;
-        }
-
-        public void setInfProfile(String infProfile) {
-            this.infoProfile = infoProfile;
-        }
-
-        public Bitmap getMainImageUser() {
-            return mainImageUser;
         }
     }
 }

@@ -7,37 +7,36 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
 
 import com.example.first.ApplicationModified;
-import com.example.first.Matches;
 import com.example.first.Profile;
-import com.example.first.mainScreen.Storage.NetworkData;
+import com.example.first.mainScreen.Storage.Database;
 
 import java.util.ArrayList;
 
-public class InfRepo implements NetworkData.InfListener {
-    private NetworkData networkData;
-    private UserInformation newUserInfo;
+public class InfRepo implements Database.InfListener {
+    private Database database;
+    private TransportCase newCase;
 
-    private UserInformation myUser;
-    private ArrayList<String> idProfiles;
-    private MediatorLiveData<UserInformation> userInfo;
+    private TransportCase myUserCase;
+    private ArrayList<String> idUsers;
+    private MediatorLiveData<TransportCase> liveDataRepo;
 
-    public InfRepo(NetworkData networkData) {
-        idProfiles = new ArrayList<>();
-        myUser = new UserInformation();
-        newUserInfo = null;
+    public InfRepo(Database database) {
+        idUsers = new ArrayList<>();
+        myUserCase = new TransportCase();
+        newCase = null;
 
-        this.networkData = networkData;
-        networkData.Connect(this);
+        this.database = database;
+        database.Connect(this);
     }
 
     @Override
-    public void setMyProfile(UserInformation user) {
-        this.myUser = user;
+    public void setMyProfile(TransportCase userCase) {
+        this.myUserCase = userCase;
     }
 
     @Override
-    public void setIdProfiles(ArrayList<String> idProfiles) {
-        this.idProfiles = idProfiles;
+    public void setIdProfiles(ArrayList<String> idUsers) {
+        this.idUsers = idUsers;
     }
 
 
@@ -47,95 +46,95 @@ public class InfRepo implements NetworkData.InfListener {
     }
 
 
-    public LiveData<UserInformation> firstProfile() {
-        userInfo = new MediatorLiveData<>();
+    public LiveData<TransportCase> getFirstCase() {
+        liveDataRepo = new MediatorLiveData<>();
 
-        if (newUserInfo == null)
-            newUserInformation();
+        if (newCase == null)
+            newTransportCase();
         else
-            userInfo.setValue(newUserInfo);
+            liveDataRepo.setValue(newCase);
 
-        return userInfo;
+        return liveDataRepo;
     }
 
-    private void newUserInformation() {
-        UserInformation lastUserInf = newUserInfo;
-        newUserInfo = null;
+    public LiveData<TransportCase> getCase() {
+        liveDataRepo = new MediatorLiveData<>();
+
+        newTransportCase();
+
+        return liveDataRepo;
+    }
+
+    private void newTransportCase() {
+        TransportCase lastCase = newCase;
+        TransportCase myLocalCase = myUserCase;
+        newCase = null;
 
         ArrayList<String> seen = new ArrayList<>();
-        if ((myUser != null) && (myUser.profile.getSeen() != null))
-            seen = myUser.profile.getSeen();
+        if ((myLocalCase != null) && (myLocalCase.profile.getSeen() != null))
+            seen = myLocalCase.profile.getSeen();
 
-        if (lastUserInf != null) {
-            seen.add(lastUserInf.id);
-            networkData.addSeenById(myUser.id, lastUserInf.id);
+        if (lastCase != null) {
+            seen.add(lastCase.id);
+            myUserCase.profile.setSeen(seen);
+            database.addSeenById(myLocalCase.id, lastCase.id);
         }
 
         int i = 0;
-        while (i < idProfiles.size() && (newUserInfo == null)) {
-            if (seen.indexOf(idProfiles.get(i)) == -1) {
-                newUserInfo = new UserInformation();
-                newUserInfo.id = idProfiles.get(i);
+        while (i < idUsers.size() && (newCase == null)) {
+            if (seen.indexOf(idUsers.get(i)) == -1) {
+                newCase = new TransportCase();
+                newCase.id = idUsers.get(i);
             }
             i++;
         }
 
-        if (newUserInfo == null)
-            userInfo.setValue(null);
+        if (newCase == null)
+            liveDataRepo.setValue(null);
         else {
-            final LiveData<InfRepo.UserInformation> newInf = networkData.getNewProfile(newUserInfo.id);
+            final LiveData<InfRepo.TransportCase> liveDataStorage = database.getNewProfile(newCase.id);
 
-            userInfo.addSource(newInf, new Observer<UserInformation>() {
+            liveDataRepo.addSource(liveDataStorage, new Observer<TransportCase>() {
                 @Override
-                public void onChanged(UserInformation userInformation) {
-                    newUserInfo = userInformation;
-                    userInfo.postValue(newUserInfo);
-                    userInfo.removeSource(newInf);
+                public void onChanged(TransportCase CaseDatabase) {
+                    newCase = CaseDatabase;
+                    liveDataRepo.postValue(newCase);
+                    liveDataRepo.removeSource(liveDataStorage);
                 }
             });
         }
     }
 
-    public LiveData<UserInformation> swipeRight() {
-        userInfo = new MediatorLiveData<>();
-        UserInformation lastUserInf = newUserInfo;
-        newUserInformation();
+    public void processInformation() {
+        TransportCase lastUserInf = newCase;
+        TransportCase myLocalCase = myUserCase;
 
         if (lastUserInf == null)
-            return userInfo;
+            return;
 
-        if ((myUser.profile.getLikes() == null) || (myUser.profile.getLikes().indexOf(lastUserInf.id) == -1)) {
+        if ((myLocalCase.profile.getLikes() == null) || (myLocalCase.profile.getLikes().indexOf(lastUserInf.id) == -1)) {
 
-            networkData.addLikeById(lastUserInf.id, myUser.id);
+            database.addLikeById(lastUserInf.id, myLocalCase.id);
         }
         else {
-            networkData.removeLike(myUser.id, lastUserInf.id);
+            database.removeLike(myLocalCase.id, lastUserInf.id);
 
-            Matches myMatch = new Matches(lastUserInf.id, lastUserInf.name, "false");
-            networkData.addMatchesById(myUser.id, myMatch);
+            Profile.Matches myMatches = new Profile.Matches(myLocalCase.id, myLocalCase.name, "false");
+            database.addMatchesById(myLocalCase.id, myMatches);
 
-            Matches youMatch = new Matches(myUser.id, myUser.name, "false");
-            networkData.addMatchesById(lastUserInf.id, youMatch);
+            Profile.Matches youMatches = new Profile.Matches(myLocalCase.id, myLocalCase.name, "false");
+            database.addMatchesById(lastUserInf.id, youMatches);
         }
-
-        return userInfo;
-    }
-
-    public LiveData<UserInformation> swipeLeft() {
-        userInfo = new MediatorLiveData<>();
-
-        newUserInformation();
-        return userInfo;
     }
 
 
-    public static class UserInformation {
+    public static class TransportCase {
         public Profile profile;
         public Bitmap bitmap;
         public String name;
         public String id;
 
-        public UserInformation() {
+        public TransportCase() {
             profile = null;
             bitmap = null;
             name = null;

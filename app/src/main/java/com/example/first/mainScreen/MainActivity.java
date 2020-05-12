@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +18,7 @@ import com.example.first.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 
-public class MainActivity extends AppCompatActivity implements DogFragment.onListener {
+public class MainActivity extends AppCompatActivity implements DogFragment.OnListenerActivity {
 
     // but of menu
     ImageView editBut, profileBut, matchesBut, exitBut;
@@ -69,15 +70,13 @@ public class MainActivity extends AppCompatActivity implements DogFragment.onLis
 
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        mViewModel.getProfile().observe(this, new Observer<MainViewModel.DataProfile>() {
+        mViewModel.getProfile().observe(this, new Observer<MainViewModel.UIInfo>() {
             @Override
-            public void onChanged(MainViewModel.DataProfile dataProfile) {
-                String infUser = dataProfile.getInfProfile();
-
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.dogFragment, DogFragment.newInstance(infUser, dataProfile.getMainImageUser()))
-                        .commit();
+            public void onChanged(MainViewModel.UIInfo dataProfile) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.dogFragment, DogFragment.newInstance(dataProfile.infoProfile, dataProfile.mainImageUser))
+                            .commit();
             }
         });
 
@@ -85,11 +84,11 @@ public class MainActivity extends AppCompatActivity implements DogFragment.onLis
 
     @Override
     public void swipeLeft() {
-        mViewModel.swipeLeft();
+        mViewModel.dislike();
     }
 
     @Override
     public void swipeRight() {
-        mViewModel.swipeRight();
+        mViewModel.like();
     }
 }

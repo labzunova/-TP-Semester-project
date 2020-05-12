@@ -1,6 +1,4 @@
 package com.example.first.mainScreen;
-import android.animation.ValueAnimator;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -16,23 +14,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.first.R;
 
-public class DogFragment extends Fragment {
+public class DogFragment extends Fragment implements OnSwipeListener.OnListener {
     private static final String ARG_ID_PHOTO = "idPhoto";
     private static final String ARG_INF_DOG = "infDog";
 
-    private static final String DEFAULT_STRING = "Default";
-
-    onListener mActivity;
-
-    private ImageView imgDogMain;
-    private TextView textMessenger;
-    private Bitmap bmpImage;
-    private String messenger = DEFAULT_STRING;
+    private Bitmap bmpImage = null;
+    private String messenger = null;
 
     public DogFragment() {
     }
 
-    interface onListener{
+    @Override
+    public void swipeLeft() {
+        ((OnListenerActivity)getActivity()).swipeLeft();
+    }
+
+    @Override
+    public void swipeRight() {
+        ((OnListenerActivity)getActivity()).swipeRight();
+    }
+
+    interface OnListenerActivity{
         void swipeLeft();
         void swipeRight();
     }
@@ -51,13 +53,6 @@ public class DogFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        mActivity = (onListener) getActivity();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -72,8 +67,8 @@ public class DogFragment extends Fragment {
             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_dog, container, false);
 
-        imgDogMain = v.findViewById(R.id.imgDogMain);
-        textMessenger = v.findViewById(R.id.textInf);
+        ImageView imgDogMain = v.findViewById(R.id.imgDogMain);
+        TextView textMessenger = v.findViewById(R.id.textInf);
 
         if (bmpImage != null)
             imgDogMain.setImageBitmap(bmpImage);
@@ -82,7 +77,7 @@ public class DogFragment extends Fragment {
         }
 
         textMessenger.setText(messenger);
-        v.setOnTouchListener(new OnSwipeListener(getContext(), v, mActivity));
+        v.setOnTouchListener(new OnSwipeListener(getContext(), v, this));
 
         return v;
     }
