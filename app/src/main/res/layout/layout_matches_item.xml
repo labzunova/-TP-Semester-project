@@ -52,6 +52,30 @@
                  android:layout_gravity="center"
                  app:layout_constraintTop_toTopOf="parent" /> -->
 
+        <LinearLayout
+            android:id="@+id/newMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            android:layout_gravity="end"
+            android:background="@drawable/shape_new_match">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_stars_black_24dp">
+            </ImageView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/newMatch"
+                android:textColor="@color/black">
+            </TextView>
+
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 

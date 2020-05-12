@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -187,7 +188,7 @@ public class MatchesActivity extends AppCompatActivity {
 
             UserModel user = matches.get(position);
             holder.nameView.setText(user.name);
-            if (user.seen.equals("false")) holder.cardView.setCardBackgroundColor(Color.parseColor("#70F8BBD0"));
+            if (user.seen.equals("false")) holder.newMatch.setVisibility(View.VISIBLE);
 
             // photo adding
             StorageReference myRef = storageRef.child("Profiles").child(user.id).child("AvatarImage");
@@ -222,12 +223,14 @@ public class MatchesActivity extends AppCompatActivity {
         TextView nameView;
         CardView cardView;
         ImageView photoView;
+        LinearLayout newMatch;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
             nameView = itemView.findViewById(R.id.name);
             cardView = itemView.findViewById(R.id.card_view);
             photoView = itemView.findViewById(R.id.photo);
+            newMatch = itemView.findViewById(R.id.newMatch);
         }
     }
 
