@@ -50,6 +50,15 @@ public class EditActivityViewModel extends AndroidViewModel {
     }
 
     public void uploadAvatarImage(Bitmap bitmap) {
+        final LiveData<AvatarImage> avatarImageLiveData = EditActivityRepo.getInstance().getUserImage();
+        userProfileImage.addSource(avatarImageLiveData, new Observer<AvatarImage>() {
+            @Override
+            public void onChanged(AvatarImage avatarImage) {
+                Log.d(TAG, "userProfileImage.addSource onChanged() in uploadAvatarImage()");
+                userProfileImage.postValue(avatarImage);
+                userProfileImage.removeSource(avatarImageLiveData);
+            }
+        });
         EditActivityRepo.getInstance().uploadAvatarImage(bitmap);
     }
 
@@ -60,7 +69,7 @@ public class EditActivityViewModel extends AndroidViewModel {
         userProfileImage.addSource(avatarImageLiveData, new Observer<AvatarImage>() {
             @Override
             public void onChanged(AvatarImage avatarImage) {
-                Log.d(TAG, "userProfileImage.addSource onChanged()");
+                Log.d(TAG, "userProfileImage.addSource onChanged() in getData()");
                 userProfileImage.postValue(avatarImage);
                 userProfileImage.removeSource(avatarImageLiveData);
             }

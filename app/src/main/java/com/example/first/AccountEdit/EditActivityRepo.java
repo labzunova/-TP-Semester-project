@@ -107,6 +107,8 @@ public class EditActivityRepo {
             public void onSuccess(byte[] bytes) {
                 Log.d(TAG, "updateUserCash: AvatarImage getBytes onSuccess()");
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                bitmap = resizeBitmap(bitmap, 600.0f);
+
                 mProfileCash.setAvatarBitmap(bitmap);
                 userImage.postValue(mProfileCash.getProfileImage());
             }
@@ -119,8 +121,13 @@ public class EditActivityRepo {
     }
 
     public void uploadAvatarImage(Bitmap bitmap) {
+        bitmap = resizeBitmap(bitmap, 600.0f);
+
         // обновление кэша
         mProfileCash.setAvatarBitmap(bitmap);
+
+        // обновление imageview
+        userImage.postValue(mProfileCash.getProfileImage());
 
         // загрузка в firebase
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -153,5 +160,29 @@ public class EditActivityRepo {
         userProfileRef.child("country").setValue(profileInfo.getCountry());
         userProfileRef.child("city").setValue(profileInfo.getCity());
         userProfileRef.child("address").setValue(profileInfo.getAddress());
+    }
+
+    public static Bitmap resizeBitmap(Bitmap bitmap, float maxResolution) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int newWidth = width;
+        int newHeight = height;
+        float rate;
+
+        if (width > height) {
+            if (maxResolution < width) {
+                rate = maxResolution / width;
+                newHeight = (int) (height * rate);
+                newWidth = (int) maxResolution;
+            }
+        } else {
+            if (maxResolution < height) {
+                rate = maxResolution / height;
+                newWidth = (int) (width * rate);
+                newHeight = (int) maxResolution;
+            }
+        }
+
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 }

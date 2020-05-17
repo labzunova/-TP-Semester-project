@@ -211,7 +211,7 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                photoProfil.setImageBitmap(AccountEditActivity.resizeBitmap(bitmap, 600.0f));
+                photoProfil.setImageBitmap(resizeBitmap(bitmap, 600.0f));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -220,11 +220,30 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
-        /*
+    }
 
+    public static Bitmap resizeBitmap(Bitmap bitmap, float maxResolution) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int newWidth = width;
+        int newHeight = height;
+        float rate;
 
+        if (width > height) {
+            if (maxResolution < width) {
+                rate = maxResolution / width;
+                newHeight = (int) (height * rate);
+                newWidth = (int) maxResolution;
+            }
+        } else {
+            if (maxResolution < height) {
+                rate = maxResolution / height;
+                newWidth = (int) (width * rate);
+                newHeight = (int) maxResolution;
+            }
+        }
 
-         */
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 
 

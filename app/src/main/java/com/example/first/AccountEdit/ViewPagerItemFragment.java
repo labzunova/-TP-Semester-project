@@ -74,7 +74,8 @@ public class ViewPagerItemFragment extends Fragment {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    image.setImageBitmap(AccountEditActivity.resizeBitmap(bitmap, 500.0f));
+                    // image.setImageBitmap(AccountEditActivity.resizeBitmap(bitmap, 500.0f));
+                    // ПЕРЕДЕЛАТЬ ЧТОБЫ resizeBitmap ЗДЕСЬ НЕ ВЫЗЫВАЛСЯ
                     Log.d(FRAGMENT_TAG, "getButes onSuccess() listener in itemFragment: " + imageRef);
                 }
             }).addOnFailureListener(new OnFailureListener() {

@@ -98,8 +98,7 @@ public class AccountEditActivity extends AppCompatActivity {
             public void onChanged(EditActivityViewModel.AvatarImage avatarImage) {
                 // update avatar image
                 Log.d(TAG, "getAvatarImage onChanged()");
-                Bitmap bitmap = resizeBitmap(avatarImage.getAvatarBitmap(), 600.0f);
-                imgPreview.setImageBitmap(bitmap);
+                imgPreview.setImageBitmap(avatarImage.getAvatarBitmap());
             }
         });
 
@@ -163,19 +162,6 @@ public class AccountEditActivity extends AppCompatActivity {
                 chooseImage();
             }
         });
-
-        // убрал вызов фрагмента на время внедрения архитектуры
-        /*
-        editGalleryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.galleryFragment, new GalleryFragment())
-                            .commit();
-            }
-        });
-         */
     }
 
 
@@ -205,38 +191,11 @@ public class AccountEditActivity extends AppCompatActivity {
 
                 // запрос на загрузку фото в кэш и firebase
                 mViewModel.uploadAvatarImage(bitmap);
-
-                bitmap = resizeBitmap(bitmap, 600.0f);
-                imgPreview.setImageBitmap(bitmap);
+                // при загрузке в imageview через livedatu, загружает некорректно (сразу не загружает), при этом в кэше все норм и вызов onChanged() для imageview - есть
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
-    public static Bitmap resizeBitmap(Bitmap bitmap, float maxResolution) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        int newWidth = width;
-        int newHeight = height;
-        float rate;
-
-        if (width > height) {
-            if (maxResolution < width) {
-                rate = maxResolution / width;
-                newHeight = (int) (height * rate);
-                newWidth = (int) maxResolution;
-            }
-        } else {
-            if (maxResolution < height) {
-                rate = maxResolution / height;
-                newWidth = (int) (width * rate);
-                newHeight = (int) maxResolution;
-            }
-        }
-
-        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
-    }
-
 
 }
