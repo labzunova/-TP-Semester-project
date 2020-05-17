@@ -32,6 +32,12 @@
     <string name="left_to_dislike">left to dislike</string>
     <string name="right_to_like">right to like</string>
     <string name="back_to_authorization">Back to authorization</string>
+    <string name="bulldogSampleData">bulldog</string>
+    <string name="ageSampleData">7 y.o.</string>
+    <string name="citySampleData">Moscow</string>
+    <string name="phoneSampleData">8-(915)-019-6019</string>
     <string name="newMatch">NEW</string>
     <string name="cancel">cancel</string>
+    <string name="bobik">Bobik</string>
+    <string name="sign_out">Sign out</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -24,42 +24,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal"
-            android:weightSum="100"
-            android:background="@color/colorPrimary"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/imageMain"
-            app:layout_constraintVertical_chainStyle="spread_inside">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="20"
-                android:layout_margin="8dp"
-                android:src="@drawable/settings4"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="60"
-                android:text="@string/myProfileName"
-                android:background="@android:color/transparent"/>
-
-            <ImageButton
-                android:id="@+id/accountEdit"
-                android:layout_weight="14"
-                android:layout_width="0dp"
-                android:layout_margin="5dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/edit5" />
-
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBar"
+                app:titleTextAppearance="@style/appBarText"
+                app:title="My Profile"
+                app:menu="@menu/app_bar_menu"
+                style="@style/topAppBar" />
+        </com.google.android.material.appbar.AppBarLayout>
 
         <LinearLayout
             android:id="@+id/imageMain"
@@ -91,7 +67,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="Bobik"
+                android:text="@string/bobik"
+                style="@style/pageTitle"
                 android:textSize="40sp" />
 
         </LinearLayout>
@@ -109,23 +86,92 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_marginHorizontal="16dp"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="left"
-                    android:layout_margin="8dp"
-                    android:src="@drawable/ic_dog1" />
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="start"
+                    android:src="@drawable/ic_event_black_24dp" />
 
                 <TextView
+                    android:id="@+id/InfoAge"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="bulldog"
-                    android:background="@android:color/transparent"
-                    android:layout_marginLeft="8dp" />
+                    android:text="@string/ageSampleData"
+                    style="@style/pageText"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="16dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="left"
+                    android:src="@drawable/dog_label" />
+
+                <TextView
+                    android:id="@+id/InfoBreed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/bulldogSampleData"
+                    style="@style/pageText"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="16dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="left"
+                    android:src="@drawable/ic_location_city_primary_24dp" />
+
+                <TextView
+                    android:id="@+id/InfoCity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/citySampleData"
+                    style="@style/pageText"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="16dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="start"
+                    android:src="@drawable/ic_phone_black_24dp" />
+
+                <TextView
+                    android:id="@+id/InfoPhoneNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/phoneSampleData"
+                    style="@style/pageText"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp" />
+            </LinearLayout>
+
 
         </LinearLayout>
 
@@ -141,7 +187,6 @@
             app:layout_constraintTop_toBottomOf="@id/additionalInfo">
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
-
                 android:id="@+id/testNavigation"
                 android:background="@color/colorPrimary"
                 android:layout_width="match_parent"
@@ -149,12 +194,25 @@
                 app:itemIconTint="@color/nav_icons_color"
                 app:itemTextColor="@color/nav_icons_color"
                 android:layout_gravity="bottom"
-                app:menu="@menu/menu"/>
-
+                app:menu="@menu/menu">
+            </com.google.android.material.bottomnavigation.BottomNavigationView>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/editActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="76dp"
+        android:background="@color/colorPrimaryDark"
+        android:src="@drawable/ic_mode_edit_black_24dp"
+        app:tint="@color/white"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:elevation="16dp"
+        app:fabSize="auto" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 

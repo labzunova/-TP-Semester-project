@@ -20,30 +20,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-   <!--<com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/editTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="56dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-        <ImageButton
-            android:id="@+id/exitBtn"
-            android:background="@drawable/cancel"
-            android:textSize="16sp"
-            android:layout_margin="8dp"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center_vertical"/>
-
-        </LinearLayout>
-    </com.google.android.material.appbar.AppBarLayout>-->
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/title"
         android:layout_width="match_parent"
@@ -51,6 +27,7 @@
         app:layout_constraintTop_toTopOf="parent">
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
+            app:navigationIcon="@drawable/cancel"
             app:titleTextAppearance="@style/appBarText"
             app:title="@string/profileEditingTitle"
             style="@style/topAppBar" />
@@ -100,8 +77,7 @@
             app:hintTextColor="@color/colorPrimaryDark"
             android:textColorHint="@color/colorPrimaryDark"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/myProfile">
+            android:layout_height="wrap_content">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nameFieldInp"
                 android:background="@color/textFields"
@@ -117,8 +93,7 @@
             app:boxStrokeColor="@color/colorPrimaryDark"
             app:hintTextColor="@color/colorPrimaryDark"
             android:textColorHint="@color/colorPrimaryDark"
-            android:theme="@style/editsStyle"
-            app:layout_constraintTop_toBottomOf="@+id/nameField">
+            android:theme="@style/editsStyle">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/emailFieldInp"
                 android:layout_width="match_parent"
@@ -134,8 +109,7 @@
             app:boxStrokeColor="@color/colorPrimaryDark"
             app:hintTextColor="@color/colorPrimaryDark"
             android:textColorHint="@color/colorPrimaryDark"
-            android:theme="@style/editsStyle"
-            app:layout_constraintTop_toBottomOf="@+id/emailField">
+            android:theme="@style/editsStyle">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/dogBreedFieldInp"
                 android:layout_width="match_parent"
@@ -151,8 +125,7 @@
             app:boxStrokeColor="@color/colorPrimaryDark"
             app:hintTextColor="@color/colorPrimaryDark"
             android:textColorHint="@color/colorPrimaryDark"
-            android:theme="@style/editsStyle"
-            app:layout_constraintTop_toBottomOf="@+id/dogBreedField">
+            android:theme="@style/editsStyle">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/dogAgeFieldInp"
                 android:layout_width="match_parent"
@@ -168,8 +141,7 @@
             android:theme="@style/editsStyle"
             app:boxStrokeColor="@color/colorPrimaryDark"
             app:hintTextColor="@color/colorPrimaryDark"
-            android:textColorHint="@color/colorPrimaryDark"
-            app:layout_constraintTop_toBottomOf="@+id/dogAgeField">
+            android:textColorHint="@color/colorPrimaryDark">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/countryFieldInp"
                 android:layout_width="match_parent"
@@ -185,8 +157,7 @@
             android:theme="@style/editsStyle"
             app:boxStrokeColor="@color/colorPrimaryDark"
             app:hintTextColor="@color/colorPrimaryDark"
-            android:textColorHint="@color/colorPrimaryDark"
-            app:layout_constraintTop_toBottomOf="@+id/countryField">
+            android:textColorHint="@color/colorPrimaryDark">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/cityFieldInp"
                 android:layout_width="match_parent"
@@ -202,8 +173,7 @@
             android:theme="@style/editsStyle"
             app:boxStrokeColor="@color/colorPrimaryDark"
             app:hintTextColor="@color/colorPrimaryDark"
-            android:textColorHint="@color/colorPrimaryDark"
-            app:layout_constraintTop_toBottomOf="@+id/cityField">
+            android:textColorHint="@color/colorPrimaryDark">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/addressFieldInp"
                 android:layout_width="match_parent"
@@ -219,8 +189,7 @@
             android:theme="@style/editsStyle"
             app:boxStrokeColor="@color/colorPrimaryDark"
             app:hintTextColor="@color/colorPrimaryDark"
-            android:textColorHint="@color/colorPrimaryDark"
-            app:layout_constraintTop_toBottomOf="@+id/addressField">
+            android:textColorHint="@color/colorPrimaryDark">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/phoneFieldInp"
                 android:layout_width="match_parent"

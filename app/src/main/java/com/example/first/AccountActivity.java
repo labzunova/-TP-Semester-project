@@ -17,10 +17,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-//import com.facebook.drawee.backends.pipeline.Fresco;
-//import com.facebook.drawee.view.SimpleDraweeView;
-//import com.facebook.imagepipeline.request.ImageRequest;
 import com.example.first.mainScreen.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -71,32 +67,32 @@ public class AccountActivity extends AppCompatActivity {
         storageRef = storage.getReference();
 
         BottomNavigationView bottomNavigationView;
-            bottomNavigationView = findViewById(R.id.testNavigation);
-            bottomNavigationView.setSelectedItemId(R.id.profile);
-            bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                    switch (menuItem.getItemId()) {
-                        case R.id.profile:
-                            return true;
-                        case R.id.matches:
-                            startActivity(new Intent(AccountActivity.this, MatchesActivity.class));
-                            return true;
-                        case R.id.cards:
-                            startActivity(new Intent(AccountActivity.this,MainActivity.class));
-                            return true;
-                    }
-                    return false;
+        bottomNavigationView = findViewById(R.id.testNavigation);
+        bottomNavigationView.setSelectedItemId(R.id.profile);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.profile:
+                        return true;
+                    case R.id.matches:
+                        startActivity(new Intent(AccountActivity.this, MatchesActivity.class));
+                        return true;
+                    case R.id.cards:
+                        startActivity(new Intent(AccountActivity.this,MainActivity.class));
+                        return true;
                 }
-            });
+                return false;
+            }
+        });
 
-           ImageButton accountEdit = (ImageButton) findViewById(R.id.accountEdit);
-            accountEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(AccountActivity.this,AccountEditActivity.class));
-                }
-            });
+        ImageButton accountEdit = (ImageButton) findViewById(R.id.editActivity);
+        accountEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountActivity.this,AccountEditActivity.class));
+            }
+        });
        /* imgSetting = findViewById(R.id.edit);
         imgExit = findViewById(R.id.exit);
         imgScroll = findViewById(R.id.cards);

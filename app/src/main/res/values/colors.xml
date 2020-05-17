@@ -5,6 +5,7 @@
     <color name="colorPrimaryDark">#880E4F</color>
     <color name="textFields">#70F8BBD0</color>
     <color name="black">#000</color>
+    <color name="white">#ffffff</color>
     <color name="toLike">#9CCC65</color>
     <color name="toDislike">#ef5350</color>
 </resources>
