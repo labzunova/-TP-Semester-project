@@ -211,7 +211,7 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                photoProfil.setImageBitmap(AccountEditActivity.resizeBitmap(bitmap, 800.0f));
+                photoProfil.setImageBitmap(AccountEditActivity.resizeBitmap(bitmap, 600.0f));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

@@ -68,15 +68,6 @@ public class AccountEditActivity extends AppCompatActivity {
     private Button doneBtn, editGalleryBtn;
     private ImageView imgPreview;
 
-    // firebase
-    private DatabaseReference databaseProfile;
-    private FirebaseUser user;
-    private String userId;
-    private Profile currentUserProfile;
-    private Uri filepath;
-    FirebaseStorage storage;
-    StorageReference storageRef;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,13 +126,6 @@ public class AccountEditActivity extends AppCompatActivity {
 
 
     private void UISetup() {
-        // firebase init
-        databaseProfile = FirebaseDatabase.getInstance().getReference("Profiles"); // Expected to be automatically created if Profiles node not yet created
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        userId = user.getUid();
-        storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReference();
-
         // init views
         mNameField = (TextInputEditText) findViewById(R.id.nameFieldInp);
         mEmailField = (TextInputEditText) findViewById(R.id.emailFieldInp);
@@ -210,8 +194,7 @@ public class AccountEditActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
-            // TODO Remove filepath from being global
-            filepath = data.getData();
+            Uri filepath = data.getData();
             try {
                 Bitmap bitmap;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

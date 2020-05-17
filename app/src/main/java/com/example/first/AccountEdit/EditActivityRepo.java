@@ -154,6 +154,4 @@ public class EditActivityRepo {
         userProfileRef.child("city").setValue(profileInfo.getCity());
         userProfileRef.child("address").setValue(profileInfo.getAddress());
     }
-
-    // TODO make this class a singleton in separate file
 }
