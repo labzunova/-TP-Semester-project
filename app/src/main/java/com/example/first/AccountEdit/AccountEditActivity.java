@@ -4,12 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -42,10 +48,13 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.ToDoubleBiFunction;
 
 public class AccountEditActivity extends AppCompatActivity {
     public final static int PICK_IMAGE_REQUEST = 71;
-    private final static String PHOTO_EDITING = "photoEditing";
+    private static final String TAG = "EditAccountActivity";
+
+    EditActivityViewModel mViewModel;
 
     // layout references
     private TextInputEditText mNameField;
@@ -56,7 +65,7 @@ public class AccountEditActivity extends AppCompatActivity {
     private TextInputEditText mCityField;
     private TextInputEditText mAddressField;
     private TextInputEditText mPhoneField;
-    private Button saveBtn, editGalleryBtn;
+    private Button doneBtn, editGalleryBtn;
     private ImageView imgPreview;
 
     // firebase
@@ -75,81 +84,55 @@ public class AccountEditActivity extends AppCompatActivity {
 
         UISetup();
 
-        gettingDataFromFirebase();
-
-    }
-
-    private void uploadImageToFirebaseStorage() {
-        Log.d(PHOTO_EDITING, "uploadImage() started");
-        if (filepath != null) {
-            Log.d(PHOTO_EDITING, "filepath != null");
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading..");
-            progressDialog.show();
-
-            StorageReference ref = storageRef.child("Profiles").child(userId).child("AvatarImage");
-
-            byte[] bytes = compressImageFromDevise(filepath);
-
-            // ref.putFile(filepath).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            ref.putBytes(bytes).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    progressDialog.dismiss();
-                    Toast.makeText(AccountEditActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+        mViewModel = ViewModelProviders.of(this).get(EditActivityViewModel.class);
+        mViewModel.getProgress().observe(this, new Observer<EditActivityViewModel.ValidationStatus>() {
+            @Override
+            public void onChanged(EditActivityViewModel.ValidationStatus validationStatus) {
+                // update UI when Data is changed (validation)
+                // if data is ok - exit editActivity
+                if (validationStatus == EditActivityViewModel.ValidationStatus.SUCCESS) {
+                    Log.d(TAG, "Data validation success. Starting AccountActivity..");
                     startActivity(new Intent(AccountEditActivity.this, AccountActivity.class));
+                } else if (validationStatus == EditActivityViewModel.ValidationStatus.FAILURE) {
+                    Log.d(TAG, "Data validation failure. Updating UI to notify user about incorrect data input..");
+                    // TODO: Update UI to make warning to user
+                } else if (validationStatus == EditActivityViewModel.ValidationStatus.NONE) {
+                    Log.d(TAG, "Data validation status is NONE");
                 }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
-                    Toast.makeText(AccountEditActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            })
-            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    progressDialog.setMessage("Uploaded " + (int)progress + "%");
-                }
-            });
-        } else {
-            Log.d(PHOTO_EDITING, "filepath is null");
-            // if new photo was not chosen - start AccountActivity anyway
-            startActivity(new Intent(AccountEditActivity.this, AccountActivity.class));
-        }
-    }
-
-    private void chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select picture"), PICK_IMAGE_REQUEST);
-        // When user chose photo - onActivityResult() is called
-    }
-
-    // result from image chooser activity
-    // set chosen photo to imageview
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
-            filepath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
-                Glide
-                        .with(getApplicationContext())
-                        .load(resizeBitmap(bitmap, 600.0f))
-                        .centerCrop()
-                        .into(imgPreview);
-                 // imgPreview.setRotation((float) 90.0);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
+        });
+
+        mViewModel.getAvatarImage().observe(this, new Observer<EditActivityViewModel.AvatarImage>() {
+            @Override
+            public void onChanged(EditActivityViewModel.AvatarImage avatarImage) {
+                // update avatar image
+                Log.d(TAG, "getAvatarImage onChanged()");
+                Bitmap bitmap = resizeBitmap(avatarImage.getAvatarBitmap(), 600.0f);
+                imgPreview.setImageBitmap(bitmap);
+            }
+        });
+
+        mViewModel.getProfileInfo().observe(this, new Observer<EditActivityViewModel.ProfileInfo>() {
+            @Override
+            public void onChanged(EditActivityViewModel.ProfileInfo profileInfo) {
+                Log.d(TAG, "getProfileInfo onChanged()");
+                // update text fields
+                mNameField.setText(profileInfo.getName());
+                mEmailField.setText(profileInfo.getEmail());
+                mBreedField.setText(profileInfo.getBreed());
+                mAgeField.setText(profileInfo.getAge());
+                mCountryField.setText(profileInfo.getCountry());
+                mCityField.setText(profileInfo.getCity());
+                mAddressField.setText(profileInfo.getAddress());
+                mPhoneField.setText(profileInfo.getPhone());
+            }
+        });
+
+        // getData either from cash or from firebase
+        Log.d(TAG, "mViewModel.getData();");
+        mViewModel.getData();
     }
+
 
     private void UISetup() {
         // firebase init
@@ -168,15 +151,25 @@ public class AccountEditActivity extends AppCompatActivity {
         mCityField = (TextInputEditText) findViewById(R.id.cityFieldInp);
         mAddressField = (TextInputEditText) findViewById(R.id.addressFieldInp);
         mPhoneField = (TextInputEditText) findViewById(R.id.phoneFieldInp);
-        saveBtn = (Button) findViewById(R.id.saveBtn);
+        doneBtn = (Button) findViewById(R.id.saveBtn);
         imgPreview = (ImageView) findViewById(R.id.imageView);
         editGalleryBtn = (Button) findViewById(R.id.editGalleryBtn);
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
+        doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadDataToDatabase();
-                uploadImageToFirebaseStorage();
+                // убрать создание здесь структуры - чтобы структура формировалась уже во ViewModel
+                EditActivityViewModel.ProfileInfo profileInfo = new EditActivityViewModel.ProfileInfo(
+                        mNameField.getText().toString(),
+                        mEmailField.getText().toString(),
+                        mPhoneField.getText().toString(),
+                        mBreedField.getText().toString(),
+                        mAgeField.getText().toString(),
+                        mCountryField.getText().toString(),
+                        mCityField.getText().toString(),
+                        mAddressField.getText().toString()
+                );
+                mViewModel.onDoneClicked(profileInfo);
             }
         });
 
@@ -201,68 +194,41 @@ public class AccountEditActivity extends AppCompatActivity {
          */
     }
 
-    private void gettingDataFromFirebase() {
-        // получение текущих данных с Database
-        databaseProfile.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // получение данных текущего пользователя
-                currentUserProfile = dataSnapshot.child(userId).getValue(Profile.class);
 
-                mNameField.setText(currentUserProfile.getName());
-                mEmailField.setText(currentUserProfile.getEmail());
-                mBreedField.setText(currentUserProfile.getBreed());
-                mAgeField.setText(currentUserProfile.getAge());
-                mCountryField.setText(currentUserProfile.getCountry());
-                mCityField.setText(currentUserProfile.getCity());
-                mAddressField.setText(currentUserProfile.getAddress());
-                mPhoneField.setText(currentUserProfile.getPhone());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        // Загрузка фотки профиля со Storage
-        final long BATCH_SIZE = 1024 * 1024; // 1 mb
-        StorageReference avatarRef = storageRef.child("Profiles").child(userId).child("AvatarImage");
-        Log.d("LeakMemory", "before getBytes: ");
-        avatarRef.getBytes(BATCH_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Log.d("LeakMemory", "onSuccess: ");
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                imgPreview.setImageBitmap(resizeBitmap(bitmap, 600.0f));
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("LeakMemory", "onFailure: ");
-                Toast.makeText(getApplicationContext(), "No Such file or Path found!!", Toast.LENGTH_LONG).show();
-            }
-        });
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select picture"), PICK_IMAGE_REQUEST);
+        // When user chose photo - onActivityResult() is called
     }
 
-    private byte[] compressImageFromDevise(Uri filepath) {
-        byte[] bytes = null;
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    // result from image chooser activity
+    // set chosen photo to imageview
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            // TODO Remove filepath from being global
+            filepath = data.getData();
+            try {
+                Bitmap bitmap;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContentResolver(), filepath));
+                } else {
+                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+                }
 
-            // requlate quality to change size of image, uploading to firebase storage
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
-            bytes = baos.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
+                // запрос на загрузку фото в кэш и firebase
+                mViewModel.uploadAvatarImage(bitmap);
+
+                bitmap = resizeBitmap(bitmap, 600.0f);
+                imgPreview.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-        if (bytes == null)
-            Log.d(PHOTO_EDITING, "bytes is null in compressImageFromDevise()");
-
-        return bytes;
     }
 
     public static Bitmap resizeBitmap(Bitmap bitmap, float maxResolution) {
@@ -289,33 +255,5 @@ public class AccountEditActivity extends AppCompatActivity {
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 
-    private void uploadDataToDatabase() {
-        if (!mNameField.getText().toString().equals(currentUserProfile.getName()))
-            currentUserProfile.setName(mNameField.getText().toString());
-
-        if (!mEmailField.getText().toString().equals(currentUserProfile.getEmail()))
-            currentUserProfile.setEmail(mEmailField.getText().toString());
-
-        if (!mBreedField.getText().toString().equals(currentUserProfile.getBreed()))
-            currentUserProfile.setBreed(mBreedField.getText().toString());
-
-        if (!mAgeField.getText().toString().equals(currentUserProfile.getAge()))
-            currentUserProfile.setAge(mAgeField.getText().toString());
-
-        if (!mCountryField.getText().toString().equals(currentUserProfile.getCountry()))
-            currentUserProfile.setCountry(mCountryField.getText().toString());
-
-        if (!mCityField.getText().toString().equals(currentUserProfile.getCity()))
-            currentUserProfile.setCity(mCityField.getText().toString());
-
-        if (!mAddressField.getText().toString().equals(currentUserProfile.getAddress()))
-            currentUserProfile.setAddress(mAddressField.getText().toString());
-
-        if (!mPhoneField.getText().toString().equals(currentUserProfile.getPhone()))
-            currentUserProfile.setPhone(mPhoneField.getText().toString());
-
-        databaseProfile.child(user.getUid()).setValue(currentUserProfile);
-
-    }
 
 }
