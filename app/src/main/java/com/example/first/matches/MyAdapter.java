@@ -23,15 +23,17 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implements RecyclerClickListener {
 
     FirebaseStorage storage;
     StorageReference storageRef;
     final long BATCH_SIZE = 1024 * 1024;
 
     private ArrayList<UserModel> matches;
-    public MyAdapter(ArrayList<UserModel> matches) {
+    private Context context;
+    public MyAdapter(ArrayList<UserModel> matches, Context context) {
         this.matches = matches;
+        this.context = context;
     }
 
     @NonNull
@@ -46,16 +48,32 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         holder.itemView.setTag(matches.get(position));
-        UserModel user = matches.get(position);
+        final UserModel user = matches.get(position);
         holder.nameView.setText(user.name);
         if (user.seen.equals("false")) holder.newMatch.setVisibility(View.VISIBLE);
 
         setPhoto(holder,position);
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() { // click on element
+            @Override
+            public void onClick(View v) {
+                itemClick(user.id);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return matches.size();
+    }
+
+    public interface RecyclerClickListener2{
+       void itemClick2(String id);
+    }
+
+    @Override
+    public void itemClick(String id) {
+        ((RecyclerClickListener2)context).itemClick2(id);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -88,7 +106,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 public void onFailure(@NonNull Exception e) {
                 }
             });
-
         }
 
     }

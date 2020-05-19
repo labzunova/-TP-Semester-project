@@ -20,5 +20,4 @@ public class MatchesViewModel extends ViewModel {
     public LiveData<ArrayList<UserModel>> getLiveData(){
         return matchesMutableLiveData;
     }
-
 }

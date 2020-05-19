@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.first.AccountActivity;
+import com.example.first.OtherDogActivity;
 import com.example.first.R;
 import com.example.first.mainScreen.MainActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,7 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MatchesActivity extends AppCompatActivity {
+public class MatchesActivity extends AppCompatActivity implements MyAdapter.RecyclerClickListener2 {
 
     private RecyclerView matchesRecycler;
     private MyAdapter myAdapter;
@@ -70,8 +71,14 @@ public class MatchesActivity extends AppCompatActivity {
             }
         });
 
-        myAdapter = new MyAdapter(model.getLiveData().getValue());
+        myAdapter = new MyAdapter(model.getLiveData().getValue(), this);
         matchesRecycler.setAdapter(myAdapter);
     }
 
+    @Override
+    public void itemClick2(String id) { // for clicking on RV items
+        Intent intent = new Intent(MatchesActivity.this, OtherDogActivity.class);
+        intent.putExtra("id",id);
+        startActivity(intent);
+    }
 }
