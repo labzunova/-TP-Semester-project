@@ -21,7 +21,6 @@ public class Repository {
     private ArrayList<UserModel> matches = new ArrayList<>();
     private MutableLiveData<ArrayList<UserModel>> dog = new MutableLiveData<>();
 
-
     public static Repository getInstance() {
         if(instance == null){
             instance = new Repository();
@@ -30,13 +29,12 @@ public class Repository {
     }
 
     public MutableLiveData<ArrayList<UserModel>> getMatches() {
-        if (matches.size() == 0 ) loadMatches(); //or -1
+        if (matches.size() == 0 ) loadMatches(); // or -1
         dog.setValue(matches);
         return dog;
     }
 
     private void loadMatches() {
-
         FirebaseUser user;
         user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
