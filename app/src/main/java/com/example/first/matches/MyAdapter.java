@@ -1,4 +1,4 @@
-package matches;
+package com.example.first.matches;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -1,10 +1,6 @@
-package matches;
-
-import android.content.Context;
+package com.example.first.matches;
 
 import androidx.annotation.NonNull;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,7 +13,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class Repository {
@@ -28,7 +23,6 @@ public class Repository {
 
 
     public static Repository getInstance() {
-
         if(instance == null){
             instance = new Repository();
         }
@@ -36,11 +30,8 @@ public class Repository {
     }
 
     public MutableLiveData<ArrayList<UserModel>> getMatches() {
-
         if (matches.size() == 0 ) loadMatches(); //or -1
-
         dog.setValue(matches);
-
         return dog;
     }
 
@@ -49,9 +40,9 @@ public class Repository {
         FirebaseUser user;
         user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Query query = reference.child("Profiles").child(user.getUid()).child("matches");
+        DatabaseReference ref = reference.child("Profiles").child(user.getUid()).child("matches");
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot :dataSnapshot.getChildren()){
@@ -59,7 +50,6 @@ public class Repository {
                 }
                 dog.postValue(matches);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
