@@ -14,16 +14,19 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,6 +56,7 @@ public class AccountEditActivity extends AppCompatActivity {
     private TextInputEditText mAddressField;
     private TextInputEditText mPhoneField;
     private Button saveBtn, chooseBtn, uploadBtn;
+    private MaterialToolbar exitBtn;
     private ImageView imgPreview;
 
     // firebase
@@ -86,6 +90,7 @@ public class AccountEditActivity extends AppCompatActivity {
         mAddressField = (TextInputEditText) findViewById(R.id.addressFieldInp);
         mPhoneField = (TextInputEditText) findViewById(R.id.phoneFieldInp);
         saveBtn = (Button) findViewById(R.id.saveBtn);
+        exitBtn = (MaterialToolbar) findViewById(R.id.topAppBar);
         imgPreview = (ImageView) findViewById(R.id.imageView);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +98,13 @@ public class AccountEditActivity extends AppCompatActivity {
             public void onClick(View v) {
                 saveData();
                 uploadImage();
+                startActivity(new Intent(AccountEditActivity.this, AccountActivity.class));
+            }
+        });
+
+        exitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 startActivity(new Intent(AccountEditActivity.this, AccountActivity.class));
             }
         });
@@ -120,7 +132,6 @@ public class AccountEditActivity extends AppCompatActivity {
             }
         });
 
-
         // Загрузка фотки профиля со Storage
         final long ONE_MEGABYTE = 1024 * 1024;
         StorageReference avatarRef = storageRef.child("Profiles").child(userId).child("AvatarImage");
@@ -143,18 +154,12 @@ public class AccountEditActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
         imgPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chooseImage();
             }
         });
-
-
 
     }
 

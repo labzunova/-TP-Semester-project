@@ -5,54 +5,66 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:background="?attr/selectableItemBackground"
-    android:padding="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:layout_gravity="center"
-        android:layout_margin="4dp"
-        app:cardBackgroundColor="#10DF38B1"
-        app:cardCornerRadius="10dp"
+        android:background="@android:color/transparent"
         app:cardElevation="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/photo"
-            tools:src="@color/customDarkPink"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            tools:src="@color/colorPrimaryDark"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_margin="10dp"
+            android:layout_margin="16dp"
             />
 
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginLeft="128dp"
+            android:layout_gravity="center_vertical"
             android:textSize="25sp"
-            android:textColor="#000"
-            android:fontFamily="casual"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_light"
             android:text="@string/testName"
-            android:layout_gravity="center"
             app:layout_constraintTop_toTopOf="parent" />
-        <!--     <TextView
-                 android:id="@+id/breed"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="15dp"
-                 android:textSize="20sp"
-                 android:fontFamily="casual"
-                 android:text="@string/testBreed"
-                 android:layout_gravity="center"
-                 app:layout_constraintTop_toTopOf="parent" /> -->
 
+        <LinearLayout
+            android:id="@+id/newMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            android:layout_gravity="end"
+            android:background="@drawable/shape_new_match">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_stars_black_24dp">
+            </ImageView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/newMatch"
+                android:textColor="@color/black">
+            </TextView>
+
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 

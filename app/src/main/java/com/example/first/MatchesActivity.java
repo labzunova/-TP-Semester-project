@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,11 +19,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.first.mainScreen.MainActivity;
+import com.example.first.mainScreen.MainViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -48,7 +53,7 @@ public class MatchesActivity extends AppCompatActivity {
     private List<UserModel> result; // matches array
     FirebaseStorage storage;
     StorageReference storageRef;
-    final long ONE_MEGABYTE = 1024 * 1024;
+    final long BATCH_SIZE = 1024 * 1024;
 
     private TextView noMatches;
 
@@ -61,7 +66,6 @@ public class MatchesActivity extends AppCompatActivity {
             this.seen = seen;
         }
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +86,28 @@ public class MatchesActivity extends AppCompatActivity {
         FirebaseUser user = mAuth.getInstance().getCurrentUser();
         mRef = FirebaseDatabase.getInstance().getReference("Profiles").child(user.getUid()).child("matches");
 
-        UpdateList();
+        BottomNavigationView bottomNavigationView;
+        bottomNavigationView = findViewById(R.id.bottomNavigation);
+        bottomNavigationView.setSelectedItemId(R.id.matches);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.profile:
+                        startActivity(new Intent(MatchesActivity.this,AccountActivity.class));
+                        return true;
+                    case R.id.matches:
+                        return true;
+                    case R.id.cards:
+                        startActivity(new Intent(MatchesActivity.this, MainActivity.class));
+                        return true;
+                }
+                return false;
+            }
+        });
 
+
+        UpdateList();
     }
 
     private void UpdateList(){
@@ -164,11 +188,11 @@ public class MatchesActivity extends AppCompatActivity {
 
             UserModel user = matches.get(position);
             holder.nameView.setText(user.name);
-            if (user.seen.equals("false")) holder.cardView.setCardBackgroundColor(Color.parseColor("#40DF38B1"));
+            if (user.seen.equals("false")) holder.newMatch.setVisibility(View.VISIBLE);
 
             // photo adding
             StorageReference myRef = storageRef.child("Profiles").child(user.id).child("AvatarImage");
-            myRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            myRef.getBytes(BATCH_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
@@ -195,18 +219,18 @@ public class MatchesActivity extends AppCompatActivity {
         }
     }
 
-
     class myViewHolder extends RecyclerView.ViewHolder {
-
         TextView nameView;
         CardView cardView;
         ImageView photoView;
+        LinearLayout newMatch;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
             nameView = itemView.findViewById(R.id.name);
             cardView = itemView.findViewById(R.id.card_view);
             photoView = itemView.findViewById(R.id.photo);
+            newMatch = itemView.findViewById(R.id.newMatch);
         }
     }
 
