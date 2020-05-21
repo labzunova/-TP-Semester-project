@@ -1,13 +1,11 @@
-package com.example.first.mainScreen;
+package com.example.first.mainScreen.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -18,7 +16,7 @@ import com.example.first.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 
-public class MainActivity extends AppCompatActivity implements DogFragment.OnListenerActivity {
+public class MainActivity extends AppCompatActivity {
 
     // but of menu
     ImageView editBut, profileBut, matchesBut, exitBut;
@@ -73,22 +71,26 @@ public class MainActivity extends AppCompatActivity implements DogFragment.OnLis
         mViewModel.getProfile().observe(this, new Observer<MainViewModel.UIInfo>() {
             @Override
             public void onChanged(MainViewModel.UIInfo dataProfile) {
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.dogFragment, DogFragment.newInstance(dataProfile.infoProfile, dataProfile.mainImageUser))
-                            .commit();
+
+                DogFragment fragment = DogFragment.newInstance(dataProfile.infoProfile, dataProfile.mainImageUser);
+                fragment.setOnSwipeListener(new DogFragment.Listener() {
+                    @Override
+                    public void swipeLeft() {
+                        mViewModel.dislike();
+                    }
+
+                    @Override
+                    public void swipeRight() {
+                        mViewModel.like();
+                    }
+                });
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.dogFragment, fragment)
+                        .commit();
             }
         });
 
-    }
-
-    @Override
-    public void swipeLeft() {
-        mViewModel.dislike();
-    }
-
-    @Override
-    public void swipeRight() {
-        mViewModel.like();
     }
 }

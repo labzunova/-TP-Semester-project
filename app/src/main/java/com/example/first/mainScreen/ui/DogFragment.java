@@ -1,10 +1,11 @@
-package com.example.first.mainScreen;
+package com.example.first.mainScreen.ui;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,32 +15,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.first.R;
 
-public class DogFragment extends Fragment implements OnSwipeListener.OnListener {
+public class DogFragment extends Fragment {
     private static final String ARG_ID_PHOTO = "idPhoto";
     private static final String ARG_INF_DOG = "infDog";
 
     private Bitmap bmpImage = null;
     private String messenger = null;
+    private Listener mListener;
 
     public DogFragment() {
     }
 
-    @Override
-    public void swipeLeft() {
-        ((OnListenerActivity)getActivity()).swipeLeft();
-    }
-
-    @Override
-    public void swipeRight() {
-        ((OnListenerActivity)getActivity()).swipeRight();
-    }
-
-    interface OnListenerActivity{
+    interface Listener{
         void swipeLeft();
         void swipeRight();
     }
 
-    public static DogFragment newInstance(String infUser, Bitmap bmpImage) {
+    void setOnSwipeListener(@NonNull Listener listener) {
+        mListener = listener;
+    }
+
+    static DogFragment newInstance(String infUser, Bitmap bmpImage) {
         DogFragment fragment = new DogFragment();
         Bundle args = new Bundle();
 
@@ -77,8 +73,10 @@ public class DogFragment extends Fragment implements OnSwipeListener.OnListener 
         }
 
         textMessenger.setText(messenger);
-        v.setOnTouchListener(new OnSwipeListener(getContext(), v, this));
 
+        if (mListener != null) {
+            v.setOnTouchListener(new OnSwipeListener(getContext(), v, mListener));
+        }
         return v;
     }
 

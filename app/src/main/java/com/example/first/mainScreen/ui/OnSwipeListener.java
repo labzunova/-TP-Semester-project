@@ -1,9 +1,8 @@
-package com.example.first.mainScreen;
+package com.example.first.mainScreen.ui;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,17 +17,12 @@ public class OnSwipeListener implements View.OnTouchListener {
     private static final int MIN_DELTA_SWIPE = 150;
 
     private View view;
-    private OnListener onListener;
+    private DogFragment.Listener mListener;
 
-    interface OnListener {
-        void swipeLeft();
-        void swipeRight();
-    }
-
-    public OnSwipeListener(Context context, View view, OnListener onListener) {
-        gestureDetector = new GestureDetector(context, new OnSwipeListener.GestureListener());
+    public OnSwipeListener(Context context, View view, DogFragment.Listener listener) {
+        gestureDetector = new GestureDetector(context, new GestureListener());
         this.view = view;
-        this.onListener = onListener;
+        this.mListener = listener;
     }
 
     @Override
@@ -72,7 +66,7 @@ public class OnSwipeListener implements View.OnTouchListener {
 
         view = null;
 
-        onListener.swipeLeft();
+        mListener.swipeLeft();
     }
 
     private void onSwipeRight() {
@@ -82,7 +76,7 @@ public class OnSwipeListener implements View.OnTouchListener {
 
         view = null;
 
-        onListener.swipeRight();
+        mListener.swipeRight();
     }
 
     final class GestureListener extends GestureDetector.SimpleOnGestureListener {

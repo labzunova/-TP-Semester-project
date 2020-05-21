@@ -18,7 +18,7 @@ import android.widget.TextView;
 //import com.facebook.drawee.backends.pipeline.Fresco;
 //import com.facebook.drawee.view.SimpleDraweeView;
 //import com.facebook.imagepipeline.request.ImageRequest;
-import com.example.first.mainScreen.MainActivity;
+import com.example.first.mainScreen.ui.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;

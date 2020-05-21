@@ -1,4 +1,4 @@
-package com.example.first.mainScreen;
+package com.example.first.mainScreen.ui;
 
 import android.app.Application;
 import android.graphics.Bitmap;
@@ -8,13 +8,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
 
+import com.example.first.mainScreen.repositories.InfoRepo;
+
 public class MainViewModel extends AndroidViewModel {
     private MediatorLiveData<UIInfo> currentUser = new MediatorLiveData<>();
-    private LiveData<InfRepo.TransportCase> informationLiveData;
+    private LiveData<InfoRepo.CaseProfile> informationLiveData;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
-        informationLiveData = InfRepo.getInstance(getApplication()).getFirstCase();
+        informationLiveData = InfoRepo.getInstance(getApplication()).getFirstCaseProfile();
         currentUser.addSource(informationLiveData, observer);
     }
 
@@ -23,19 +25,19 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void dislike() {
-        informationLiveData = InfRepo.getInstance(getApplication()).getCase();
+        informationLiveData = InfoRepo.getInstance(getApplication()).getCaseProfile();
         currentUser.addSource(informationLiveData, observer);
     }
 
     public void like() {
-        InfRepo.getInstance(getApplication()).processInformation();
-        informationLiveData = InfRepo.getInstance(getApplication()).getCase();
+        InfoRepo.getInstance(getApplication()).processInformation();
+        informationLiveData = InfoRepo.getInstance(getApplication()).getCaseProfile();
         currentUser.addSource(informationLiveData, observer);
     }
 
-    private Observer<InfRepo.TransportCase> observer = new Observer<InfRepo.TransportCase>() {
+    private Observer<InfoRepo.CaseProfile> observer = new Observer<InfoRepo.CaseProfile>() {
         @Override
-        public void onChanged(InfRepo.TransportCase userInformation) {
+        public void onChanged(InfoRepo.CaseProfile userInformation) {
             String infoUser = "";
             Bitmap bitmap;
             UIInfo uiInfo;
