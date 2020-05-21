@@ -4,61 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context=".AuthorizationActivity">
 
     <ImageView
         android:id="@+id/background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/bg"
-        android:alpha="0.7"
+        style="@style/backgroundStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/authPageName"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:shadowDy="-3"
-        android:shadowDx="-3"
-        android:shadowColor="@color/customDarkPink"
-        android:shadowRadius="5"
-        android:background="#808A2B4B"
-        android:fontFamily="casual"
-        android:gravity="center"
-        android:text="@string/loginPageName"
-        android:textColor="#000"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            app:titleTextAppearance="@style/appBarText"
+            app:title="@string/authTitle"
+            style="@style/topAppBar" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailField"
         android:theme="@style/editsStyle"
         android:layout_height="wrap_content"
         android:layout_width="300dp"
-        android:layout_margin="10dp"
-        app:boxCornerRadiusBottomEnd="10dp"
-        app:boxCornerRadiusBottomStart="10dp"
-        app:boxCornerRadiusTopEnd="10dp"
-        app:boxCornerRadiusTopStart="10dp"
-        app:boxBackgroundColor="#70E3B7D6"
-        app:boxBackgroundMode="filled"
-        android:textColorHint="@color/customDarkPink"
+        android:layout_margin="8dp"
+        app:boxStrokeColor="@color/colorPrimaryDark"
+        app:hintTextColor="@color/colorPrimaryDark"
+        android:textColorHint="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@+id/passwordField"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailFieldInp"
-            android:fontFamily="casual"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/textFields"
             android:hint="@string/emailHint" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -66,50 +49,39 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordField"
         android:theme="@style/editsStyle"
+        app:passwordToggleEnabled="true"
         android:layout_height="wrap_content"
         android:layout_width="300dp"
-        android:layout_margin="10dp"
-        app:boxCornerRadiusBottomEnd="10dp"
-        app:boxCornerRadiusBottomStart="10dp"
-        app:boxCornerRadiusTopEnd="10dp"
-        app:boxCornerRadiusTopStart="10dp"
-        app:boxBackgroundColor="#70E3B7D6"
         app:boxBackgroundMode="filled"
-        android:textColorHint="@color/customDarkPink"
-        app:layout_constraintBottom_toTopOf="@+id/loginBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:boxStrokeColor="@color/colorPrimaryDark"
+        app:hintTextColor="@color/colorPrimaryDark"
+        android:textColorHint="@color/colorPrimaryDark"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordFieldInp"
-            android:fontFamily="casual"
+            android:background="@color/textFields"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/passwordHint" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/loginBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#808A2B4B"
-        android:textSize="20sp"
-        android:fontFamily="casual"
+        style="@style/button"
+        android:layout_marginTop="24dp"
         android:text="@string/loginBtnText"
-        app:layout_constraintBottom_toBottomOf="@+id/background"
+        app:layout_constraintTop_toBottomOf="@+id/passwordField"
         app:layout_constraintEnd_toEndOf="@+id/background"
         app:layout_constraintStart_toStartOf="@+id/background"
-        app:layout_constraintTop_toTopOf="parent" />
+        />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/registrationBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#808A2B4B"
-        android:fontFamily="casual"
-        android:layout_marginTop="30dp"
+        style="@style/borderlessBtn"
         android:text="@string/registrationBtnName"
-        android:textColor="#000"
-        android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginBtn" />

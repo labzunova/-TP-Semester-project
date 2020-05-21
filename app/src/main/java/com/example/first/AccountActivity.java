@@ -9,8 +9,10 @@ import android.graphics.BitmapFactory;
 //import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
-//import android.widget.Button;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,9 +21,11 @@ import android.widget.TextView;
 //import com.facebook.drawee.view.SimpleDraweeView;
 //import com.facebook.imagepipeline.request.ImageRequest;
 import com.example.first.AccountEdit.AccountEditActivity;
+import com.example.first.mainScreen.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -40,17 +44,14 @@ public class AccountActivity extends AppCompatActivity {
     private boolean isImageScaled = false;
     private String str = new String("");
 
-
-
     private DatabaseReference databaseProfile;
     private FirebaseUser user;
     private String userId;
     private Profile currentUserProfile;
     private Uri filepath;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     FirebaseStorage storage;
     StorageReference storageRef;
-
-    BottomNavigationView bottomNavigationView;
 
 
     @Override
@@ -60,18 +61,57 @@ public class AccountActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
 
+        FloatingActionButton fab = findViewById(R.id.editActivity);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountActivity.this, AccountEditActivity.class));
+            }
+        });
+
+        /*
+
         databaseProfile = FirebaseDatabase.getInstance().getReference("Profiles");
         user = FirebaseAuth.getInstance().getCurrentUser();
-        userId = user.getUid();
+        if (user == null)         //back to auth if currentUser = null
+            startActivity(new Intent(AccountActivity.this, AuthorizationActivity.class));
+        if (user != null) userId = user.getUid();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
 
+        BottomNavigationView bottomNavigationView;
+        bottomNavigationView = findViewById(R.id.testNavigation);
+        bottomNavigationView.setSelectedItemId(R.id.profile);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.profile:
+                        return true;
+                    case R.id.matches:
+                        startActivity(new Intent(AccountActivity.this, MatchesActivity.class));
+                        return true;
+                    case R.id.cards:
+                        startActivity(new Intent(AccountActivity.this,MainActivity.class));
+                        return true;
+                }
+                return false;
+            }
+        });
+
+        ImageButton accountEdit = (ImageButton) findViewById(R.id.editActivity);
+        accountEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountActivity.this,AccountEditActivity.class));
+            }
+        });
         imgSetting = findViewById(R.id.edit);
         imgExit = findViewById(R.id.exit);
-        imgScroll = findViewById(R.id.to_str_scroll);
-        imgMatch = findViewById(R.id.match);
+        imgScroll = findViewById(R.id.cards);
+        imgMatch = findViewById(R.id.matches);
 
-        /*
+
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setSelectedItemId(R.id.profile);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -93,7 +133,7 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
-         */
+
 
         labName = findViewById(R.id.i_name);
         labEmail = findViewById(R.id.i_email);
@@ -132,7 +172,7 @@ public class AccountActivity extends AppCompatActivity {
                 }
              });
 
-        imgSetting.setOnClickListener(new View.OnClickListener() {
+       imgSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AccountActivity.this, AccountEditActivity.class));
@@ -219,6 +259,8 @@ public class AccountActivity extends AppCompatActivity {
                 photoProfil.setImageResource(R.drawable.dog);
             }
         });
+
+        */
 
     }
 

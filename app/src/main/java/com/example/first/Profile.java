@@ -18,7 +18,7 @@ public class Profile {
     private ArrayList<Matches> matches;
     private ArrayList<String> seen;
 
-    Profile () {
+    public Profile() {
 
     }
 
@@ -129,7 +129,7 @@ public class Profile {
     public void setMatches(ArrayList<Matches> matches) { this.matches = matches; }
 
 
-    static class Matches {
+    public static class Matches {
         private String id;
         private String name;
         private String seen;

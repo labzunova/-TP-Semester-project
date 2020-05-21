@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -35,6 +37,8 @@ public class AuthorizationActivity extends AppCompatActivity {
 
         mEmailField = (TextInputEditText) findViewById(R.id.emailFieldInp);
         mPasswordField = (TextInputEditText) findViewById(R.id.passwordFieldInp);
+        mPasswordField.setTransformationMethod(new PasswordTransformationMethod()); // for font family
+        mPasswordField.setTypeface(Typeface.DEFAULT);
         mLoginButton = (Button) findViewById(R.id.loginBtn);
         mRegistrationButton = (Button) findViewById(R.id.registrationBtn);
 

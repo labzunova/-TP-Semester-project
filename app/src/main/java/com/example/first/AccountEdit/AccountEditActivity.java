@@ -65,7 +65,6 @@ public class AccountEditActivity extends AppCompatActivity {
     private TextInputEditText mCityField;
     private TextInputEditText mAddressField;
     private TextInputEditText mPhoneField;
-    private Button doneBtn, editGalleryBtn;
     private ImageView imgPreview;
 
     @Override
@@ -126,17 +125,17 @@ public class AccountEditActivity extends AppCompatActivity {
 
     private void UISetup() {
         // init views
-        mNameField = (TextInputEditText) findViewById(R.id.nameFieldInp);
-        mEmailField = (TextInputEditText) findViewById(R.id.emailFieldInp);
-        mBreedField = (TextInputEditText) findViewById(R.id.dogBreedFieldInp);
-        mAgeField = (TextInputEditText) findViewById(R.id.dogAgeFieldInp);
-        mCountryField = (TextInputEditText) findViewById(R.id.countryFieldInp);
-        mCityField = (TextInputEditText) findViewById(R.id.cityFieldInp);
-        mAddressField = (TextInputEditText) findViewById(R.id.addressFieldInp);
-        mPhoneField = (TextInputEditText) findViewById(R.id.phoneFieldInp);
-        doneBtn = (Button) findViewById(R.id.saveBtn);
-        imgPreview = (ImageView) findViewById(R.id.imageView);
-        editGalleryBtn = (Button) findViewById(R.id.editGalleryBtn);
+        mNameField = findViewById(R.id.nameFieldInp);
+        mEmailField = findViewById(R.id.emailFieldInp);
+        mBreedField = findViewById(R.id.dogBreedFieldInp);
+        mAgeField = findViewById(R.id.dogAgeFieldInp);
+        mCountryField = findViewById(R.id.countryFieldInp);
+        mCityField = findViewById(R.id.cityFieldInp);
+        mAddressField = findViewById(R.id.addressFieldInp);
+        mPhoneField = findViewById(R.id.phoneFieldInp);
+        Button doneBtn = findViewById(R.id.saveBtn);
+        Button changeProfilePhotoBtn = findViewById(R.id.changePhotoBtn);
+        imgPreview = findViewById(R.id.imageView);
 
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +155,7 @@ public class AccountEditActivity extends AppCompatActivity {
             }
         });
 
-        imgPreview.setOnClickListener(new View.OnClickListener() {
+        changeProfilePhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chooseImage();

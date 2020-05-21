@@ -1,13 +1,15 @@
-package com.example.first;
+package com.example.first.mainScreen;
 
-import android.content.Intent;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,20 +18,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.ByteArrayOutputStream;
+import com.bumptech.glide.Glide;
+import com.example.first.Profile;
+import com.example.first.R;
 
 public class DogFragment extends Fragment {
 
     public static final String INFORMATION_PROCESS_FRAGMENT = "infFragment";
 
-    private static final String ARG_ID_Photo = "idPhoto";
+    private static final String ARG_ID_PHOTO = "idPhoto";
     private static final String ARG_INF_DOG = "infDog";
 
-    private static final String DEFAULT_STRING = "Swipe\nleft or right";
+    private static final String DEFAULT_STRING = "Default";
+
+    MainViewModel mViewModel;
 
     private ImageView imgDogMain;
     private TextView textMessenger;
-    private View view;
     private Bitmap bmpImage;
     private String messenger = DEFAULT_STRING;
 
@@ -37,26 +42,17 @@ public class DogFragment extends Fragment {
     }
 
 
-    public static DogFragment newInstance(Bitmap bmpImage, Profile infUser) {
+    public static DogFragment newInstance(String infUser, Bitmap bmpImage) {
         Log.d(INFORMATION_PROCESS_FRAGMENT, "Get data for initialisation");
 
         DogFragment fragment = new DogFragment();
         Bundle args = new Bundle();
 
-        String inf;
         if (infUser != null) {
             Log.d(INFORMATION_PROCESS_FRAGMENT, "We have data for fragment");
 
-            inf = infUser.getName() + ", "
-                    + infUser.getAge() + "\n"
-                    + infUser.getCity();
-
-            // put photo
-
-            args.putParcelable(ARG_ID_Photo, bmpImage);
-
-            // put string
-            args.putString(ARG_INF_DOG, inf);
+            args.putParcelable(ARG_ID_PHOTO, bmpImage);
+            args.putString(ARG_INF_DOG, infUser);
             fragment.setArguments(args);
         }
         else {
@@ -70,12 +66,16 @@ public class DogFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(INFORMATION_PROCESS_FRAGMENT, "onCreate start");
+
+        mViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+
         if (getArguments() != null) {
             Log.d(INFORMATION_PROCESS_FRAGMENT, "Data initialisation fragment in onCrate");
 
-            bmpImage = getArguments().getParcelable(ARG_ID_Photo);
+            bmpImage = getArguments().getParcelable(ARG_ID_PHOTO);
             messenger = getArguments().getString(ARG_INF_DOG);
         }
+
     }
 
     @Override
@@ -91,19 +91,31 @@ public class DogFragment extends Fragment {
         else {
             imgDogMain.setImageResource(R.drawable.dog_example2);
         }
+
         textMessenger.setText(messenger);
 
         Log.d(INFORMATION_PROCESS_FRAGMENT, "we have new fragment in OnCreateView");
-        v.setOnTouchListener(new OnSwipeListener(getContext(), v));
+        v.setOnTouchListener(new OnSwipeListener(getContext(), v, mViewModel));
 
         return v;
     }
 
+
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        this.view = view;
+        ValueAnimator animator;
+        animator = ValueAnimator.ofFloat(0.5f, 1f);
+        animator.setDuration(300L);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(final ValueAnimator animation) {
+                view.setScaleX((float) animation.getAnimatedValue());
+                view.setScaleY((float) animation.getAnimatedValue());
+            }
+        });
+        animator.start();
     }
 
     @Override
