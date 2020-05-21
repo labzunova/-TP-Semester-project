@@ -69,7 +69,7 @@
                 android:background="@android:color/transparent"
                 android:text="@string/bobik"
                 style="@style/pageTitle"
-                android:textSize="40sp" />
+                android:textSize="@dimen/text_size40" />
 
         </LinearLayout>
 
