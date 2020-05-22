@@ -19,8 +19,8 @@
         <activity android:name=".mainScreen.ui.MainActivity" />
         <activity android:name=".AccountEditActivity" />
         <activity android:name=".RegistrationActivity" />
-        <activity android:name=".AuthorizationActivity"/>
-        <activity android:name=".AccountActivity">
+        <activity android:name=".AccountActivity"/>
+        <activity android:name=".AuthorizationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

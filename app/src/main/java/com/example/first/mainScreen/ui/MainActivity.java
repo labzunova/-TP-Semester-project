@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.example.first.AccountActivity;
 import com.example.first.AccountEditActivity;
+import com.example.first.AuthorizationActivity;
 import com.example.first.MatchesActivity;
 import com.example.first.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(MainActivity.this, AccountActivity.class));
+                startActivity(new Intent(MainActivity.this, AuthorizationActivity.class));
             }
         });
     }

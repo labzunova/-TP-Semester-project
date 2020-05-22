@@ -3,22 +3,22 @@ package com.example.first.mainScreen.database.local;
 import android.content.Context;
 
 import com.example.first.Profile;
-import com.example.first.mainScreen.database.CredentialDatabase;
+import com.example.first.mainScreen.database.ProfileDatabase;
 import com.example.first.mainScreen.executors.AppExecutors;
 import com.example.first.mainScreen.repositories.InfoRepo;
 
 import java.util.List;
 
-public class LocalDatabase implements CredentialDatabase {
+public class LocalDatabase implements ProfileDatabase {
     private final static int MAX_USER = 20;
 
-    private CredentialDatabase mNetworkDatabase;
+    private ProfileDatabase mNetworkDatabase;
     private Context mContext;
 
     private List<Credential> allCred = null;
     private int count = 0;
 
-    public LocalDatabase(Context context, CredentialDatabase networkDatabase) {
+    public LocalDatabase(Context context, ProfileDatabase networkDatabase) {
         this.mContext = context;
         this.mNetworkDatabase = networkDatabase;
 

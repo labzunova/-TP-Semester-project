@@ -7,16 +7,16 @@ import androidx.lifecycle.MediatorLiveData;
 
 import com.example.first.ApplicationModified;
 import com.example.first.Profile;
-import com.example.first.mainScreen.database.CredentialDatabase;
+import com.example.first.mainScreen.database.ProfileDatabase;
 
 import java.util.ArrayList;
 
 public class InfoRepo {
-    private CredentialDatabase database;
+    private ProfileDatabase database;
     private CaseProfile newCase;
     private MediatorLiveData<CaseProfile> liveDataRepo;
 
-    public InfoRepo(CredentialDatabase database) {
+    public InfoRepo(ProfileDatabase database) {
         newCase = null;
 
         this.database = database;
@@ -24,7 +24,7 @@ public class InfoRepo {
 
     @NonNull
     public static InfoRepo getInstance(Context context) {
-        return ApplicationModified.from(context).getInfRepo();
+        return ApplicationModified.from(context).getInfoRepo();
     }
 
 
@@ -89,7 +89,7 @@ public class InfoRepo {
 
     public void processInformation() {
         final CaseProfile lastUserCase = newCase;
-        database.getMyCaseProfile(new CredentialDatabase.GetCaseProfileCallback() {
+        database.getMyCaseProfile(new ProfileDatabase.GetCaseProfileCallback() {
             @Override
             public void onSuccess(CaseProfile caseProfile) {
                 processInformation(caseProfile, lastUserCase);
@@ -97,12 +97,14 @@ public class InfoRepo {
 
             @Override
             public void onError(int codeError) {
-
+                if (codeError == ProfileDatabase.BAD_INTERNET) {
+                    // TODO открыть экран загрузки
+                }
             }
 
             @Override
             public void onNotFound() {
-
+                // TODO выход из аккаунта с сообщением пользователю, что его данных нет в базе
             }
         });
     }
@@ -121,7 +123,7 @@ public class InfoRepo {
         }
     }
 
-    private class CredentialsCallback implements CredentialDatabase.GetCaseProfileCallback {
+    private class CredentialsCallback implements ProfileDatabase.GetCaseProfileCallback {
 
         @Override
         public void onSuccess(CaseProfile caseProfile) {

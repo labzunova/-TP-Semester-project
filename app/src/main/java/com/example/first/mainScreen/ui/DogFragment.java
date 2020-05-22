@@ -75,7 +75,17 @@ public class DogFragment extends Fragment {
         textMessenger.setText(messenger);
 
         if (mListener != null) {
-            v.setOnTouchListener(new OnSwipeListener(getContext(), v, mListener));
+            v.setOnTouchListener(new OnSwipeListener(getContext(), v, new OnSwipeListener.Listener() {
+                @Override
+                public void swipeLeft() {
+                    mListener.swipeLeft();
+                }
+
+                @Override
+                public void swipeRight() {
+                    mListener.swipeRight();
+                }
+            }));
         }
         return v;
     }

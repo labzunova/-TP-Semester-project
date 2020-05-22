@@ -1,14 +1,18 @@
 package com.example.first.mainScreen.database;
 
+import android.content.Context;
+
+import com.example.first.mainScreen.database.local.LocalDatabase;
+import com.example.first.mainScreen.database.network.NetworkDatabase;
 import com.example.first.mainScreen.repositories.InfoRepo;
 
-public class CompositeDatabase implements CredentialDatabase {
-    private CredentialDatabase localDatabase;
-    private CredentialDatabase networkDatabase;
+public class CompositeDatabase implements ProfileDatabase {
+    private ProfileDatabase localDatabase;
+    private ProfileDatabase networkDatabase;
 
-    public CompositeDatabase(CredentialDatabase localDatabase, CredentialDatabase networkDatabase) {
-        this.localDatabase = localDatabase;
-        this.networkDatabase = networkDatabase;
+    public CompositeDatabase(Context context) {
+        networkDatabase = new NetworkDatabase();
+        localDatabase = new LocalDatabase(context, networkDatabase);
     }
 
     @Override

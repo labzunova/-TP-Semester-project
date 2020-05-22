@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import androidx.annotation.NonNull;
 
 import com.example.first.Profile;
-import com.example.first.mainScreen.database.CredentialDatabase;
+import com.example.first.mainScreen.database.ProfileDatabase;
 import com.example.first.mainScreen.repositories.InfoRepo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,7 +22,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-public class NetworkDatabase implements CredentialDatabase {
+public class NetworkDatabase implements ProfileDatabase {
     private static final String BRANCH_NAME = "Profiles";
     private static final String BRANCH_ID_PROFILES = "IdProfiles";
 
@@ -34,6 +34,8 @@ public class NetworkDatabase implements CredentialDatabase {
 
     private ArrayList<String> seen = null;
     private ArrayList<String> allId = null;
+
+    private String myId;
 
     public NetworkDatabase(){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -78,7 +80,7 @@ public class NetworkDatabase implements CredentialDatabase {
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    caseCallback.onError(BAD_ERROR);
+                                    caseCallback.onError(BAD_INTERNET);
                                 }
                             });
                         }
@@ -86,7 +88,7 @@ public class NetworkDatabase implements CredentialDatabase {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        caseCallback.onError(BAD_ERROR);
+                        caseCallback.onError(BAD_INTERNET);
                     }
                 });
     }
@@ -112,8 +114,6 @@ public class NetworkDatabase implements CredentialDatabase {
                         profile.setMatches(changeMatches(
                                 profile.getMatches(), localCase.profile.getMatches()
                         ));
-                        // TODO change matches
-
 
                         myRef.child(BRANCH_NAME).child(localCase.id).setValue(profile);
                     }
@@ -180,7 +180,14 @@ public class NetworkDatabase implements CredentialDatabase {
 
     @Override
     public void getMyCaseProfile(GetCaseProfileCallback caseProfileCallback) {
-        getCaseById(user.getUid(), caseProfileCallback);
+        if (user == null) {
+            caseProfileCallback.onError(NOT_ENTER);
+            return;
+        }
+        else {
+            myId = user.getUid();
+        }
+        getCaseById(myId, caseProfileCallback);
     }
 
     @Override
@@ -216,29 +223,19 @@ public class NetworkDatabase implements CredentialDatabase {
 
                     @Override
                     public void onError() {
-                        getCaseProfileCallback.onError(BAD_ERROR);
+                        getCaseProfileCallback.onError(BAD_INTERNET);
                     }
                 });
             }
 
             @Override
             public void onError() {
-                getCaseProfileCallback.onError(BAD_ERROR);
+                getCaseProfileCallback.onError(BAD_INTERNET);
             }
         });
-
-        /*
-
-        if (lastCase != null) {
-            seen.add(lastCase.id);
-            myUserCase.profile.setSeen(seen);
-            database.addSeenById(myLocalCase.id, lastCase.id);
-        }
-
-        */
     }
 
-    public void getAllId(final AllIdCollBack allIdCollBack) {
+    private void getAllId(final AllIdCollBack allIdCollBack) {
         myRef.child(BRANCH_ID_PROFILES)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -259,7 +256,7 @@ public class NetworkDatabase implements CredentialDatabase {
                 });
     }
 
-    public void getSeen(final SeenCollBack seenCollBack) {
+    private void getSeen(final SeenCollBack seenCollBack) {
         myRef.child(BRANCH_NAME).child(user.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override

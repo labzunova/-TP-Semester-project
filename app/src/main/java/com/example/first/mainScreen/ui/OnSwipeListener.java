@@ -17,9 +17,14 @@ public class OnSwipeListener implements View.OnTouchListener {
     private static final int MIN_DELTA_SWIPE = 150;
 
     private View view;
-    private DogFragment.Listener mListener;
+    private Listener mListener;
 
-    public OnSwipeListener(Context context, View view, DogFragment.Listener listener) {
+    interface Listener {
+        void swipeLeft();
+        void swipeRight();
+    }
+
+    public OnSwipeListener(Context context, View view, Listener listener) {
         gestureDetector = new GestureDetector(context, new GestureListener());
         this.view = view;
         this.mListener = listener;
