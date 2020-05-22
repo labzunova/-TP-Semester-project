@@ -20,7 +20,7 @@
         <activity android:name=".AccountEditActivity" />
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".AuthorizationActivity"/>
-        <activity android:name=".AccountActivity">
+        <activity android:name=".Account.AccountActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
