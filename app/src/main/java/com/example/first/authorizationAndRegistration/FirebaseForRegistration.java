@@ -52,8 +52,9 @@ public class FirebaseForRegistration {
 
     public void startRegister(String email, String password) {
         this.email = email;
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) ) {
-            ((FirebaseForRegistration.Toasts)context).makeToast("Fields are empty"); } else
+        if ((email.equals("")) || (password.equals(""))) {
+            ((Toasts)context).makeToast("Fields are empty");
+        }
             mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {

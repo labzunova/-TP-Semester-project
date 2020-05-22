@@ -32,9 +32,9 @@ public class FirebaseForAuth {
     }
 
     public void startSignIn(String email, String password) {
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+        if ((email.equals("")) || (password.equals(""))) {
             ((Toasts)context).makeToast("Fields are empty");
-        } else {
+        }
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -43,7 +43,6 @@ public class FirebaseForAuth {
                     }
                 }
             });
-        }
     }
 
     public void startListening(){

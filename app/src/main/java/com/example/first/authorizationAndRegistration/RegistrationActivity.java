@@ -14,7 +14,7 @@ import com.example.first.AccountActivity;
 import com.example.first.R;
 import com.google.android.material.textfield.TextInputEditText;
 
-public class RegistrationActivity extends AppCompatActivity implements FirebaseForAuth.Auth, FirebaseForAuth.Toasts  {
+public class RegistrationActivity extends AppCompatActivity implements FirebaseForRegistration.Auth, FirebaseForRegistration.Toasts  {
 
     private Button mRegisterBtn;
     private TextInputEditText mEmailField;
@@ -24,8 +24,6 @@ public class RegistrationActivity extends AppCompatActivity implements FirebaseF
 
         mEmailField = (TextInputEditText) findViewById(R.id.emailFieldInp);
         mPasswordField = (TextInputEditText) findViewById(R.id.passwordFieldInp);
-        mPasswordField.setTransformationMethod(new PasswordTransformationMethod()); // for font family
-        mPasswordField.setTypeface(Typeface.DEFAULT);
         mRegisterBtn = (Button) findViewById(R.id.registerBtn);
         Button mBackButton = (Button) findViewById(R.id.backToAuthBtn);
         mBackButton.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +51,14 @@ public class RegistrationActivity extends AppCompatActivity implements FirebaseF
                 firebase.startRegister(email,password);
             }
         });
+    }
+
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override

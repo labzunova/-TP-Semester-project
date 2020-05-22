@@ -20,13 +20,9 @@ public class AuthorizationActivity extends AppCompatActivity implements Firebase
     private TextInputEditText mPasswordField;
     private Button mLoginButton;
 
-    //private InitDataViewModel model;
-
     public void InitView(){
         mEmailField = (TextInputEditText) findViewById(R.id.emailFieldInp);
         mPasswordField = (TextInputEditText) findViewById(R.id.passwordFieldInp);
-        mPasswordField.setTransformationMethod(new PasswordTransformationMethod()); // for font family
-        mPasswordField.setTypeface(Typeface.DEFAULT);
         mLoginButton = (Button) findViewById(R.id.loginBtn);
         Button mRegistrationButton = (Button) findViewById(R.id.registrationBtn);
         mRegistrationButton.setOnClickListener(new View.OnClickListener() {
@@ -47,15 +43,6 @@ public class AuthorizationActivity extends AppCompatActivity implements Firebase
         String email = mEmailField.getText().toString();
         String password = mPasswordField.getText().toString();
 
-      /*  model = new ViewModelProvider(this).get(InitDataViewModel.class);
-        model.init(email,password);
-        model.getLiveData().observe(this, new Observer<InitData>() {
-            @Override
-            public void onChanged(InitData initData) {
-
-            }
-        }); */
-
         final FirebaseForAuth firebase = new FirebaseForAuth(this);
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +51,7 @@ public class AuthorizationActivity extends AppCompatActivity implements Firebase
                 String email = mEmailField.getText().toString();
                 String password = mPasswordField.getText().toString();
                 firebase.startSignIn(email,password);
+                email = password;
             }
         });
 
