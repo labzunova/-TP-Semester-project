@@ -10,11 +10,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 
 public class EditActivityViewModel extends AndroidViewModel {
     private static final String TAG = "EditAccountActivity";
-    private final static int NAME_MAX_LENGTH = 15;
+    private final static int NAME_MAX_LENGTH = 12;
 
     private MutableLiveData<ValidationStatus> mValidationState = new MutableLiveData<>();
     private MediatorLiveData<EditActivityRepo.AvatarImage> userProfileImage = new MediatorLiveData<>();
@@ -25,19 +24,19 @@ public class EditActivityViewModel extends AndroidViewModel {
     }
 
     // getProfile() returning liveData
-    public LiveData<ValidationStatus> getProgress() {
+    LiveData<ValidationStatus> getProgress() {
         return mValidationState;
     }
 
-    public LiveData<EditActivityRepo.AvatarImage> getAvatarImage() {
+    LiveData<EditActivityRepo.AvatarImage> getAvatarImage() {
         return userProfileImage;
     }
 
-    public LiveData<EditActivityRepo.ProfileInfo> getProfileInfo() {
+    LiveData<EditActivityRepo.ProfileInfo> getProfileInfo() {
         return userProfileInfo;
     }
 
-    public void uploadProfileData(EditActivityRepo.ProfileInfo profileInfo) {
+    void uploadProfileData(EditActivityRepo.ProfileInfo profileInfo) {
         // data validation sample
         if (profileInfo.getName().length() > NAME_MAX_LENGTH){
             mValidationState.setValue(ValidationStatus.NAME_FAILURE);
@@ -57,7 +56,7 @@ public class EditActivityViewModel extends AndroidViewModel {
         BREED_FAILURE
     }
 
-    public void uploadAvatarImage(Bitmap bitmap) {
+    void uploadAvatarImage(Bitmap bitmap) {
         final LiveData<EditActivityRepo.AvatarImage> avatarImageLiveData = EditActivityRepo.getInstance().getUserImage();
 
         userProfileImage.addSource(avatarImageLiveData, new Observer<EditActivityRepo.AvatarImage>() {
@@ -73,7 +72,7 @@ public class EditActivityViewModel extends AndroidViewModel {
         EditActivityRepo.getInstance().uploadAvatarImage();
     }
 
-    public void getData() {
+    void getData() {
         // запршиваем у Repo данные для UI
         final LiveData<EditActivityRepo.AvatarImage> avatarImageLiveData = EditActivityRepo.getInstance().getUserImage();
         final LiveData<EditActivityRepo.ProfileInfo> profileInfoLiveData = EditActivityRepo.getInstance().getUserInfo();

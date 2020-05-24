@@ -1,19 +1,12 @@
 package com.example.first.AccountEdit;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Build;
@@ -24,34 +17,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
-import com.bumptech.glide.Glide;
 import com.example.first.AccountActivity;
-import com.example.first.Profile;
 import com.example.first.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.function.ToDoubleBiFunction;
 
 public class AccountEditActivity extends AppCompatActivity {
     private static final String TAG = "EditAccountActivity";
@@ -82,16 +56,27 @@ public class AccountEditActivity extends AppCompatActivity {
         mViewModel.getProgress().observe(this, new Observer<EditActivityViewModel.ValidationStatus>() {
             @Override
             public void onChanged(EditActivityViewModel.ValidationStatus validationStatus) {
-                // update UI when Data is changed (validation)
-                // if data is ok - exit editActivity
-                if (validationStatus == EditActivityViewModel.ValidationStatus.SUCCESS) {
-                    Log.d(TAG, "Data validation success. Starting AccountActivity..");
-                    startActivity(new Intent(AccountEditActivity.this, AccountActivity.class));
-                } else if (validationStatus == EditActivityViewModel.ValidationStatus.DEFAULT_FAILURE) {
-                    Log.d(TAG, "Data validation failure. Updating UI to notify user about incorrect data input..");
-                    // TODO: Update UI to make warning to user
-                } else if (validationStatus == EditActivityViewModel.ValidationStatus.NONE) {
-                    Log.d(TAG, "Data validation status is NONE");
+                // TODO: update textedit color
+                switch (validationStatus) {
+                    case SUCCESS:
+                        Log.d(TAG, "Data validation success. Starting AccountActivity..");
+                        startActivity(new Intent(AccountEditActivity.this, AccountActivity.class));
+                        break;
+                    case NONE:
+                        Log.d(TAG, "Data validation status is NONE");
+                        break;
+                    case DEFAULT_FAILURE:
+                        Toast.makeText(AccountEditActivity.this, "Unknown validation failure", Toast.LENGTH_SHORT).show();
+                        break;
+                    case NAME_FAILURE:
+                        Toast.makeText(AccountEditActivity.this, "Name is too long", Toast.LENGTH_SHORT).show();
+                        break;
+                    case AGE_FAILURE:
+                        Toast.makeText(AccountEditActivity.this, "Age should be a number", Toast.LENGTH_SHORT).show();
+                        break;
+                    case BREED_FAILURE:
+                        Toast.makeText(AccountEditActivity.this, "Wrong breed format", Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         });
@@ -122,6 +107,7 @@ public class AccountEditActivity extends AppCompatActivity {
         });
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
         Log.d(TAG, "User id: " + user.getUid());
 
         // getData either from cash or from firebase

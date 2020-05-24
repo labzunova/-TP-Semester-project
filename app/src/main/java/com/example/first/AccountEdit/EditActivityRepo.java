@@ -2,9 +2,7 @@ package com.example.first.AccountEdit;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.provider.ContactsContract;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -57,15 +55,15 @@ public class EditActivityRepo {
         return sInstance;
     }
 
-    public LiveData<AvatarImage> getUserImage() {
+    LiveData<AvatarImage> getUserImage() {
         return userImage;
     }
 
-    public LiveData<ProfileInfo> getUserInfo() {
+    LiveData<ProfileInfo> getUserInfo() {
         return userInfo;
     }
 
-    public void refreshUserCash() {
+    void refreshUserCash() {
         // проверка, есть ли что то в кэше - потом сделать проверку нормальной (не за счет вспомогательной пер. isEmpty)
         if (mProfileCash.isEmpty) {
             Log.d(TAG, "refreshUserCash: mProfileCash.isEmpty == true");
@@ -123,7 +121,7 @@ public class EditActivityRepo {
         });
     }
 
-    public void updateAvatarImageCashe(Bitmap bitmap) {
+    void updateAvatarImageCashe(Bitmap bitmap) {
         bitmap = resizeBitmap(bitmap, PREVIEW_IMG_QUALITY);
         
         // обновление кэша
@@ -134,7 +132,7 @@ public class EditActivityRepo {
         userImage.setValue(mProfileCash.getProfileImage());
     }
 
-    public void uploadAvatarImage() {
+    void uploadAvatarImage() {
         // загрузка в firebase
         Log.d(TAG, "uploadAvatarImage: ");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -155,7 +153,7 @@ public class EditActivityRepo {
         });
     }
 
-    public void uploadProfileData(ProfileInfo profileInfo) {
+    void uploadProfileData(ProfileInfo profileInfo) {
         // обновление кэша
         mProfileCash.setProfileData(profileInfo);
 
@@ -203,7 +201,7 @@ public class EditActivityRepo {
         private String city;
         private String address;
 
-        public ProfileInfo(String name, String email, String phone, String breed, String age, String country, String city, String address) {
+        ProfileInfo(String name, String email, String phone, String breed, String age, String country, String city, String address) {
             this.name = name;
             this.email = email;
             this.phone = phone;
@@ -217,35 +215,35 @@ public class EditActivityRepo {
         public ProfileInfo() {
         }
 
-        public String getName() {
+        String getName() {
             return name;
         }
 
-        public String getEmail() {
+        String getEmail() {
             return email;
         }
 
-        public String getPhone() {
+        String getPhone() {
             return phone;
         }
 
-        public String getBreed() {
+        String getBreed() {
             return breed;
         }
 
-        public String getAge() {
+        String getAge() {
             return age;
         }
 
-        public String getCountry() {
+        String getCountry() {
             return country;
         }
 
-        public String getCity() {
+        String getCity() {
             return city;
         }
 
-        public String getAddress() {
+        String getAddress() {
             return address;
         }
 
@@ -285,13 +283,13 @@ public class EditActivityRepo {
     public static class AvatarImage {
         private Bitmap avatarBitmap;
 
-        public AvatarImage(Bitmap avatarBitmap) {
+        AvatarImage(Bitmap avatarBitmap) {
             this.avatarBitmap = avatarBitmap;
         }
 
         public AvatarImage() {  }
 
-        public Bitmap getAvatarBitmap() {
+        Bitmap getAvatarBitmap() {
             return avatarBitmap;
         }
 
