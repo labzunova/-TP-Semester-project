@@ -7,18 +7,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-
 import com.example.first.AccountActivity;
-import com.example.first.AccountEditActivity;
-import com.example.first.AuthorizationActivity;
 import com.example.first.MatchesActivity;
 import com.example.first.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
+
 
 public class MainActivity extends AppCompatActivity {
 
