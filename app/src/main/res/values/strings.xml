@@ -17,6 +17,7 @@
     <string name="saveBtn">Save changes</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="citata">look around, your love may be in the next kennel</string>
+    <string name="edit_gallery">Edit gallery</string>
     <string name="change_photo">Change profile photo</string>
     <string name="breedHint">Breed</string>
     <string name="ageHint">Age</string>
