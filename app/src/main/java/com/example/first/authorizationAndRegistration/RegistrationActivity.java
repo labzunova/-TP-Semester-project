@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.first.AccountActivity;
+import com.example.first.Account.AccountActivity;
 import com.example.first.R;
 import com.google.android.material.textfield.TextInputEditText;
 

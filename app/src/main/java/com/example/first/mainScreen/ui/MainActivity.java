@@ -8,11 +8,11 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import com.example.first.AccountActivity;
+
+import com.example.first.Account.AccountActivity;
 import com.example.first.R;
 import com.example.first.matches.MatchesActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 
 public class MainActivity extends AppCompatActivity {
 

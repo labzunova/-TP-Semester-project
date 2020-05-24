@@ -5,7 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".AccountActivity"
+    tools:context="com.example.first.Account.AccountActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        tools:context=".AccountActivity"
+        tools:context=".Account.AccountActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -59,17 +59,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/dog"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription"
+                    android:id="@+id/photo_profile"/>
             </androidx.cardview.widget.CardView>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="@string/bobik"
                 style="@style/pageTitle"
-                android:textSize="@dimen/text_size40" />
+                android:textSize="40sp"
+                android:id="@+id/i_name"/>
 
         </LinearLayout>
 
@@ -87,7 +87,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginHorizontal="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/layout_age">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -96,10 +97,9 @@
                     android:src="@drawable/ic_event_black_24dp" />
 
                 <TextView
-                    android:id="@+id/InfoAge"
+                    android:id="@+id/i_age"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/ageSampleData"
                     style="@style/pageText"
                     android:layout_marginLeft="12dp"
                     android:layout_marginStart="12dp" />
@@ -109,7 +109,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginHorizontal="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/layout_breed">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -118,10 +119,9 @@
                     android:src="@drawable/dog_label" />
 
                 <TextView
-                    android:id="@+id/InfoBreed"
+                    android:id="@+id/i_breed"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/bulldogSampleData"
                     style="@style/pageText"
                     android:layout_marginLeft="12dp"
                     android:layout_marginStart="12dp" />
@@ -132,7 +132,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginHorizontal="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/layout_city">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -141,10 +142,9 @@
                     android:src="@drawable/ic_location_city_primary_24dp" />
 
                 <TextView
-                    android:id="@+id/InfoCity"
+                    android:id="@+id/i_city"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/citySampleData"
                     style="@style/pageText"
                     android:layout_marginLeft="12dp"
                     android:layout_marginStart="12dp" />
@@ -154,7 +154,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginHorizontal="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/layout_telephone">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -163,10 +164,9 @@
                     android:src="@drawable/ic_phone_black_24dp" />
 
                 <TextView
-                    android:id="@+id/InfoPhoneNumber"
+                    android:id="@+id/i_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/phoneSampleData"
                     style="@style/pageText"
                     android:layout_marginLeft="12dp"
                     android:layout_marginStart="12dp" />
