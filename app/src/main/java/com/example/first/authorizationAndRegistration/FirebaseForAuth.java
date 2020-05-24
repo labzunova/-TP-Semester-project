@@ -1,7 +1,6 @@
 package com.example.first.authorizationAndRegistration;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -10,13 +9,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class FirebaseForAuth {
+class FirebaseForAuth {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private Context context;
 
-    public FirebaseForAuth(Context context){
+    FirebaseForAuth(Context context){
         this.context = context;
         mAuth = FirebaseAuth.getInstance();
         startListening();
@@ -31,7 +30,7 @@ public class FirebaseForAuth {
         void makeToast(String toast);
     }
 
-    public void startSignIn(String email, String password) {
+    void startSignIn(String email, String password) {
         if ((email.equals("")) || (password.equals(""))) {
             ((Toasts)context).makeToast("Fields are empty");
         }
@@ -45,7 +44,7 @@ public class FirebaseForAuth {
             });
     }
 
-    public void startListening(){
+    private void startListening(){
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {

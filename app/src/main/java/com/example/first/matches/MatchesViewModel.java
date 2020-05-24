@@ -6,18 +6,18 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 
-public class MatchesViewModel extends ViewModel {
+class MatchesViewModel extends ViewModel {
 
-    MutableLiveData<ArrayList<UserModel>> matchesMutableLiveData;
+    private MutableLiveData<ArrayList<UserModel>> matchesMutableLiveData;
 
-    public void init(){
+    void init(){
         if (matchesMutableLiveData != null){
             return;
         }
         matchesMutableLiveData = Repository.getInstance().getMatches();
     }
 
-    public LiveData<ArrayList<UserModel>> getLiveData(){
+    LiveData<ArrayList<UserModel>> getLiveData(){
         return matchesMutableLiveData;
     }
 }

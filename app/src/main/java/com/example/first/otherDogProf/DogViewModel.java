@@ -15,11 +15,11 @@ public class DogViewModel extends AndroidViewModel {
     private MediatorLiveData<ProfileData> userProfile = new MediatorLiveData<>();
     private MediatorLiveData<Bitmap> userImage = new MediatorLiveData<>();
 
-    public LiveData<ProfileData> getProfileData() {
+    LiveData<ProfileData> getProfileData() {
         return userProfile;
     }
 
-    public LiveData<Bitmap> getUserImage() {
+    LiveData<Bitmap> getUserImage() {
         return userImage;
     }
 
@@ -64,11 +64,7 @@ public class DogViewModel extends AndroidViewModel {
         });
     }
 
-    public void exit() {
-        DogCache.getInstance().getAccountRepo().exit();
-    }
-
-    class ProfileData {
+    static class ProfileData {
         private String name;
         private String phone;
         private String breed;
@@ -76,16 +72,7 @@ public class DogViewModel extends AndroidViewModel {
         private String city;
         private String address;
 
-        public ProfileData(String name, String phone, String breed, String age, String city, String address) {
-            this.name = name;
-            this.phone = phone;
-            this.breed = breed;
-            this.age = age;
-            this.city = city;
-            this.address = address;
-        }
-
-        public  ProfileData() {
+        ProfileData() {
         }
 
         public String getName() {

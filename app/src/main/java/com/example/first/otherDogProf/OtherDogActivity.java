@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.first.Profile;
 import com.example.first.R;
 import com.example.first.matches.MatchesActivity;
 import com.google.android.material.appbar.MaterialToolbar;

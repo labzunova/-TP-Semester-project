@@ -6,7 +6,7 @@ public class DogCache {
 
     private DogRepository dogRepo;
 
-    public DogRepository getAccountRepo() {
+    DogRepository getAccountRepo() {
         return dogRepo;
     }
 
@@ -18,7 +18,7 @@ public class DogCache {
         return accountCash;
     }
 
-    public DogCache(String id) {
+    DogCache(String id) {
         dogsID = id;
         dogRepo = new DogRepository(dogsID);
     }

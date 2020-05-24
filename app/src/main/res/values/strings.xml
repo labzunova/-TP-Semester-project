@@ -36,10 +36,13 @@
     <string name="bulldogSampleData">bulldog</string>
     <string name="ageSampleData">7 y.o.</string>
     <string name="citySampleData">Moscow</string>
-    <string name="phoneSampleData">8-(915)-019-6019</string>
+    <string name="phoneSampleData">8–(915)–019–6019</string>
     <string name="newMatch">NEW</string>
-    <string name="cancel">cancel</string>
+    <string name="cancel">Cancel</string>
     <string name="bobik">Bobik</string>
     <string name="sign_out">Sign out</string>
     <string name="addressSampleData">Lenina, 33</string>
+    <string name="background">background</string>
+    <string name="photo">photo</string>
+    <string name="name_age_n_city">Name, Age \n city</string>
 </resources>
