@@ -120,18 +120,19 @@ public class EditActivityRepo {
         });
     }
 
-    public void uploadAvatarImage(Bitmap bitmap) {
-        bitmap = resizeBitmap(bitmap, 600.0f);
-
+    public void updateAvatarImageCashe(Bitmap bitmap) {
+        //bitmap = resizeBitmap(bitmap, 600.0f);
+        
         // обновление кэша
+        Log.d(TAG, "updateAvatarImageCashe: ");
         mProfileCash.setAvatarBitmap(bitmap);
+    }
 
-        // обновление imageview
-        userImage.postValue(mProfileCash.getProfileImage());
-
+    public void uploadAvatarImage() {
         // загрузка в firebase
+        Log.d(TAG, "uploadAvatarImage: ");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, (int)(INITIAL_QUALITY*0.6), baos);
+        mProfileCash.getAvatarBitmap().compress(Bitmap.CompressFormat.JPEG, (int)(INITIAL_QUALITY*0.6), baos);
         byte[] bytes = baos.toByteArray();
         StorageReference ref = userStorageRef.child("AvatarImage");
         ref.putBytes(bytes).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {

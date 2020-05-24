@@ -74,7 +74,7 @@ public class AccountEditActivity extends AppCompatActivity {
 
         UISetup();
 
-        mViewModel = ViewModelProviders.of(this).get(EditActivityViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(EditActivityViewModel.class);
         mViewModel.getProgress().observe(this, new Observer<EditActivityViewModel.ValidationStatus>() {
             @Override
             public void onChanged(EditActivityViewModel.ValidationStatus validationStatus) {
@@ -116,6 +116,9 @@ public class AccountEditActivity extends AppCompatActivity {
                 mPhoneField.setText(profileInfo.getPhone());
             }
         });
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.d(TAG, "User id: " + user.getUid());
 
         // getData either from cash or from firebase
         Log.d(TAG, "mViewModel.getData();");
@@ -188,7 +191,12 @@ public class AccountEditActivity extends AppCompatActivity {
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
                 }
 
+                // TODO: пробрасывать bitmap в repo и оттуда делать запрос на загрузку картинки (работает некорректно)
+                bitmap = EditActivityRepo.resizeBitmap(bitmap, 600.0f);
+                imgPreview.setImageBitmap(bitmap);
+
                 // запрос на загрузку фото в кэш и firebase
+                Log.d(TAG, "onActivityResult: mViewModel.uploadAvatarImage()");
                 mViewModel.uploadAvatarImage(bitmap);
                 // при загрузке в imageview через livedatu, загружает некорректно (сразу не загружает), при этом в кэше все норм и вызов onChanged() для imageview - есть
             } catch (IOException e) {

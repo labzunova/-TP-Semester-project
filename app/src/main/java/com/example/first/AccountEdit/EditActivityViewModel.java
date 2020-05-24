@@ -22,7 +22,6 @@ public class EditActivityViewModel extends AndroidViewModel {
 
     public EditActivityViewModel(@NonNull Application application) {
         super(application);
-        mValidationState.setValue(ValidationStatus.NONE);
     }
 
     // getProfile() returning liveData
@@ -50,7 +49,8 @@ public class EditActivityViewModel extends AndroidViewModel {
     }
 
     public void uploadAvatarImage(Bitmap bitmap) {
-        final LiveData<AvatarImage> avatarImageLiveData = EditActivityRepo.getInstance().getUserImage();
+        // final LiveData<AvatarImage> avatarImageLiveData = EditActivityRepo.getInstance().getUserImage();
+        /*
         userProfileImage.addSource(avatarImageLiveData, new Observer<AvatarImage>() {
             @Override
             public void onChanged(AvatarImage avatarImage) {
@@ -59,7 +59,9 @@ public class EditActivityViewModel extends AndroidViewModel {
                 userProfileImage.removeSource(avatarImageLiveData);
             }
         });
-        EditActivityRepo.getInstance().uploadAvatarImage(bitmap);
+         */
+        EditActivityRepo.getInstance().updateAvatarImageCashe(bitmap);
+        EditActivityRepo.getInstance().uploadAvatarImage();
     }
 
     public void getData() {

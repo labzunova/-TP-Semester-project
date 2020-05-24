@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         InitView();
 
-        MainViewModel mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        MainViewModel mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         mViewModel.getProfile().observe(this, new Observer<MainViewModel.DataProfile>() {
             @Override
