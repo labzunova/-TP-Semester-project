@@ -1,12 +1,15 @@
 package com.example.first.Account;
 
+import com.example.first.Account.Repositories.CompositeRepo;
+import com.example.first.Account.Repositories.RepoDB;
+
 public class AccountCash {
     private static AccountCash accountCash;
 
-    private AccountRepo accountRepo;
+    private CompositeRepo compositeRepo;
 
-    public AccountRepo getAccountRepo() {
-        return accountRepo;
+    public RepoDB getRepo() {
+        return compositeRepo;
     }
 
     public static AccountCash getInstance() {
@@ -18,6 +21,6 @@ public class AccountCash {
     }
 
     private AccountCash() {
-        accountRepo = new AccountRepo();
+        compositeRepo = new CompositeRepo();
     }
 }

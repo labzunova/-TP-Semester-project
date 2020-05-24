@@ -1,4 +1,4 @@
-package com.example.first.Account;
+package com.example.first.Account.Repositories;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -19,7 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class AccountRepo {
+public class AccountRepo implements RepoDB{
     private static final String BRANCH = "Profiles";
     private static final String AVATAR_IMAGE = "AvatarImage";
 
@@ -31,7 +31,7 @@ public class AccountRepo {
     private Profile profileData;
     private StorageReference storageRef;
 
-    AccountRepo() {
+    public AccountRepo() {
         getUser();
         databaseProfile = FirebaseDatabase.getInstance().getReference(BRANCH);
         storageRef = FirebaseStorage.getInstance().getReference().child(BRANCH);

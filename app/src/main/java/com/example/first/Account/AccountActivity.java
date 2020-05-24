@@ -102,7 +102,7 @@ public class AccountActivity extends AppCompatActivity {
                 } else
                     layoutBreed.setVisibility(View.GONE);
 
-                if (profileData.getAge() != null && !profileData.getAge().equals(str) ){
+                if (profileData.getAge() != null && !profileData.getAge().equals(AccountViewModel.DEFAULT_AGE)){
                     labAge.setText(profileData.getAge());
                 } else
                     layoutAge.setVisibility(View.GONE);

@@ -9,9 +9,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
 
+import com.example.first.Account.Repositories.RepoDB;
 import com.example.first.Profile;
 
 public class AccountViewModel extends AndroidViewModel {
+    public static final String DEFAULT_AGE = " y.o.";
+
     private MediatorLiveData<ProfileData> userProfile = new MediatorLiveData<>();
     private MediatorLiveData<Bitmap> userImage = new MediatorLiveData<>();
 
@@ -26,7 +29,7 @@ public class AccountViewModel extends AndroidViewModel {
     public AccountViewModel(@NonNull Application application) {
         super(application);
 
-        LiveData profileLiveData = AccountCash.getInstance().getAccountRepo().getProfile();
+        LiveData profileLiveData = AccountCash.getInstance().getRepo().getProfile();
         userProfile.addSource(profileLiveData, new Observer<Profile>() {
             @Override
             public void onChanged(Profile profile) {
@@ -35,7 +38,7 @@ public class AccountViewModel extends AndroidViewModel {
                 profileData.setBreed(profile.getBreed());
                 profileData.setCity(profile.getCity());
 
-                profileData.setAge(profile.getAge() + " y.o");
+                profileData.setAge(profile.getAge() + DEFAULT_AGE);
                 String str = profile.getPhone();
                 String phone;
                 if (str.length() == 11) {
@@ -54,7 +57,7 @@ public class AccountViewModel extends AndroidViewModel {
             }
         });
 
-        LiveData imageLiveData = AccountCash.getInstance().getAccountRepo().getImage();
+        LiveData imageLiveData = AccountCash.getInstance().getRepo().getImage();
         userImage.addSource(imageLiveData, new Observer<Bitmap>() {
             @Override
             public void onChanged(Bitmap bitmap) {
@@ -64,7 +67,7 @@ public class AccountViewModel extends AndroidViewModel {
     }
 
     public void exit() {
-        AccountCash.getInstance().getAccountRepo().exit();
+        AccountCash.getInstance().getRepo().exit();
     }
 
     class ProfileData {
