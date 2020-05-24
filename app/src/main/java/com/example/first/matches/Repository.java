@@ -47,27 +47,6 @@ public class Repository {
         return dog;
     }
 
-   /* public void loadPhotos() {
-
-        for (int i = 0; i < matches.size(); i++) {
-            UserModel user = matches.get(i);
-            storage = FirebaseStorage.getInstance();
-            storageRef = storage.getReference();
-            StorageReference myRef = storageRef.child("Profiles").child(user.id).child("AvatarImage");
-            myRef.getBytes(BATCH_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    //holder.photoView.setImageBitmap(bmp);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                }
-            });
-        }
-    }*/
-
     private void loadMatches() {
         final FirebaseUser user;
         user = FirebaseAuth.getInstance().getCurrentUser();

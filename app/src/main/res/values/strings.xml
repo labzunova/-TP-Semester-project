@@ -40,4 +40,5 @@
     <string name="cancel">cancel</string>
     <string name="bobik">Bobik</string>
     <string name="sign_out">Sign out</string>
+    <string name="addressSampleData">Lenina, 33</string>
 </resources>

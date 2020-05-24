@@ -14,7 +14,7 @@
         android:roundIcon="@drawable/dog"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-        <activity android:name=".OtherDogActivity"></activity>
+        <activity android:name=".otherDogProf.OtherDogActivity"></activity>
         <activity android:name=".matches.MatchesActivity" />
         <activity android:name=".mainScreen.MainActivity" />
         <activity android:name=".AccountEditActivity" />

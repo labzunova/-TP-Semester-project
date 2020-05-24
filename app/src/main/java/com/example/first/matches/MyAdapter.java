@@ -58,6 +58,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
             @Override
             public void onClick(View v) {
                 itemClick(user.id);
+                user.seen = "true";
             }
         });
     }
@@ -74,6 +75,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
     @Override
     public void itemClick(String id) {
         ((RecyclerClickListener2)context).itemClick2(id);
+
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

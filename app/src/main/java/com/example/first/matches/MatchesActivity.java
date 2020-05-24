@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.first.AccountActivity;
-import com.example.first.OtherDogActivity;
+import com.example.first.otherDogProf.OtherDogActivity;
 import com.example.first.R;
 import com.example.first.mainScreen.MainActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
