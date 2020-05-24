@@ -2,6 +2,7 @@ package com.example.first.AccountEdit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.example.first.AccountActivity;
@@ -32,6 +34,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -126,6 +129,7 @@ public class AccountEditActivity extends AppCompatActivity {
     }
 
 
+
     private void UISetup() {
         // init views
         mNameField = findViewById(R.id.nameFieldInp);
@@ -138,6 +142,7 @@ public class AccountEditActivity extends AppCompatActivity {
         mPhoneField = findViewById(R.id.phoneFieldInp);
         Button doneBtn = findViewById(R.id.saveBtn);
         Button changeProfilePhotoBtn = findViewById(R.id.changePhotoBtn);
+        MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
         imgPreview = findViewById(R.id.imageView);
 
         doneBtn.setOnClickListener(new View.OnClickListener() {
@@ -164,6 +169,18 @@ public class AccountEditActivity extends AppCompatActivity {
                 chooseImage();
             }
         });
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Log.d(TAG, "UISetup: NavigationOnClickListener is set");
+            topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(AccountEditActivity.this, AccountActivity.class));
+                }
+            });
+        }
+
     }
 
 
@@ -191,14 +208,9 @@ public class AccountEditActivity extends AppCompatActivity {
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
                 }
 
-                // TODO: пробрасывать bitmap в repo и оттуда делать запрос на загрузку картинки (работает некорректно)
-                bitmap = EditActivityRepo.resizeBitmap(bitmap, 600.0f);
-                imgPreview.setImageBitmap(bitmap);
-
-                // запрос на загрузку фото в кэш и firebase
+                // запрос на загрузку фото в кэш и firebase + загрузка в imageview
                 Log.d(TAG, "onActivityResult: mViewModel.uploadAvatarImage()");
                 mViewModel.uploadAvatarImage(bitmap);
-                // при загрузке в imageview через livedatu, загружает некорректно (сразу не загружает), при этом в кэше все норм и вызов onChanged() для imageview - есть
             } catch (IOException e) {
                 e.printStackTrace();
             }

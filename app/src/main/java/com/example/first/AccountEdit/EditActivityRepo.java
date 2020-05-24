@@ -69,8 +69,8 @@ public class EditActivityRepo {
             updateUserCash();
         } else {
             Log.d(TAG, "refreshUserCash: mProfileCash.isEmpty == false");
-            userInfo.postValue(mProfileCash.getProfileData());
-            userImage.postValue(mProfileCash.getProfileImage());
+            userInfo.setValue(mProfileCash.getProfileData());
+            userImage.setValue(mProfileCash.getProfileImage());
         }
     }
 
@@ -121,11 +121,14 @@ public class EditActivityRepo {
     }
 
     public void updateAvatarImageCashe(Bitmap bitmap) {
-        //bitmap = resizeBitmap(bitmap, 600.0f);
+        bitmap = resizeBitmap(bitmap, 600.0f);
         
         // обновление кэша
         Log.d(TAG, "updateAvatarImageCashe: ");
         mProfileCash.setAvatarBitmap(bitmap);
+
+        // запрос на обновление UI
+        userImage.setValue(mProfileCash.getProfileImage());
     }
 
     public void uploadAvatarImage() {
@@ -153,7 +156,6 @@ public class EditActivityRepo {
         mProfileCash.setProfileData(profileInfo);
 
         // загрузка в firebase
-        // такой хардкод из-за несовершенства структуры хранения данных в Firebase, это поправляется
         userProfileRef.child("name").setValue(profileInfo.getName());
         userProfileRef.child("phone").setValue(profileInfo.getPhone());
         userProfileRef.child("breed").setValue(profileInfo.getBreed());
