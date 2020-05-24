@@ -37,14 +37,21 @@ public class EditActivityViewModel extends AndroidViewModel {
     }
 
     void uploadProfileData(EditActivityRepo.ProfileInfo profileInfo) {
-        // data validation sample
+        // data validation
+        try {
+            Integer.parseInt(profileInfo.getAge());
+        } catch (NumberFormatException nfe) {
+            mValidationState.setValue(ValidationStatus.AGE_FAILURE);
+            return;
+        }
         if (profileInfo.getName().length() > NAME_MAX_LENGTH){
             mValidationState.setValue(ValidationStatus.NAME_FAILURE);
-        } else {
-            mValidationState.setValue(ValidationStatus.SUCCESS);
-            // request data-upload to firebase
-            EditActivityRepo.getInstance().uploadProfileData(profileInfo);
+            return;
         }
+
+        mValidationState.setValue(ValidationStatus.SUCCESS);
+        // request data-upload to firebase
+        EditActivityRepo.getInstance().uploadProfileData(profileInfo);
     }
 
     public enum ValidationStatus {
@@ -53,7 +60,6 @@ public class EditActivityViewModel extends AndroidViewModel {
         DEFAULT_FAILURE,
         NAME_FAILURE,
         AGE_FAILURE,
-        BREED_FAILURE
     }
 
     void uploadAvatarImage(Bitmap bitmap) {

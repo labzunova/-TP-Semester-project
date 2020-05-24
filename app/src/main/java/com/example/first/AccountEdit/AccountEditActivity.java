@@ -74,9 +74,6 @@ public class AccountEditActivity extends AppCompatActivity {
                     case AGE_FAILURE:
                         Toast.makeText(AccountEditActivity.this, "Age should be a number", Toast.LENGTH_SHORT).show();
                         break;
-                    case BREED_FAILURE:
-                        Toast.makeText(AccountEditActivity.this, "Wrong breed format", Toast.LENGTH_SHORT).show();
-                        break;
                 }
             }
         });
