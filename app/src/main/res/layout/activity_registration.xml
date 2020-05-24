@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegistrationActivity">
+    tools:context=".authorizationAndRegistration.RegistrationActivity">
 
     <ImageView
         android:id="@+id/background"
@@ -61,6 +61,7 @@
         app:layout_constraintBottom_toBottomOf="parent"  >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordFieldInp"
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/textFields"
