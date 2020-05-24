@@ -26,6 +26,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 
+// TODO: разобраться как отслежвать событие выхода
+
 public class EditActivityRepo {
     private static final String TAG = "EditAccountActivity";
     private static final int INITIAL_COMPRESS_QUALITY = 100;
@@ -78,7 +80,10 @@ public class EditActivityRepo {
     private void updateUserCash() {
         // получение текущих данных с Database
         Log.d(TAG, "updateUserCash()");
-        userProfileRef.addValueEventListener(new ValueEventListener() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference newRefRefreshed = FirebaseDatabase.getInstance().getReference("Profiles").child(user.getUid());
+        newRefRefreshed.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d(TAG, "updateUserCash: onDataChange()");
@@ -91,7 +96,7 @@ public class EditActivityRepo {
                 }
                 Log.d(TAG, "updateUserCash: onDataChange(): profile != null");
                 mProfileCash.setProfileData(profile);
-                userInfo.postValue(mProfileCash.getProfileData());
+                userInfo.setValue(mProfileCash.getProfileData());
             }
 
             @Override
@@ -101,7 +106,7 @@ public class EditActivityRepo {
         });
 
         // получение аватарки со Storage
-        StorageReference avatarRef = userStorageRef.child("AvatarImage");
+        StorageReference avatarRef = FirebaseStorage.getInstance().getReference().child("Profiles").child(user.getUid()).child("AvatarImage");
         final long BATCH_SIZE = 1024 * 1024; // 1 mb
         avatarRef.getBytes(BATCH_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -111,7 +116,7 @@ public class EditActivityRepo {
                 bitmap = resizeBitmap(bitmap, PREVIEW_IMG_QUALITY);
 
                 mProfileCash.setAvatarBitmap(bitmap);
-                userImage.postValue(mProfileCash.getProfileImage());
+                userImage.setValue(mProfileCash.getProfileImage());
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
