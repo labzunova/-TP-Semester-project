@@ -52,7 +52,6 @@ dependencies {
     compile 'com.google.firebase:firebase-storage:19.1.1'
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'com.google.firebase:firebase-storage:19.1.1'
-
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
 }

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.first.AccountEdit.ProfileCash;
 import com.example.first.Profile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -81,6 +82,7 @@ public class AccountRepo {
     }
 
     public void exit() {
+        ProfileCash.getInstance().isEmpty = true;
         FirebaseAuth.getInstance().signOut();
         user = null;
     }
