@@ -22,6 +22,8 @@ import android.widget.TextView;
 import com.example.first.mainScreen.ui.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.first.mainScreen.ui.MainActivity;
+import com.example.first.matches.MatchesActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
