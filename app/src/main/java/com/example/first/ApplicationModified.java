@@ -3,22 +3,22 @@ package com.example.first;
 import android.app.Application;
 import android.content.Context;
 
-import com.example.first.mainScreen.InfRepo;
-import com.example.first.mainScreen.Storage.NetworkData;
+import com.example.first.mainScreen.database.CompositeDatabase;
+import com.example.first.mainScreen.repositories.InfoRepo;
 
 public class ApplicationModified extends Application {
-    private InfRepo mInfRepo;
-    private NetworkData networkData;
+    private InfoRepo infoRepo;
+    private CompositeDatabase compositeDatabase;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        networkData = new NetworkData();
-        mInfRepo = new InfRepo(networkData);
+        compositeDatabase = new CompositeDatabase(getApplicationContext());
+        infoRepo = new InfoRepo(compositeDatabase);
     }
 
-    public InfRepo getInfRepo() {
-        return mInfRepo;
+    public InfoRepo getInfoRepo() {
+        return infoRepo;
     }
 
     public static  ApplicationModified from(Context context) {
