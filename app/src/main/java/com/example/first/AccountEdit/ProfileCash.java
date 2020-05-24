@@ -53,7 +53,7 @@ public class ProfileCash {
         isEmpty = false;
     }
 
-    public void setProfileData(EditActivityViewModel.ProfileInfo profileInfo) {
+    public void setProfileData(EditActivityRepo.ProfileInfo profileInfo) {
         this.name = profileInfo.getName();
         this.email = profileInfo.getEmail();
         this.phone = profileInfo.getPhone();
@@ -102,15 +102,15 @@ public class ProfileCash {
         this.address = address;
     }
 
-    public EditActivityViewModel.ProfileInfo getProfileData() {
-        EditActivityViewModel.ProfileInfo profileInfo = new EditActivityViewModel.ProfileInfo(
+    public EditActivityRepo.ProfileInfo getProfileData() {
+        EditActivityRepo.ProfileInfo profileInfo = new EditActivityRepo.ProfileInfo(
                 name, email, phone, breed, age, country, city, address
         );
         return profileInfo;
     }
 
-    public EditActivityViewModel.AvatarImage getProfileImage() {
-        EditActivityViewModel.AvatarImage avatarImage = new EditActivityViewModel.AvatarImage(
+    public EditActivityRepo.AvatarImage getProfileImage() {
+        EditActivityRepo.AvatarImage avatarImage = new EditActivityRepo.AvatarImage(
                 avatarBitmap
         );
         return avatarImage;

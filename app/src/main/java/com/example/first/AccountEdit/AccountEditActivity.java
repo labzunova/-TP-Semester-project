@@ -54,8 +54,9 @@ import java.util.List;
 import java.util.function.ToDoubleBiFunction;
 
 public class AccountEditActivity extends AppCompatActivity {
-    public final static int PICK_IMAGE_REQUEST = 71;
     private static final String TAG = "EditAccountActivity";
+    public final static int PICK_IMAGE_REQUEST = 71;
+
 
     EditActivityViewModel mViewModel;
 
@@ -86,7 +87,7 @@ public class AccountEditActivity extends AppCompatActivity {
                 if (validationStatus == EditActivityViewModel.ValidationStatus.SUCCESS) {
                     Log.d(TAG, "Data validation success. Starting AccountActivity..");
                     startActivity(new Intent(AccountEditActivity.this, AccountActivity.class));
-                } else if (validationStatus == EditActivityViewModel.ValidationStatus.FAILURE) {
+                } else if (validationStatus == EditActivityViewModel.ValidationStatus.DEFAULT_FAILURE) {
                     Log.d(TAG, "Data validation failure. Updating UI to notify user about incorrect data input..");
                     // TODO: Update UI to make warning to user
                 } else if (validationStatus == EditActivityViewModel.ValidationStatus.NONE) {
@@ -95,18 +96,18 @@ public class AccountEditActivity extends AppCompatActivity {
             }
         });
 
-        mViewModel.getAvatarImage().observe(this, new Observer<EditActivityViewModel.AvatarImage>() {
+        mViewModel.getAvatarImage().observe(this, new Observer<EditActivityRepo.AvatarImage>() {
             @Override
-            public void onChanged(EditActivityViewModel.AvatarImage avatarImage) {
+            public void onChanged(EditActivityRepo.AvatarImage avatarImage) {
                 // update avatar image
                 Log.d(TAG, "getAvatarImage onChanged()");
                 imgPreview.setImageBitmap(avatarImage.getAvatarBitmap());
             }
         });
 
-        mViewModel.getProfileInfo().observe(this, new Observer<EditActivityViewModel.ProfileInfo>() {
+        mViewModel.getProfileInfo().observe(this, new Observer<EditActivityRepo.ProfileInfo>() {
             @Override
-            public void onChanged(EditActivityViewModel.ProfileInfo profileInfo) {
+            public void onChanged(EditActivityRepo.ProfileInfo profileInfo) {
                 Log.d(TAG, "getProfileInfo onChanged()");
                 // update text fields
                 mNameField.setText(profileInfo.getName());
@@ -149,7 +150,7 @@ public class AccountEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // убрать создание здесь структуры - чтобы структура формировалась уже во ViewModel
-                EditActivityViewModel.ProfileInfo profileInfo = new EditActivityViewModel.ProfileInfo(
+                EditActivityRepo.ProfileInfo profileInfo = new EditActivityRepo.ProfileInfo(
                         mNameField.getText().toString(),
                         mEmailField.getText().toString(),
                         mPhoneField.getText().toString(),
@@ -159,7 +160,7 @@ public class AccountEditActivity extends AppCompatActivity {
                         mCityField.getText().toString(),
                         mAddressField.getText().toString()
                 );
-                mViewModel.onDoneClicked(profileInfo);
+                mViewModel.uploadProfileData(profileInfo);
             }
         });
 
@@ -214,6 +215,8 @@ public class AccountEditActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            Toast.makeText(this, "Failed to load photo", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -30,12 +30,14 @@ import java.io.ByteArrayOutputStream;
 
 public class EditActivityRepo {
     private static final String TAG = "EditAccountActivity";
-    private static final int INITIAL_QUALITY = 100;
+    private static final int INITIAL_COMPRESS_QUALITY = 100;
+    private final static float PREVIEW_IMG_QUALITY = 600.0f;
+    private final static float FULL_IMG_QUALITY = 800.0f;
 
     private ProfileCash mProfileCash;
 
-    private MutableLiveData<EditActivityViewModel.AvatarImage> userImage = new MutableLiveData<>();
-    private MutableLiveData<EditActivityViewModel.ProfileInfo> userInfo = new MutableLiveData<>();
+    private MutableLiveData<AvatarImage> userImage = new MutableLiveData<>();
+    private MutableLiveData<ProfileInfo> userInfo = new MutableLiveData<>();
 
     private DatabaseReference userProfileRef;
     private StorageReference userStorageRef;
@@ -43,10 +45,11 @@ public class EditActivityRepo {
     private static final EditActivityRepo sInstance = new EditActivityRepo();
     private EditActivityRepo() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.d(TAG, "EditActivityRepo: assert user != null;");
+        assert user != null;
         userProfileRef = FirebaseDatabase.getInstance().getReference("Profiles").child(user.getUid());
         userStorageRef = FirebaseStorage.getInstance().getReference().child("Profiles").child(user.getUid());
 
-        // получаем кэш
         mProfileCash = ProfileCash.getInstance();
     }
 
@@ -54,11 +57,11 @@ public class EditActivityRepo {
         return sInstance;
     }
 
-    public LiveData<EditActivityViewModel.AvatarImage> getUserImage() {
+    public LiveData<AvatarImage> getUserImage() {
         return userImage;
     }
 
-    public LiveData<EditActivityViewModel.ProfileInfo> getUserInfo() {
+    public LiveData<ProfileInfo> getUserInfo() {
         return userInfo;
     }
 
@@ -67,11 +70,11 @@ public class EditActivityRepo {
         if (mProfileCash.isEmpty) {
             Log.d(TAG, "refreshUserCash: mProfileCash.isEmpty == true");
             updateUserCash();
-        } else {
-            Log.d(TAG, "refreshUserCash: mProfileCash.isEmpty == false");
-            userInfo.setValue(mProfileCash.getProfileData());
-            userImage.setValue(mProfileCash.getProfileImage());
+            return;
         }
+        Log.d(TAG, "refreshUserCash: mProfileCash.isEmpty == false");
+        userInfo.setValue(mProfileCash.getProfileData());
+        userImage.setValue(mProfileCash.getProfileImage());
     }
 
     private void updateUserCash() {
@@ -84,13 +87,13 @@ public class EditActivityRepo {
                 // получение данных текущего пользователя
                 Profile profile = dataSnapshot.getValue(Profile.class);
 
-                if (profile != null) {
-                    Log.d(TAG, "updateUserCash: onDataChange(): profile != null");
-                    mProfileCash.setProfileData(profile);
-                    userInfo.postValue(mProfileCash.getProfileData());
-                } else {
+                if (profile == null) {
                     Log.d(TAG, "onDataChange: updateUserCash() profile is null");
+                    return;
                 }
+                Log.d(TAG, "updateUserCash: onDataChange(): profile != null");
+                mProfileCash.setProfileData(profile);
+                userInfo.postValue(mProfileCash.getProfileData());
             }
 
             @Override
@@ -100,14 +103,14 @@ public class EditActivityRepo {
         });
 
         // получение аватарки со Storage
-        final long BATCH_SIZE = 1024 * 1024; // 1 mb
         StorageReference avatarRef = userStorageRef.child("AvatarImage");
+        final long BATCH_SIZE = 1024 * 1024; // 1 mb
         avatarRef.getBytes(BATCH_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Log.d(TAG, "updateUserCash: AvatarImage getBytes onSuccess()");
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                bitmap = resizeBitmap(bitmap, 600.0f);
+                bitmap = resizeBitmap(bitmap, PREVIEW_IMG_QUALITY);
 
                 mProfileCash.setAvatarBitmap(bitmap);
                 userImage.postValue(mProfileCash.getProfileImage());
@@ -121,7 +124,7 @@ public class EditActivityRepo {
     }
 
     public void updateAvatarImageCashe(Bitmap bitmap) {
-        bitmap = resizeBitmap(bitmap, 600.0f);
+        bitmap = resizeBitmap(bitmap, PREVIEW_IMG_QUALITY);
         
         // обновление кэша
         Log.d(TAG, "updateAvatarImageCashe: ");
@@ -135,7 +138,7 @@ public class EditActivityRepo {
         // загрузка в firebase
         Log.d(TAG, "uploadAvatarImage: ");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        mProfileCash.getAvatarBitmap().compress(Bitmap.CompressFormat.JPEG, (int)(INITIAL_QUALITY*0.6), baos);
+        mProfileCash.getAvatarBitmap().compress(Bitmap.CompressFormat.WEBP, INITIAL_COMPRESS_QUALITY, baos);
         byte[] bytes = baos.toByteArray();
         StorageReference ref = userStorageRef.child("AvatarImage");
         ref.putBytes(bytes).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -147,11 +150,12 @@ public class EditActivityRepo {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d(TAG, "onFailure: in uploadAvatarImage()");
+                e.printStackTrace();
             }
         });
     }
 
-    public void uploadProfileData(EditActivityViewModel.ProfileInfo profileInfo) {
+    public void uploadProfileData(ProfileInfo profileInfo) {
         // обновление кэша
         mProfileCash.setProfileData(profileInfo);
 
@@ -165,7 +169,7 @@ public class EditActivityRepo {
         userProfileRef.child("address").setValue(profileInfo.getAddress());
     }
 
-    public static Bitmap resizeBitmap(Bitmap bitmap, float maxResolution) {
+    private static Bitmap resizeBitmap(Bitmap bitmap, float maxResolution) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         int newWidth = width;
@@ -187,5 +191,112 @@ public class EditActivityRepo {
         }
 
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+    }
+
+    public static class ProfileInfo {
+        private String name;
+        private String email;
+        private String phone;
+        private String breed;
+        private String age;
+        private String country;
+        private String city;
+        private String address;
+
+        public ProfileInfo(String name, String email, String phone, String breed, String age, String country, String city, String address) {
+            this.name = name;
+            this.email = email;
+            this.phone = phone;
+            this.breed = breed;
+            this.age = age;
+            this.country = country;
+            this.city = city;
+            this.address = address;
+        }
+
+        public ProfileInfo() {
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public String getBreed() {
+            return breed;
+        }
+
+        public String getAge() {
+            return age;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public void setBreed(String breed) {
+            this.breed = breed;
+        }
+
+        public void setAge(String age) {
+            this.age = age;
+        }
+
+        public void setCountry(String country) {
+            this.country = country;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+    }
+
+    public static class AvatarImage {
+        private Bitmap avatarBitmap;
+
+        public AvatarImage(Bitmap avatarBitmap) {
+            this.avatarBitmap = avatarBitmap;
+        }
+
+        public AvatarImage() {  }
+
+        public Bitmap getAvatarBitmap() {
+            return avatarBitmap;
+        }
+
+        public void setAvatarBitmap(Bitmap avatarBitmap) {
+            this.avatarBitmap = avatarBitmap;
+        }
     }
 }
