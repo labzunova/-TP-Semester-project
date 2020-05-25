@@ -9,8 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.first.Profile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,31 +17,24 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class DogRepository {
+class DogRepository {
     private static final String BRANCH = "Profiles";
     private static final String AVATAR_IMAGE = "AvatarImage";
 
-    MutableLiveData<Profile> profileLiveData = new MutableLiveData<>();
-    MutableLiveData<Bitmap> imageLiveData = new MutableLiveData<>();
+    private MutableLiveData<Profile> profileLiveData = new MutableLiveData<>();
+    private MutableLiveData<Bitmap> imageLiveData = new MutableLiveData<>();
 
     private DatabaseReference databaseProfile;
-    private FirebaseUser user;
     private Profile profileData;
     private StorageReference storageRef;
-    private static String dogsID;
 
-    DogRepository(String id) {
-        dogsID = id;
-        //getUser();
+    DogRepository() {
         databaseProfile = FirebaseDatabase.getInstance().getReference(BRANCH);
         storageRef = FirebaseStorage.getInstance().getReference().child(BRANCH);
     }
 
-    public LiveData getProfile() {
-    //    if (user == null)
-    //        getUser();
-
-        databaseProfile.child(dogsID).addValueEventListener(new ValueEventListener() {
+    LiveData getProfile(String id) {
+        databaseProfile.child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 profileData = dataSnapshot.getValue(Profile.class);
@@ -59,17 +50,14 @@ public class DogRepository {
         return profileLiveData;
     }
 
-    public LiveData getImage() {
+    LiveData getImage(String id) {
         final long ONE_MEGABYTE = 1024*1024;
 
-     //   if (user == null)
-     //       getUser();
-
-        storageRef.child(dogsID).child(AVATAR_IMAGE).getBytes(3 * ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        storageRef.child(id).child(AVATAR_IMAGE).getBytes(3 * ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                bitmap = resizeBitmap(bitmap, 600.0f);
+                bitmap = resizeBitmap(bitmap);
                 imageLiveData.postValue(bitmap);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -82,20 +70,12 @@ public class DogRepository {
         return imageLiveData;
     }
 
-    public void exit() {
-        FirebaseAuth.getInstance().signOut();
-        user = null;
-    }
-
-//   private void getUser() {
-//       user = FirebaseAuth.getInstance().getCurrentUser();
-//   }
-
-    private Bitmap resizeBitmap(Bitmap bitmap, float maxResolution) {
+    private Bitmap resizeBitmap(Bitmap bitmap) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         int newWidth = width;
         int newHeight = height;
+        float maxResolution = 600.0f;
         float rate;
 
         if (width > height) {
@@ -114,4 +94,5 @@ public class DogRepository {
 
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
+
 }

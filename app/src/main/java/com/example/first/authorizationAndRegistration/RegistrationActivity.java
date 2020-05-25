@@ -3,9 +3,7 @@ package com.example.first.authorizationAndRegistration;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -13,6 +11,10 @@ import android.widget.Toast;
 import com.example.first.Account.AccountActivity;
 import com.example.first.R;
 import com.google.android.material.textfield.TextInputEditText;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class RegistrationActivity extends AppCompatActivity implements FirebaseForRegistration.Auth, FirebaseForRegistration.Toasts  {
 
@@ -22,10 +24,10 @@ public class RegistrationActivity extends AppCompatActivity implements FirebaseF
 
     public void InitView(){
 
-        mEmailField = (TextInputEditText) findViewById(R.id.emailFieldInp);
-        mPasswordField = (TextInputEditText) findViewById(R.id.passwordFieldInp);
-        mRegisterBtn = (Button) findViewById(R.id.registerBtn);
-        Button mBackButton = (Button) findViewById(R.id.backToAuthBtn);
+        mEmailField = findViewById(R.id.emailFieldInp);
+        mPasswordField = findViewById(R.id.passwordFieldInp);
+        mRegisterBtn = findViewById(R.id.registerBtn);
+        Button mBackButton = findViewById(R.id.backToAuthBtn);
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,18 +48,18 @@ public class RegistrationActivity extends AppCompatActivity implements FirebaseF
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = mEmailField.getText().toString();
-                String password = mPasswordField.getText().toString();
+                String email = Objects.requireNonNull(mEmailField.getText()).toString();
+                String password = Objects.requireNonNull(mPasswordField.getText()).toString();
                 firebase.startRegister(email,password);
             }
         });
     }
 
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NotNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 

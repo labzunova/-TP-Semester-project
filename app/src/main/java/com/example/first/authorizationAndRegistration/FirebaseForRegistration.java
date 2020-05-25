@@ -3,7 +3,6 @@ package com.example.first.authorizationAndRegistration;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -24,18 +23,17 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-public class FirebaseForRegistration {
+class FirebaseForRegistration {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private Context context;
-    FirebaseStorage storage;
-    StorageReference storageRef;
+    private StorageReference storageRef;
     private String email;
 
-    public FirebaseForRegistration(Context context){
+    FirebaseForRegistration(Context context){
         this.context = context;
         mAuth = FirebaseAuth.getInstance();
-        storage = FirebaseStorage.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         startListening();
         mAuth.addAuthStateListener(mAuthListener);
@@ -50,7 +48,7 @@ public class FirebaseForRegistration {
     }
 
 
-    public void startRegister(String email, String password) {
+    void startRegister(String email, String password) {
         this.email = email;
         if ((email.equals("")) || (password.equals(""))) {
             ((Toasts)context).makeToast("Fields are empty");
@@ -65,7 +63,7 @@ public class FirebaseForRegistration {
             });
     }
 
-    public void startListening() {
+    private void startListening() {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -77,7 +75,7 @@ public class FirebaseForRegistration {
         };
     }
 
-    public void databaseFilling() {
+    private void databaseFilling() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference();
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -93,6 +91,7 @@ public class FirebaseForRegistration {
         profile.setCity(str);
         profile.setBreed(str);
         ArrayList<String> seen = new ArrayList<>();
+        assert user != null;
         seen.add(user.getUid());
         profile.setSeen(seen);
 

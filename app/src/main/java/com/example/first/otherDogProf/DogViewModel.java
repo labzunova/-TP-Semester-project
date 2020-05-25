@@ -15,18 +15,17 @@ public class DogViewModel extends AndroidViewModel {
     private MediatorLiveData<ProfileData> userProfile = new MediatorLiveData<>();
     private MediatorLiveData<Bitmap> userImage = new MediatorLiveData<>();
 
-    public LiveData<ProfileData> getProfileData() {
+    LiveData<ProfileData> getProfileData() {
         return userProfile;
     }
 
-    public LiveData<Bitmap> getUserImage() {
+    LiveData<Bitmap> getUserImage() {
         return userImage;
     }
 
-    public DogViewModel(@NonNull Application application) {
-        super(application);
+    void getData(String id) {
 
-        LiveData profileLiveData = DogCache.getInstance().getAccountRepo().getProfile();
+        LiveData profileLiveData = DogCache.getInstance().getAccountRepo().getProfile(id);
         userProfile.addSource(profileLiveData, new Observer<Profile>() {
             @Override
             public void onChanged(Profile profile) {
@@ -55,7 +54,7 @@ public class DogViewModel extends AndroidViewModel {
             }
         });
 
-        LiveData imageLiveData = DogCache.getInstance().getAccountRepo().getImage();
+        LiveData imageLiveData = DogCache.getInstance().getAccountRepo().getImage(id);
         userImage.addSource(imageLiveData, new Observer<Bitmap>() {
             @Override
             public void onChanged(Bitmap bitmap) {
@@ -64,11 +63,11 @@ public class DogViewModel extends AndroidViewModel {
         });
     }
 
-    public void exit() {
-        DogCache.getInstance().getAccountRepo().exit();
+    public DogViewModel(@NonNull Application application) {
+        super(application);
     }
 
-    class ProfileData {
+    static class ProfileData {
         private String name;
         private String phone;
         private String breed;
@@ -76,16 +75,7 @@ public class DogViewModel extends AndroidViewModel {
         private String city;
         private String address;
 
-        public ProfileData(String name, String phone, String breed, String age, String city, String address) {
-            this.name = name;
-            this.phone = phone;
-            this.breed = breed;
-            this.age = age;
-            this.city = city;
-            this.address = address;
-        }
-
-        public  ProfileData() {
+        ProfileData() {
         }
 
         public String getName() {
