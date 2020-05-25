@@ -97,9 +97,7 @@ public class InfoRepo {
 
             @Override
             public void onError(int codeError) {
-                if (codeError == ProfileDatabase.BAD_INTERNET) {
-                    // TODO открыть экран загрузки
-                }
+                // TODO открыть экран загрузки
             }
 
             @Override

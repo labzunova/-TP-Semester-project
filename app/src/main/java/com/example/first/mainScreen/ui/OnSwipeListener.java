@@ -24,7 +24,7 @@ public class OnSwipeListener implements View.OnTouchListener {
         void swipeRight();
     }
 
-    public OnSwipeListener(Context context, View view, Listener listener) {
+    OnSwipeListener(Context context, View view, Listener listener) {
         gestureDetector = new GestureDetector(context, new GestureListener());
         this.view = view;
         this.mListener = listener;
@@ -105,7 +105,7 @@ public class OnSwipeListener implements View.OnTouchListener {
 
     }
 
-    public void onScrollRight(float diffX) {
+    private void onScrollRight(float diffX) {
         LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         deltaLeft += diffX;
         deltaRight -= diffX;
@@ -115,7 +115,7 @@ public class OnSwipeListener implements View.OnTouchListener {
         view.setLayoutParams(linearLay);
     }
 
-    public void onScrollLeft(float diffX) {
+    private void onScrollLeft(float diffX) {
         LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         deltaLeft -= diffX;
         deltaRight += diffX;

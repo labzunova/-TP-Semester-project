@@ -11,9 +11,6 @@ import java.util.List;
 @Dao
 public interface CredentialDao {
 
-    @Query("SELECT * FROM credential WHERE id = :id")
-    Credential getById(String id);
-
     @Query("SELECT * FROM credential")
     List<Credential> getAll();
 

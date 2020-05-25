@@ -15,7 +15,7 @@ public class DBHelper {
         return ourInstance;
     }
 
-    public CredentialDb getCredentialDb() {
+    CredentialDb getCredentialDb() {
         return mCredentialDb;
     }
 
