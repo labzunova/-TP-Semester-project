@@ -63,24 +63,11 @@ public class EditActivityViewModel extends AndroidViewModel {
     }
 
     void uploadAvatarImage(Bitmap bitmap) {
-        final LiveData<EditActivityRepo.AvatarImage> avatarImageLiveData = EditActivityRepo.getInstance().getUserImage();
-
-        userProfileImage.addSource(avatarImageLiveData, new Observer<EditActivityRepo.AvatarImage>() {
-            @Override
-            public void onChanged(EditActivityRepo.AvatarImage avatarImage) {
-                Log.d(TAG, "userProfileImage.addSource onChanged() in uploadAvatarImage()");
-                userProfileImage.setValue(avatarImage);
-                userProfileImage.removeSource(avatarImageLiveData);
-            }
-        });
-
         EditActivityRepo.getInstance().updateAvatarImageCashe(bitmap);
         EditActivityRepo.getInstance().uploadAvatarImage();
     }
 
-    void getData() {
-        // запршиваем у Repo данные для UI
-        // TODO: попробовать сделать эту лайвдату не одноразовой
+    void subscribeRepoData() {
         final LiveData<EditActivityRepo.AvatarImage> UserImage = EditActivityRepo.getInstance().getUserImage();
         final LiveData<EditActivityRepo.ProfileInfo> UserInfo = EditActivityRepo.getInstance().getUserInfo();
         userProfileImage.addSource(UserImage, new Observer<EditActivityRepo.AvatarImage>() {
@@ -97,8 +84,10 @@ public class EditActivityViewModel extends AndroidViewModel {
                 userProfileInfo.setValue(profileInfo);
             }
         });
+    }
 
-        Log.d(TAG, "getData: refreshUserCash()");
+    void getData() {
+        Log.d(TAG, "getData()");
         EditActivityRepo.getInstance().getData();
     }
 
