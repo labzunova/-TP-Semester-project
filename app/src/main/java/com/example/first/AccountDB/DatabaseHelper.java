@@ -1,4 +1,4 @@
-package com.example.first.Account.AccountDB;
+package com.example.first.AccountDB;
 
 import android.content.Context;
 import androidx.room.Room;
@@ -14,7 +14,7 @@ public class DatabaseHelper {
         return databaseHelper;
     }
 
-    DatabaseHelper(Context context) {
+    private DatabaseHelper(Context context) {
         profileDB = Room.databaseBuilder(context, ProfileDB.class, "profileInfo.db")
                 .build();
     }

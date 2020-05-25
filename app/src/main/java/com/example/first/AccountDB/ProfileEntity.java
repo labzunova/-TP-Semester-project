@@ -1,4 +1,4 @@
-package com.example.first.Account.AccountDB;
+package com.example.first.AccountDB;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -6,9 +6,11 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "myProfile")
 public class ProfileEntity {
+    public static final String DEFAULT_NUMBER = "def";
+
     @PrimaryKey
     @NonNull
-    public String id;
+    public String id = DEFAULT_NUMBER;
     public String name;
     public String email;
     public String phone;
@@ -18,11 +20,10 @@ public class ProfileEntity {
     public String city;
     public String address;
 
-    ProfileEntity() {
+    public ProfileEntity() {
     }
 
-    public ProfileEntity(@NonNull String id, String name, String email, String phone, String breed, String age, String country, String city, String address) {
-        this.id = id;
+    public ProfileEntity(String name, String email, String phone, String breed, String age, String country, String city, String address) {
         this.name = name;
         this.email = email;
         this.phone = phone;

@@ -3,8 +3,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.example.first.Profile;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,21 +21,19 @@ public class AccountRepo implements RepoDB{
     private static final String BRANCH = "Profiles";
     private static final String AVATAR_IMAGE = "AvatarImage";
 
-    MutableLiveData<Profile> profileLiveData = new MutableLiveData<>();
-    MutableLiveData<Bitmap> imageLiveData = new MutableLiveData<>();
-
     private DatabaseReference databaseProfile;
     private FirebaseUser user;
     private Profile profileData;
     private StorageReference storageRef;
 
-    public AccountRepo() {
+    AccountRepo() {
         getUser();
         databaseProfile = FirebaseDatabase.getInstance().getReference(BRANCH);
         storageRef = FirebaseStorage.getInstance().getReference().child(BRANCH);
     }
 
-    public LiveData getProfile() {
+    @Override
+    public void getProfile(final CallbackProfile callback) {
         if (user == null)
             getUser();
 
@@ -45,19 +41,18 @@ public class AccountRepo implements RepoDB{
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 profileData = dataSnapshot.getValue(Profile.class);
-                profileLiveData.postValue(profileData);
+                callback.onSuccess(profileData);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                callback.Error();
             }
         });
-
-        return profileLiveData;
     }
 
-    public LiveData getImage() {
+    @Override
+    public void getImage(final CallbackImage callback) {
         final long ONE_MEGABYTE = 1024*1024;
 
         if (user == null)
@@ -67,17 +62,15 @@ public class AccountRepo implements RepoDB{
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                bitmap = resizeBitmap(bitmap, 600.0f);
-                imageLiveData.postValue(bitmap);
+                bitmap = resizeBitmap(bitmap);
+                callback.onSuccess(bitmap);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                imageLiveData.postValue(null);
+                callback.Error();
             }
         });
-
-        return imageLiveData;
     }
 
     public void exit() {
@@ -89,7 +82,8 @@ public class AccountRepo implements RepoDB{
         user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    private Bitmap resizeBitmap(Bitmap bitmap, float maxResolution) {
+    private Bitmap resizeBitmap(Bitmap bitmap) {
+        float maxResolution = 600f;
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         int newWidth = width;

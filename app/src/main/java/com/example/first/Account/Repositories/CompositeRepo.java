@@ -1,39 +1,63 @@
 package com.example.first.Account.Repositories;
 
-import androidx.lifecycle.LiveData;
+import android.content.Context;
+import android.graphics.Bitmap;
+
+import com.example.first.Profile;
 
 public class CompositeRepo implements RepoDB {
     private LocalRepo localRepo;
     private AccountRepo accountRepo;
 
-    public CompositeRepo() {
-        localRepo = new LocalRepo();
+    public CompositeRepo(Context context) {
+        localRepo = new LocalRepo(context);
         accountRepo = new AccountRepo();
     }
+
+
     @Override
-    public LiveData getProfile() {
-        LiveData liveData;
-        liveData = localRepo.getProfile();
+    public void getProfile(final CallbackProfile callback) {
+        localRepo.getProfile(new CallbackProfile() {
+            @Override
+            public void onSuccess(Profile profile) {
+                callback.onSuccess(profile);
+            }
 
-        if (liveData == null)
-            liveData = accountRepo.getProfile();
+            @Override
+            public void notFound() {
+                accountRepo.getProfile(callback);
+            }
 
-        return liveData;
+            @Override
+            public void Error() {
+                accountRepo.getProfile(callback);
+            }
+        });
     }
 
     @Override
-    public LiveData getImage() {
-        LiveData liveData;
-        liveData = localRepo.getImage();
+    public void getImage(final CallbackImage callback) {
+        localRepo.getImage(new CallbackImage() {
+            @Override
+            public void onSuccess(Bitmap bitmap) {
+                callback.onSuccess(bitmap);
+            }
 
-        if (liveData == null)
-            liveData = accountRepo.getImage();
+            @Override
+            public void notFound() {
+                accountRepo.getImage(callback);
+            }
 
-        return liveData;
+            @Override
+            public void Error() {
+                accountRepo.getImage(callback);
+            }
+        });
     }
 
     @Override
     public void exit() {
+        localRepo.exit();
         accountRepo.exit();
     }
 }

@@ -28,10 +28,9 @@ public class AccountActivity extends AppCompatActivity {
     private TextView labName, labPhone, labBreed, labAge, labCity;
     private ImageView photoProfile;
     private LinearLayout layoutPhone, layoutBreed, layoutAge, layoutCity;
-    private String str = new String("");
+    private String str = "";
 
     private AccountViewModel accountViewModel;
-    private Toolbar toolbar;
 
     private void init() {
         labName = findViewById(R.id.i_name);
@@ -42,10 +41,10 @@ public class AccountActivity extends AppCompatActivity {
 
         photoProfile = findViewById(R.id.photo_profile);
 
-        layoutPhone = (LinearLayout) findViewById(R.id.layout_telephone);
-        layoutBreed = (LinearLayout) findViewById(R.id.layout_breed);
-        layoutAge = (LinearLayout) findViewById(R.id.layout_age);
-        layoutCity = (LinearLayout) findViewById(R.id.layout_city);
+        layoutPhone = findViewById(R.id.layout_telephone);
+        layoutBreed = findViewById(R.id.layout_breed);
+        layoutAge = findViewById(R.id.layout_age);
+        layoutCity = findViewById(R.id.layout_city);
 
         BottomNavigationView bottomNavigationView;
         bottomNavigationView = findViewById(R.id.testNavigation);
@@ -67,7 +66,7 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton accountEdit = (ImageButton) findViewById(R.id.editActivity);
+        ImageButton accountEdit = findViewById(R.id.editActivity);
         accountEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +83,7 @@ public class AccountActivity extends AppCompatActivity {
 
         init();
 
-        toolbar = findViewById(R.id.topAppBar);
+        Toolbar toolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(toolbar);
 
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
