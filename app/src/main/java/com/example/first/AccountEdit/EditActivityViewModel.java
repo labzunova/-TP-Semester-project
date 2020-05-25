@@ -49,9 +49,10 @@ public class EditActivityViewModel extends AndroidViewModel {
             return;
         }
 
-        mValidationState.setValue(ValidationStatus.SUCCESS);
         // request data-upload to firebase
         EditActivityRepo.getInstance().uploadProfileData(profileInfo);
+
+        mValidationState.setValue(ValidationStatus.SUCCESS);
     }
 
     public enum ValidationStatus {
@@ -63,44 +64,32 @@ public class EditActivityViewModel extends AndroidViewModel {
     }
 
     void uploadAvatarImage(Bitmap bitmap) {
-        final LiveData<EditActivityRepo.AvatarImage> avatarImageLiveData = EditActivityRepo.getInstance().getUserImage();
-
-        userProfileImage.addSource(avatarImageLiveData, new Observer<EditActivityRepo.AvatarImage>() {
-            @Override
-            public void onChanged(EditActivityRepo.AvatarImage avatarImage) {
-                Log.d(TAG, "userProfileImage.addSource onChanged() in uploadAvatarImage()");
-                userProfileImage.setValue(avatarImage);
-                userProfileImage.removeSource(avatarImageLiveData);
-            }
-        });
-
         EditActivityRepo.getInstance().updateAvatarImageCashe(bitmap);
         EditActivityRepo.getInstance().uploadAvatarImage();
     }
 
-    void getData() {
-        // запршиваем у Repo данные для UI
-        final LiveData<EditActivityRepo.AvatarImage> avatarImageLiveData = EditActivityRepo.getInstance().getUserImage();
-        final LiveData<EditActivityRepo.ProfileInfo> profileInfoLiveData = EditActivityRepo.getInstance().getUserInfo();
-        userProfileImage.addSource(avatarImageLiveData, new Observer<EditActivityRepo.AvatarImage>() {
+    void subscribeRepoData() {
+        final LiveData<EditActivityRepo.AvatarImage> UserImage = EditActivityRepo.getInstance().getUserImage();
+        final LiveData<EditActivityRepo.ProfileInfo> UserInfo = EditActivityRepo.getInstance().getUserInfo();
+        userProfileImage.addSource(UserImage, new Observer<EditActivityRepo.AvatarImage>() {
             @Override
             public void onChanged(EditActivityRepo.AvatarImage avatarImage) {
                 Log.d(TAG, "userProfileImage.addSource onChanged() in getData()");
                 userProfileImage.setValue(avatarImage);
-                userProfileImage.removeSource(avatarImageLiveData);
             }
         });
-        userProfileInfo.addSource(profileInfoLiveData, new Observer<EditActivityRepo.ProfileInfo>() {
+        userProfileInfo.addSource(UserInfo, new Observer<EditActivityRepo.ProfileInfo>() {
             @Override
             public void onChanged(EditActivityRepo.ProfileInfo profileInfo) {
                 Log.d(TAG, "userProfileInfo.addSource onChanged()");
                 userProfileInfo.setValue(profileInfo);
-                userProfileInfo.removeSource(profileInfoLiveData);
             }
         });
+    }
 
-        Log.d(TAG, "getData: refreshUserCash()");
-        EditActivityRepo.getInstance().refreshUserCash();
+    void getData() {
+        Log.d(TAG, "getData()");
+        EditActivityRepo.getInstance().getData();
     }
 
 }

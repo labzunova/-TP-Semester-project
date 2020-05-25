@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class AccountEditActivity extends AppCompatActivity {
     private static final String TAG = "EditAccountActivity";
@@ -107,6 +108,8 @@ public class AccountEditActivity extends AppCompatActivity {
         assert user != null;
         Log.d(TAG, "User id: " + user.getUid());
 
+        mViewModel.subscribeRepoData();
+
         // getData either from cash or from firebase
         Log.d(TAG, "mViewModel.getData();");
         mViewModel.getData();
@@ -134,14 +137,14 @@ public class AccountEditActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // убрать создание здесь структуры - чтобы структура формировалась уже во ViewModel
                 EditActivityRepo.ProfileInfo profileInfo = new EditActivityRepo.ProfileInfo(
-                        mNameField.getText().toString(),
-                        mEmailField.getText().toString(),
-                        mPhoneField.getText().toString(),
-                        mBreedField.getText().toString(),
-                        mAgeField.getText().toString(),
-                        mCountryField.getText().toString(),
-                        mCityField.getText().toString(),
-                        mAddressField.getText().toString()
+                        Objects.requireNonNull(mNameField.getText()).toString(),
+                        Objects.requireNonNull(mEmailField.getText()).toString(),
+                        Objects.requireNonNull(mPhoneField.getText()).toString(),
+                        Objects.requireNonNull(mBreedField.getText()).toString(),
+                        Objects.requireNonNull(mAgeField.getText()).toString(),
+                        Objects.requireNonNull(mCountryField.getText()).toString(),
+                        Objects.requireNonNull(mCityField.getText()).toString(),
+                        Objects.requireNonNull(mAddressField.getText()).toString()
                 );
                 mViewModel.uploadProfileData(profileInfo);
             }
