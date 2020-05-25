@@ -29,11 +29,18 @@
     <string name="authTitle">"Изменить "</string>
     <string name="passwordHint">пароль</string>
     <string name="loginBtnText">вход</string>
-    <string name="loginPageName">авторизация</string>
     <string name="registrationBtnName">новенький?</string>
-    <string name="registrationPageName">регистрация</string>
-    <string name="regiserBtn">обсер</string>
     <string name="nameHint">Мое имя</string>
     <string name="registrateBtnText">Зарегистрировать</string>
     <string name="myProfileName">Мой профиль</string>
+    <string name="matchesTitle">Взаимности</string>
+    <string name="registrationTitle">Регистрация</string>
+    <string name="profileEditingTitle">Редактирование</string>
+    <string name="noMatches">Нету взаимностей(((</string>
+    <string name="saveBtn">Сохранить</string>
+    <string name="citata">Обернись и сделай ГАВ. Возможно твоя любовь где-то рядом</string>
+    <string name="change_photo">Изменить фото профиля</string>
+    <string name="testName">ИмяТест</string>
+    <string name="testBreed">ПородаТест</string>
+    <string name="hello_blank_fragment">Пустой фрагмент</string>
 </resources>
