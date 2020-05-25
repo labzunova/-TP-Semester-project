@@ -27,6 +27,7 @@ allprojects {
 
 ext {
     roomVersion = '2.0.0-beta01'
+    archLifecycleVersion = '1.1.1'
 }
 
 task clean(type: Delete) {

@@ -6,36 +6,36 @@ import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.Observer;
-
+import androidx.lifecycle.MutableLiveData;
+import com.example.first.Account.Repositories.RepoDB;
 import com.example.first.Profile;
 
 public class AccountViewModel extends AndroidViewModel {
-    private MediatorLiveData<ProfileData> userProfile = new MediatorLiveData<>();
-    private MediatorLiveData<Bitmap> userImage = new MediatorLiveData<>();
+    static final String DEFAULT_AGE = " y.o.";
 
-    public LiveData<ProfileData> getProfileData() {
+    private MutableLiveData<ProfileData> userProfile = new MutableLiveData<>();
+    private MutableLiveData<Bitmap> userImage = new MutableLiveData<>();
+
+    LiveData<ProfileData> getProfileData() {
         return userProfile;
     }
 
-    public LiveData<Bitmap> getUserImage() {
+    LiveData<Bitmap> getUserImage() {
         return userImage;
     }
 
     public AccountViewModel(@NonNull Application application) {
         super(application);
 
-        LiveData profileLiveData = AccountCash.getInstance().getAccountRepo().getProfile();
-        userProfile.addSource(profileLiveData, new Observer<Profile>() {
+        AccountCache.getInstance(getApplication()).getRepo().getProfile(new RepoDB.CallbackProfile() {
             @Override
-            public void onChanged(Profile profile) {
+            public void onSuccess(Profile profile) {
                 ProfileData profileData = new ProfileData();
                 profileData.setName(profile.getName());
                 profileData.setBreed(profile.getBreed());
                 profileData.setCity(profile.getCity());
 
-                profileData.setAge(profile.getAge() + " y.o");
+                profileData.setAge(profile.getAge() + DEFAULT_AGE);
                 String str = profile.getPhone();
                 String phone;
                 if (str.length() == 11) {
@@ -50,25 +50,44 @@ public class AccountViewModel extends AndroidViewModel {
 
                 profileData.setPhone(phone);
 
-                userProfile.postValue(profileData);
+                userProfile.setValue(profileData);
             }
-        });
 
-        LiveData imageLiveData = AccountCash.getInstance().getAccountRepo().getImage();
-        userImage.addSource(imageLiveData, new Observer<Bitmap>() {
             @Override
-            public void onChanged(Bitmap bitmap) {
-                userImage.postValue(bitmap);
+            public void notFound() {
+                // TODO exit account
+            }
+
+            @Override
+            public void Error() {
+                // TODO message for user
+            }
+        });
+
+        AccountCache.getInstance(getApplication()).getRepo().getImage(new RepoDB.CallbackImage() {
+            @Override
+            public void onSuccess(Bitmap bitmap) {
+                userImage.setValue(bitmap);
+            }
+
+            @Override
+            public void notFound() {
+                 userImage.postValue(null);
+            }
+
+            @Override
+            public void Error() {
+                userImage.setValue(null);
             }
         });
     }
 
-    public void exit() {
-        AccountCash.getInstance().getAccountRepo().exit();
+    void exit() {
+        AccountCache.getInstance(getApplication()).getRepo().exit();
     }
 
-    class ProfileData {
-        private String name;
+    static class ProfileData {
+        public String name;
         private String phone;
         private String breed;
         private String age;
@@ -82,26 +101,26 @@ public class AccountViewModel extends AndroidViewModel {
             this.city = city;
         }
 
-        public  ProfileData() {
+        ProfileData() {
         }
 
         public String getName() {
             return name;
         }
 
-        public String getPhone() {
+        String getPhone() {
             return phone;
         }
 
-        public String getBreed() {
+        String getBreed() {
             return breed;
         }
 
-        public String getAge() {
+        String getAge() {
             return age;
         }
 
-        public String getCity() {
+        String getCity() {
             return city;
         }
 
@@ -109,19 +128,19 @@ public class AccountViewModel extends AndroidViewModel {
             this.name = name;
         }
 
-        public void setPhone(String phone) {
+        void setPhone(String phone) {
             this.phone = phone;
         }
 
-        public void setBreed(String breed) {
+        void setBreed(String breed) {
             this.breed = breed;
         }
 
-        public void setAge(String age) {
+        void setAge(String age) {
             this.age = age;
         }
 
-        public void setCity(String city) {
+        void setCity(String city) {
             this.city = city;
         }
     }
