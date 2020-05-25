@@ -27,6 +27,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 
 // TODO: разобраться как отслежвать событие выхода
+// TODO: наладить постоянные, обновляемые при смене аккаунта рефы в Firebase
 
 public class EditActivityRepo {
     private static final String TAG = "EditAccountActivity";
@@ -39,16 +40,10 @@ public class EditActivityRepo {
     private MutableLiveData<AvatarImage> userImage = new MutableLiveData<>();
     private MutableLiveData<ProfileInfo> userInfo = new MutableLiveData<>();
 
-    private DatabaseReference userProfileRef;
-    private StorageReference userStorageRef;
-
     private static final EditActivityRepo sInstance = new EditActivityRepo();
     private EditActivityRepo() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Log.d(TAG, "EditActivityRepo: assert user != null;");
-        assert user != null;
-        userProfileRef = FirebaseDatabase.getInstance().getReference("Profiles").child(user.getUid());
-        userStorageRef = FirebaseStorage.getInstance().getReference().child("Profiles").child(user.getUid());
 
         mProfileCash = ProfileCash.getInstance();
     }
@@ -143,8 +138,11 @@ public class EditActivityRepo {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         mProfileCash.getAvatarBitmap().compress(Bitmap.CompressFormat.WEBP, INITIAL_COMPRESS_QUALITY, baos);
         byte[] bytes = baos.toByteArray();
-        StorageReference ref = userStorageRef.child("AvatarImage");
-        ref.putBytes(bytes).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        StorageReference avatarRef = FirebaseStorage.getInstance().getReference().child("Profiles").child(user.getUid()).child("AvatarImage");
+
+        avatarRef.putBytes(bytes).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 Log.d(TAG, "onComplete: in uploadAvatarImage()");
@@ -162,14 +160,17 @@ public class EditActivityRepo {
         // обновление кэша
         mProfileCash.setProfileData(profileInfo);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference newRefRefreshed = FirebaseDatabase.getInstance().getReference("Profiles").child(user.getUid());
+
         // загрузка в firebase
-        userProfileRef.child("name").setValue(profileInfo.getName());
-        userProfileRef.child("phone").setValue(profileInfo.getPhone());
-        userProfileRef.child("breed").setValue(profileInfo.getBreed());
-        userProfileRef.child("age").setValue(profileInfo.getAge());
-        userProfileRef.child("country").setValue(profileInfo.getCountry());
-        userProfileRef.child("city").setValue(profileInfo.getCity());
-        userProfileRef.child("address").setValue(profileInfo.getAddress());
+        newRefRefreshed.child("name").setValue(profileInfo.getName());
+        newRefRefreshed.child("phone").setValue(profileInfo.getPhone());
+        newRefRefreshed.child("breed").setValue(profileInfo.getBreed());
+        newRefRefreshed.child("age").setValue(profileInfo.getAge());
+        newRefRefreshed.child("country").setValue(profileInfo.getCountry());
+        newRefRefreshed.child("city").setValue(profileInfo.getCity());
+        newRefRefreshed.child("address").setValue(profileInfo.getAddress());
     }
 
     private static Bitmap resizeBitmap(Bitmap bitmap, float maxResolution) {

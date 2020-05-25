@@ -49,9 +49,10 @@ public class EditActivityViewModel extends AndroidViewModel {
             return;
         }
 
-        mValidationState.setValue(ValidationStatus.SUCCESS);
         // request data-upload to firebase
         EditActivityRepo.getInstance().uploadProfileData(profileInfo);
+
+        mValidationState.setValue(ValidationStatus.SUCCESS);
     }
 
     public enum ValidationStatus {
