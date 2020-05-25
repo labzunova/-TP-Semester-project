@@ -77,6 +77,7 @@ public class EditActivityRepo {
         Log.d(TAG, "updateUserCash()");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        assert user != null;
         DatabaseReference newRefRefreshed = FirebaseDatabase.getInstance().getReference("Profiles").child(user.getUid());
         newRefRefreshed.addValueEventListener(new ValueEventListener() {
             @Override
@@ -140,6 +141,7 @@ public class EditActivityRepo {
         byte[] bytes = baos.toByteArray();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
         StorageReference avatarRef = FirebaseStorage.getInstance().getReference().child("Profiles").child(user.getUid()).child("AvatarImage");
 
         avatarRef.putBytes(bytes).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -161,6 +163,7 @@ public class EditActivityRepo {
         mProfileCash.setProfileData(profileInfo);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
         DatabaseReference newRefRefreshed = FirebaseDatabase.getInstance().getReference("Profiles").child(user.getUid());
 
         // загрузка в firebase
