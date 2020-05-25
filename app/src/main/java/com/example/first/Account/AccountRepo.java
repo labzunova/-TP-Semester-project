@@ -82,7 +82,7 @@ public class AccountRepo {
     }
 
     public void exit() {
-        ProfileCash.getInstance().isEmpty = true;
+        ProfileCash.getInstance().isEmpty = true; // for correct ProfileCash work (AccountEdit)
         FirebaseAuth.getInstance().signOut();
         user = null;
     }

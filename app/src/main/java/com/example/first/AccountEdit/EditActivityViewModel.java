@@ -80,27 +80,28 @@ public class EditActivityViewModel extends AndroidViewModel {
 
     void getData() {
         // запршиваем у Repo данные для UI
-        final LiveData<EditActivityRepo.AvatarImage> avatarImageLiveData = EditActivityRepo.getInstance().getUserImage();
-        final LiveData<EditActivityRepo.ProfileInfo> profileInfoLiveData = EditActivityRepo.getInstance().getUserInfo();
-        userProfileImage.addSource(avatarImageLiveData, new Observer<EditActivityRepo.AvatarImage>() {
+        // TODO: попробовать сделать эту лайвдату не одноразовой
+        final LiveData<EditActivityRepo.AvatarImage> UserImage = EditActivityRepo.getInstance().getUserImage();
+        final LiveData<EditActivityRepo.ProfileInfo> UserInfo = EditActivityRepo.getInstance().getUserInfo();
+        userProfileImage.addSource(UserImage, new Observer<EditActivityRepo.AvatarImage>() {
             @Override
             public void onChanged(EditActivityRepo.AvatarImage avatarImage) {
                 Log.d(TAG, "userProfileImage.addSource onChanged() in getData()");
                 userProfileImage.setValue(avatarImage);
-                userProfileImage.removeSource(avatarImageLiveData);
+                userProfileImage.removeSource(UserImage);
             }
         });
-        userProfileInfo.addSource(profileInfoLiveData, new Observer<EditActivityRepo.ProfileInfo>() {
+        userProfileInfo.addSource(UserInfo, new Observer<EditActivityRepo.ProfileInfo>() {
             @Override
             public void onChanged(EditActivityRepo.ProfileInfo profileInfo) {
                 Log.d(TAG, "userProfileInfo.addSource onChanged()");
                 userProfileInfo.setValue(profileInfo);
-                userProfileInfo.removeSource(profileInfoLiveData);
+                userProfileInfo.removeSource(UserInfo);
             }
         });
 
         Log.d(TAG, "getData: refreshUserCash()");
-        EditActivityRepo.getInstance().refreshUserCash();
+        EditActivityRepo.getInstance().getData();
     }
 
 }

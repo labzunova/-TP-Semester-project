@@ -65,7 +65,7 @@ public class EditActivityRepo {
         return userInfo;
     }
 
-    void refreshUserCash() {
+    void getData() {
         // проверка, есть ли что то в кэше - потом сделать проверку нормальной (не за счет вспомогательной пер. isEmpty)
         if (mProfileCash.isEmpty) {
             Log.d(TAG, "refreshUserCash: mProfileCash.isEmpty == true");
