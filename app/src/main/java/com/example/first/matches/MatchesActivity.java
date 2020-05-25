@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.example.first.Account.AccountActivity;
 import com.example.first.otherDogProf.OtherDogActivity;
@@ -26,7 +25,6 @@ public class MatchesActivity extends AppCompatActivity implements MyAdapter.Recy
     private MyAdapter myAdapter;
 
     public void InitView(){
-        TextView noMatches = findViewById(R.id.noMatches);
         matchesRecycler = findViewById(R.id.matchesRecycler);
         matchesRecycler.setLayoutManager(new LinearLayoutManager(this));
         BottomNavigationView bottomNavigationView;

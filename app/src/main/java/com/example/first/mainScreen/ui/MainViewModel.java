@@ -51,7 +51,7 @@ public class MainViewModel extends AndroidViewModel {
                 if (userInformation.profile.getAge() != null)
                     infoUser += ", " + userInformation.profile.getAge();
                 if (userInformation.profile.getCity() != null)
-                    infoUser += '\n' + userInformation.profile.getCity();
+                    infoUser += ", " + userInformation.profile.getCity();
 
                 bitmap = userInformation.bitmap;
 
