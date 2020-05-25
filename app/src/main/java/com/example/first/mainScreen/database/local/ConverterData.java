@@ -7,7 +7,7 @@ import androidx.room.TypeConverter;
 
 import java.io.ByteArrayOutputStream;
 
-public class ConverterData {
+class ConverterData {
 
     @TypeConverter
     public static byte[] getBytes(Bitmap bitmap) {

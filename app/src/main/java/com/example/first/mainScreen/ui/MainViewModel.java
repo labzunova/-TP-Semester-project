@@ -20,16 +20,16 @@ public class MainViewModel extends AndroidViewModel {
         currentUser.addSource(informationLiveData, observer);
     }
 
-    public LiveData<UIInfo> getProfile() {
+    LiveData<UIInfo> getProfile() {
         return currentUser;
     }
 
-    public void dislike() {
+    void dislike() {
         informationLiveData = InfoRepo.getInstance(getApplication()).getCaseProfile();
         currentUser.addSource(informationLiveData, observer);
     }
 
-    public void like() {
+    void like() {
         InfoRepo.getInstance(getApplication()).processInformation();
         informationLiveData = InfoRepo.getInstance(getApplication()).getCaseProfile();
         currentUser.addSource(informationLiveData, observer);
@@ -49,9 +49,9 @@ public class MainViewModel extends AndroidViewModel {
                 if (userInformation.profile.getName() != null)
                     infoUser += userInformation.profile.getName();
                 if (userInformation.profile.getAge() != null)
-                    infoUser += userInformation.profile.getAge();
+                    infoUser += ", " + userInformation.profile.getAge();
                 if (userInformation.profile.getCity() != null)
-                    infoUser += userInformation.profile.getCity();
+                    infoUser += '\n' + userInformation.profile.getCity();
 
                 bitmap = userInformation.bitmap;
 
@@ -64,10 +64,10 @@ public class MainViewModel extends AndroidViewModel {
     };
 
     static class UIInfo {
-        public String infoProfile;
-        public Bitmap mainImageUser;
+        String infoProfile;
+        Bitmap mainImageUser;
 
-        public UIInfo(String infoProfile, Bitmap mainImageUser) {
+        UIInfo(String infoProfile, Bitmap mainImageUser) {
             this.infoProfile = infoProfile;
             this.mainImageUser = mainImageUser;
         }

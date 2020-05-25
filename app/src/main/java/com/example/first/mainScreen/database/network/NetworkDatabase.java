@@ -35,8 +35,6 @@ public class NetworkDatabase implements ProfileDatabase {
     private ArrayList<String> seen = null;
     private ArrayList<String> allId = null;
 
-    private String myId;
-
     public NetworkDatabase(){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
@@ -103,6 +101,9 @@ public class NetworkDatabase implements ProfileDatabase {
                         Profile profile = dataSnapshot.getValue(Profile.class);
                         myRef.child(BRANCH_NAME).child(localCase.id).removeEventListener(this);
 
+                        if (profile == null)
+                            return;
+
                         profile.setSeen(changeStringParameters(
                                 profile.getSeen(), localCase.profile.getSeen()
                         ));
@@ -154,7 +155,7 @@ public class NetworkDatabase implements ProfileDatabase {
     }
 
     private Bitmap resizeBitmap(Bitmap bitmap) {
-        float maxResolution = (float) 400.0;    //edit 'maxResolution' to fit your need
+        float maxResolution = (float) 350.0;    //edit 'maxResolution' to fit your need
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         int newWidth = width;
@@ -180,6 +181,7 @@ public class NetworkDatabase implements ProfileDatabase {
 
     @Override
     public void getMyCaseProfile(GetCaseProfileCallback caseProfileCallback) {
+        String myId;
         if (user == null) {
             caseProfileCallback.onError(NOT_ENTER);
             return;
