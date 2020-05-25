@@ -93,26 +93,31 @@ public class AccountActivity extends AppCompatActivity {
             public void onChanged(AccountViewModel.ProfileData profileData) {
                 if ( profileData.getName() != null && !profileData.getName().equals(str) ){
                     labName.setText(profileData.getName());
+                    labName.setVisibility(View.VISIBLE);
                 } else
                     labName.setVisibility(View.GONE);
 
                 if (profileData.getBreed() != null && !profileData.getBreed().equals(str) ){
                     labBreed.setText(profileData.getBreed());
+                    labBreed.setVisibility(View.VISIBLE);
                 } else
                     layoutBreed.setVisibility(View.GONE);
 
                 if (profileData.getAge() != null && !profileData.getAge().equals(AccountViewModel.DEFAULT_AGE)){
                     labAge.setText(profileData.getAge());
+                    labAge.setVisibility(View.VISIBLE);
                 } else
                     layoutAge.setVisibility(View.GONE);
 
                 if (profileData.getCity() != null && !profileData.getCity().equals(str) ){
                     labCity.setText(profileData.getCity());
+                    labCity.setVisibility(View.VISIBLE);
                 } else
                     layoutCity.setVisibility(View.GONE);
 
                 if (profileData.getPhone() != null && !profileData.getPhone().equals(str) ){
                     labPhone.setText(profileData.getPhone());
+                    labPhone.setVisibility(View.VISIBLE);
                 } else
                     layoutPhone.setVisibility(View.GONE);
             }
