@@ -30,6 +30,7 @@ public class Repository {
     public MutableLiveData<ArrayList<UserModel>> getMatches() {
         if (matches.size() == 0 ) {
             loadMatches();
+            //loadPhotos();
         }
         dog.setValue(matches);
         return dog;

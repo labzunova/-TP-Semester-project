@@ -2,8 +2,6 @@ package com.example.first.otherDogProf;
 
 public class DogCache {
     private static DogCache accountCash;
-    private static String dogsID;
-
     private DogRepository dogRepo;
 
     DogRepository getAccountRepo() {
@@ -12,14 +10,13 @@ public class DogCache {
 
     public static DogCache getInstance() {
         if (accountCash == null) {
-            accountCash = new DogCache(dogsID);
+            accountCash = new DogCache();
         }
-
         return accountCash;
     }
 
-    DogCache(String id) {
-        dogsID = id;
-        dogRepo = new DogRepository(dogsID);
+    private DogCache() {
+        dogRepo = new DogRepository();
     }
+
 }

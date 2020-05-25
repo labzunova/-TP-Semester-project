@@ -45,4 +45,5 @@
     <string name="background">background</string>
     <string name="photo">photo</string>
     <string name="name_age_n_city">Name, Age \n city</string>
+    <string name="nameSampleData">Bobik</string>
 </resources>

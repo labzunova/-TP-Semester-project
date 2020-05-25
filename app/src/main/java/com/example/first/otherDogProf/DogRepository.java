@@ -17,7 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class DogRepository {
+class DogRepository {
     private static final String BRANCH = "Profiles";
     private static final String AVATAR_IMAGE = "AvatarImage";
 
@@ -27,17 +27,14 @@ public class DogRepository {
     private DatabaseReference databaseProfile;
     private Profile profileData;
     private StorageReference storageRef;
-    private static String dogsID;
 
-    DogRepository(String id) {
-        dogsID = id;
+    DogRepository() {
         databaseProfile = FirebaseDatabase.getInstance().getReference(BRANCH);
         storageRef = FirebaseStorage.getInstance().getReference().child(BRANCH);
     }
 
-    public LiveData getProfile() {
-
-        databaseProfile.child(dogsID).addValueEventListener(new ValueEventListener() {
+    LiveData getProfile(String id) {
+        databaseProfile.child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 profileData = dataSnapshot.getValue(Profile.class);
@@ -53,11 +50,10 @@ public class DogRepository {
         return profileLiveData;
     }
 
-    LiveData getImage() {
+    LiveData getImage(String id) {
         final long ONE_MEGABYTE = 1024*1024;
 
-
-        storageRef.child(dogsID).child(AVATAR_IMAGE).getBytes(3 * ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        storageRef.child(id).child(AVATAR_IMAGE).getBytes(3 * ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -98,4 +94,5 @@ public class DogRepository {
 
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
+
 }

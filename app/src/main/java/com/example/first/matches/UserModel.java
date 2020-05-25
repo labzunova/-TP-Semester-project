@@ -1,6 +1,6 @@
 package com.example.first.matches;
 import java.io.Serializable;
 
-class UserModel implements Serializable {
-    String id, name, seen;
+public class UserModel implements Serializable {
+    public String id, name, seen;
 }

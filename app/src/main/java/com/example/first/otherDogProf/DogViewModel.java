@@ -23,10 +23,9 @@ public class DogViewModel extends AndroidViewModel {
         return userImage;
     }
 
-    public DogViewModel(@NonNull Application application) {
-        super(application);
+    void getData(String id) {
 
-        LiveData profileLiveData = DogCache.getInstance().getAccountRepo().getProfile();
+        LiveData profileLiveData = DogCache.getInstance().getAccountRepo().getProfile(id);
         userProfile.addSource(profileLiveData, new Observer<Profile>() {
             @Override
             public void onChanged(Profile profile) {
@@ -55,13 +54,17 @@ public class DogViewModel extends AndroidViewModel {
             }
         });
 
-        LiveData imageLiveData = DogCache.getInstance().getAccountRepo().getImage();
+        LiveData imageLiveData = DogCache.getInstance().getAccountRepo().getImage(id);
         userImage.addSource(imageLiveData, new Observer<Bitmap>() {
             @Override
             public void onChanged(Bitmap bitmap) {
                 userImage.postValue(bitmap);
             }
         });
+    }
+
+    public DogViewModel(@NonNull Application application) {
+        super(application);
     }
 
     static class ProfileData {

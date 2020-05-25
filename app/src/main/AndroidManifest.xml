@@ -16,11 +16,11 @@
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
         <activity android:name=".mainScreen.ui.MainActivity" />
         <activity android:name=".authorizationAndRegistration.RegistrationActivity" />
-        <activity android:name=".authorizationAndRegistration.AuthorizationActivity"/>
         <activity android:name=".otherDogProf.OtherDogActivity"/>
         <activity android:name=".matches.MatchesActivity" />
         <activity android:name=".AccountEdit.AccountEditActivity" />
-        <activity android:name=".Account.AccountActivity">
+        <activity android:name=".Account.AccountActivity"/>
+        <activity android:name=".authorizationAndRegistration.AuthorizationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
