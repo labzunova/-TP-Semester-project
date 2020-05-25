@@ -88,7 +88,6 @@ public class EditActivityViewModel extends AndroidViewModel {
             public void onChanged(EditActivityRepo.AvatarImage avatarImage) {
                 Log.d(TAG, "userProfileImage.addSource onChanged() in getData()");
                 userProfileImage.setValue(avatarImage);
-                userProfileImage.removeSource(UserImage);
             }
         });
         userProfileInfo.addSource(UserInfo, new Observer<EditActivityRepo.ProfileInfo>() {
@@ -96,7 +95,6 @@ public class EditActivityViewModel extends AndroidViewModel {
             public void onChanged(EditActivityRepo.ProfileInfo profileInfo) {
                 Log.d(TAG, "userProfileInfo.addSource onChanged()");
                 userProfileInfo.setValue(profileInfo);
-                userProfileInfo.removeSource(UserInfo);
             }
         });
 
