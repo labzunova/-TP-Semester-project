@@ -31,7 +31,10 @@ public class RegistrationActivity extends AppCompatActivity implements FirebaseF
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(RegistrationActivity.this, AuthorizationActivity.class));
+                Intent intent = new Intent(RegistrationActivity.this, AuthorizationActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                RegistrationActivity.this.finish();
+                startActivity(intent);
             }
         });
     }
@@ -65,7 +68,10 @@ public class RegistrationActivity extends AppCompatActivity implements FirebaseF
 
     @Override
     public void goToAccount() {
-        startActivity(new Intent(RegistrationActivity.this, AccountActivity.class));
+        Intent intent = new Intent(RegistrationActivity.this, AccountActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        RegistrationActivity.this.finish();
+        startActivity(intent);
     }
 
     @Override

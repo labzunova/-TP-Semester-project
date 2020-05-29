@@ -3,6 +3,7 @@ package com.example.first.authorizationAndRegistration;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -52,21 +53,24 @@ class FirebaseForRegistration {
         this.email = email;
         if ((email.equals("")) || (password.equals(""))) {
             ((Toasts)context).makeToast("Fields are empty");
+
+            return;
         }
-            mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (!task.isSuccessful()) {
-                        ((FirebaseForRegistration.Toasts)context).makeToast("Sign in problem");
-                    }
+        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (!task.isSuccessful()) {
+                    ((FirebaseForRegistration.Toasts)context).makeToast("Sign in problem");
                 }
-            });
+            }
+        });
     }
 
     private void startListening() {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                Log.d("information", "onAuthStateChanged in registration");
                 if (firebaseAuth.getCurrentUser() != null) {
                     databaseFilling();
                     ((FirebaseForRegistration.Auth) context).goToAccount(); // Start account activity cause user != null
@@ -120,6 +124,10 @@ class FirebaseForRegistration {
                 + '/' + context.getResources().getResourceTypeName(R.drawable.default_avatar) + '/' + context.getResources().getResourceEntryName(R.drawable.default_avatar) );
         StorageReference ref = storageRef.child("Profiles").child(user.getUid()).child("AvatarImage");
         ref.putFile(imageUri);
+    }
+
+    public void onDestroy() {
+        context = null;
     }
 
 }

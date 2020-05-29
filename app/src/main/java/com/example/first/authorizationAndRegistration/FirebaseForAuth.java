@@ -1,6 +1,7 @@
 package com.example.first.authorizationAndRegistration;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -33,21 +34,24 @@ class FirebaseForAuth {
     void startSignIn(String email, String password) {
         if ((email.equals("")) || (password.equals(""))) {
             ((Toasts)context).makeToast("Fields are empty");
+
+            return;
         }
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (!task.isSuccessful()) {
-                        ((Toasts)context).makeToast("Sign in problem");
-                    }
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (!task.isSuccessful()) {
+                    ((Toasts)context).makeToast("Sign in problem");
                 }
-            });
+            }
+        });
     }
 
     private void startListening(){
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                Log.d("information", "onAuthStateChanged in autorisation");
                 if (firebaseAuth.getCurrentUser() != null) {
                     ((Auth)context).goToAccount(); // Start account activity cause user != null
                 }
