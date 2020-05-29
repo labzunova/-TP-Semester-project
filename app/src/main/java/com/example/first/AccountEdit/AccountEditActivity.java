@@ -206,4 +206,9 @@ public class AccountEditActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        mViewModel.unsubscribeRepoData();
+        super.onDestroy();
+    }
 }

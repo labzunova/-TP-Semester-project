@@ -19,8 +19,14 @@ public class EditActivityViewModel extends AndroidViewModel {
     private MediatorLiveData<EditActivityRepo.AvatarImage> userProfileImage = new MediatorLiveData<>();
     private MediatorLiveData<EditActivityRepo.ProfileInfo> userProfileInfo = new MediatorLiveData<>();
 
+    private final LiveData<EditActivityRepo.AvatarImage> UserImage;
+    private final LiveData<EditActivityRepo.ProfileInfo> UserInfo;
+
     public EditActivityViewModel(@NonNull Application application) {
         super(application);
+
+        UserImage = EditActivityRepo.getInstance().getUserImage();
+        UserInfo = EditActivityRepo.getInstance().getUserInfo();
     }
 
     // getProfile() returning liveData
@@ -69,8 +75,6 @@ public class EditActivityViewModel extends AndroidViewModel {
     }
 
     void subscribeRepoData() {
-        final LiveData<EditActivityRepo.AvatarImage> UserImage = EditActivityRepo.getInstance().getUserImage();
-        final LiveData<EditActivityRepo.ProfileInfo> UserInfo = EditActivityRepo.getInstance().getUserInfo();
         userProfileImage.addSource(UserImage, new Observer<EditActivityRepo.AvatarImage>() {
             @Override
             public void onChanged(EditActivityRepo.AvatarImage avatarImage) {
@@ -85,6 +89,11 @@ public class EditActivityViewModel extends AndroidViewModel {
                 userProfileInfo.setValue(profileInfo);
             }
         });
+    }
+
+    void unsubscribeRepoData() {
+        userProfileImage.removeSource(UserImage);
+        userProfileInfo.removeSource(UserInfo);
     }
 
     void getData() {
