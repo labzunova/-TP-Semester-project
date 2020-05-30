@@ -7,7 +7,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.first.Account.Repositories.LocalRepo;
 import com.example.first.Profile;
 import com.example.first.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +31,8 @@ class FirebaseForRegistration {
     private StorageReference storageRef;
     private String email;
 
+    private FirebaseToLocalbaseData firebaseToLocalbaseData;
+
     FirebaseForRegistration(Context context){
         this.context = context;
         mAuth = FirebaseAuth.getInstance();
@@ -39,6 +40,8 @@ class FirebaseForRegistration {
         storageRef = storage.getReference();
         startListening();
         mAuth.addIdTokenListener(mAuthListener);
+
+        firebaseToLocalbaseData = new FirebaseToLocalbaseData(context);
     }
 
     interface Auth {
@@ -63,8 +66,11 @@ class FirebaseForRegistration {
                 if (!task.isSuccessful()) {
                     ((FirebaseForRegistration.Toasts)context).makeToast("Sign in problem");
                 }
-                else
+                else {
                     databaseFilling();
+
+                    firebaseToLocalbaseData.pushDate();
+                }
             }
         });
     }
@@ -127,10 +133,6 @@ class FirebaseForRegistration {
                 + '/' + context.getResources().getResourceTypeName(R.drawable.default_avatar) + '/' + context.getResources().getResourceEntryName(R.drawable.default_avatar) );
         StorageReference ref = storageRef.child("Profiles").child(user.getUid()).child("AvatarImage");
         ref.putFile(imageUri);
-    }
-
-    public void onDestroy() {
-        context = null;
     }
 
 }
