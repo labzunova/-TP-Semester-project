@@ -16,11 +16,15 @@ class FirebaseForAuth {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private Context context;
 
+    private FirebaseToLocalbaseData firebaseToLocalbaseData;
+
     FirebaseForAuth(Context context){
         this.context = context;
         mAuth = FirebaseAuth.getInstance();
         startListening();
         mAuth.addAuthStateListener(mAuthListener);
+
+        firebaseToLocalbaseData = new FirebaseToLocalbaseData(context);
     }
 
     interface Auth {
@@ -43,6 +47,9 @@ class FirebaseForAuth {
                 if (!task.isSuccessful()) {
                     ((Toasts)context).makeToast("Sign in problem");
                 }
+                else {
+                    firebaseToLocalbaseData.pushDate();
+                }
             }
         });
     }
@@ -58,8 +65,4 @@ class FirebaseForAuth {
             }
         };
     }
-
-
-
-
 }
