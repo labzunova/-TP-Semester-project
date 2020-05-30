@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.first.Account.Repositories.LocalRepo;
 import com.example.first.Profile;
 import com.example.first.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 
 class FirebaseForRegistration {
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseAuth.IdTokenListener mAuthListener;
     private Context context;
     private StorageReference storageRef;
     private String email;
@@ -37,7 +38,7 @@ class FirebaseForRegistration {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         startListening();
-        mAuth.addAuthStateListener(mAuthListener);
+        mAuth.addIdTokenListener(mAuthListener);
     }
 
     interface Auth {
@@ -62,21 +63,23 @@ class FirebaseForRegistration {
                 if (!task.isSuccessful()) {
                     ((FirebaseForRegistration.Toasts)context).makeToast("Sign in problem");
                 }
+                else
+                    databaseFilling();
             }
         });
     }
 
     private void startListening() {
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        mAuthListener = new FirebaseAuth.IdTokenListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                Log.d("information", "onAuthStateChanged in registration");
+            public void onIdTokenChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
-                    databaseFilling();
+                    Log.d("information", "onIdTokenChanged in registration");
                     ((FirebaseForRegistration.Auth) context).goToAccount(); // Start account activity cause user != null
                 }
             }
         };
+
     }
 
     private void databaseFilling() {

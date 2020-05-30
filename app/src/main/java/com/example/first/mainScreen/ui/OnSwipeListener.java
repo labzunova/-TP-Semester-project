@@ -13,7 +13,7 @@ public class OnSwipeListener implements View.OnTouchListener {
 
     private final GestureDetector gestureDetector;
     private int deltaRight = 0, deltaLeft = 0;
-    private static final long SPEED_SWIPE = 150L;
+    private static final long SPEED_SWIPE = 300L;
     private static final int MIN_DELTA_SWIPE = 150;
 
     private View view;
