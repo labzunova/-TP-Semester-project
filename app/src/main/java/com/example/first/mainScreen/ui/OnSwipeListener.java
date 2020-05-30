@@ -56,6 +56,7 @@ public class OnSwipeListener implements View.OnTouchListener {
 
     private void onNotSwipe() {
         LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        linearLay.topMargin = view.getTop();
         deltaLeft = 0;
         deltaRight = 0;
         linearLay.leftMargin = deltaLeft;
@@ -107,6 +108,7 @@ public class OnSwipeListener implements View.OnTouchListener {
 
     private void onScrollRight(float diffX) {
         LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        linearLay.topMargin = view.getTop();
         deltaLeft += diffX;
         deltaRight -= diffX;
         linearLay.leftMargin = deltaLeft;
@@ -117,6 +119,7 @@ public class OnSwipeListener implements View.OnTouchListener {
 
     private void onScrollLeft(float diffX) {
         LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        linearLay.topMargin = view.getTop();
         deltaLeft -= diffX;
         deltaRight += diffX;
         linearLay.leftMargin = deltaLeft;
