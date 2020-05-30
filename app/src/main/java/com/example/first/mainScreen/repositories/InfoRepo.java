@@ -41,7 +41,7 @@ public class InfoRepo {
 
     public LiveData<CaseProfile> getCaseProfile() {
         liveDataRepo = new MediatorLiveData<>();
-        //newCase = null;
+        newCase = null;
 
         database.getCaseProfile(new CredentialsCallback());
 

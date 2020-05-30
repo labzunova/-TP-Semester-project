@@ -154,6 +154,12 @@ public class Profile {
         public String getName() { return name; }
 
         public String getSeen() { return seen; }
+
+
+        @Override
+        public boolean equals(Object obj) {
+            return ((Matches) obj).getId().equals(this.getId());
+        }
     }
 }
 
