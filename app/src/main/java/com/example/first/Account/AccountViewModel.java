@@ -80,6 +80,7 @@ public class AccountViewModel extends AndroidViewModel {
                 userImage.setValue(null);
             }
         });
+
     }
 
     void exit() {

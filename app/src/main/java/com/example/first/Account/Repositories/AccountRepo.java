@@ -71,7 +71,7 @@ public class AccountRepo implements RepoDB{
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                bitmap = resizeBitmap(bitmap);
+                bitmap = CompositeRepo.resizeBitmap(bitmap);
                 callback.onSuccess(bitmap);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -108,9 +108,9 @@ public class AccountRepo implements RepoDB{
     }
 
     @Override
-    public void setAvatarImage(EditActivityRepo.AvatarImage avatarImage, final CallbackUpload callback) {
+    public void setImage(Bitmap image, final CallbackUpload callback) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        avatarImage.getAvatarBitmap().compress(Bitmap.CompressFormat.WEBP, INITIAL_COMPRESS_QUALITY, baos);
+        image.compress(Bitmap.CompressFormat.WEBP, INITIAL_COMPRESS_QUALITY, baos);
         byte[] bytes = baos.toByteArray();
 
         if (user == null)
@@ -133,30 +133,5 @@ public class AccountRepo implements RepoDB{
 
     private void getUser() {
         user = FirebaseAuth.getInstance().getCurrentUser();
-    }
-
-    private Bitmap resizeBitmap(Bitmap bitmap) {
-        float maxResolution = 600f;
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        int newWidth = width;
-        int newHeight = height;
-        float rate;
-
-        if (width > height) {
-            if (maxResolution < width) {
-                rate = maxResolution / width;
-                newHeight = (int) (height * rate);
-                newWidth = (int) maxResolution;
-            }
-        } else {
-            if (maxResolution < height) {
-                rate = maxResolution / height;
-                newWidth = (int) (width * rate);
-                newHeight = (int) maxResolution;
-            }
-        }
-
-        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 }

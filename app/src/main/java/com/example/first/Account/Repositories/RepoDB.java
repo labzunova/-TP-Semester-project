@@ -11,7 +11,7 @@ public interface RepoDB {
      void getProfile(CallbackProfile callback);
      void getImage(CallbackImage callback);
      void setProfile(EditActivityRepo.ProfileInfo profile, CallbackUpload callback);
-     void setAvatarImage(EditActivityRepo.AvatarImage avatarImage, CallbackUpload callback);
+     void setImage(Bitmap image, CallbackUpload callback);
      void exit();
 
      interface CallbackProfile {

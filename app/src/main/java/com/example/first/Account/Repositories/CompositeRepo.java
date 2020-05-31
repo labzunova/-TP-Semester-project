@@ -74,17 +74,18 @@ public class CompositeRepo implements RepoDB {
     }
 
     @Override
-    public void setAvatarImage(final EditActivityRepo.AvatarImage avatarImage, final CallbackUpload callback) {
-        localRepo.setAvatarImage(avatarImage, new CallbackUpload() {
+    public void setImage(final Bitmap image, final CallbackUpload callback) {
+        final Bitmap resizedImage = resizeBitmap(image);
+        localRepo.setImage(resizedImage, new CallbackUpload() {
             @Override
             public void onSuccess() {
-                accountRepo.setAvatarImage(avatarImage, callback);
+                accountRepo.setImage(resizedImage, callback);
             }
 
             @Override
             public void Error() {
                 Log.d(TAG, "localRepo error");
-                accountRepo.setAvatarImage(avatarImage, callback);
+                accountRepo.setImage(resizedImage, callback);
             }
         });
     }
@@ -93,5 +94,30 @@ public class CompositeRepo implements RepoDB {
     public void exit() {
         localRepo.exit();
         accountRepo.exit();
+    }
+
+    static Bitmap resizeBitmap(Bitmap bitmap) {
+        float maxResolution = 600f;
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int newWidth = width;
+        int newHeight = height;
+        float rate;
+
+        if (width > height) {
+            if (maxResolution < width) {
+                rate = maxResolution / width;
+                newHeight = (int) (height * rate);
+                newWidth = (int) maxResolution;
+            }
+        } else {
+            if (maxResolution < height) {
+                rate = maxResolution / height;
+                newWidth = (int) (width * rate);
+                newHeight = (int) maxResolution;
+            }
+        }
+
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 }

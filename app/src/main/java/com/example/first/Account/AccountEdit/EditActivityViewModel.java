@@ -93,7 +93,7 @@ public class EditActivityViewModel extends AndroidViewModel {
 
         AccountCache.getInstance(getApplication())
                 .getRepo()
-                .setAvatarImage(new EditActivityRepo.AvatarImage(bitmap), new RepoDB.CallbackUpload() {
+                .setImage(bitmap, new RepoDB.CallbackUpload() {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "CallbackUpload onSuccess");
@@ -128,6 +128,7 @@ public class EditActivityViewModel extends AndroidViewModel {
                 Log.d(TAG, "CallbackProfile: Error");
             }
         });
+
 
         AccountCache.getInstance(getApplication()).getRepo().getImage(new RepoDB.CallbackImage() {
             @Override
