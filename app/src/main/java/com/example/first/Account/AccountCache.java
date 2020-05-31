@@ -10,7 +10,7 @@ public class AccountCache {
 
     private CompositeRepo compositeRepo;
 
-    RepoDB getRepo() {
+    public RepoDB getRepo() {
         return compositeRepo;
     }
 

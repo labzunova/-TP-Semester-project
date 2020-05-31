@@ -18,7 +18,7 @@
         <activity android:name=".authorizationAndRegistration.RegistrationActivity" />
         <activity android:name=".otherDogProf.OtherDogActivity"/>
         <activity android:name=".matches.MatchesActivity" />
-        <activity android:name=".AccountEdit.AccountEditActivity" />
+        <activity android:name=".Account.AccountEdit.AccountEditActivity" />
         <activity android:name=".Account.AccountActivity"/>
         <activity android:name=".authorizationAndRegistration.AuthorizationActivity">
             <intent-filter>

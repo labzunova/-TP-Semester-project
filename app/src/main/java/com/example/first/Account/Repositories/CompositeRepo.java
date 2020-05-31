@@ -2,10 +2,13 @@ package com.example.first.Account.Repositories;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 
+import com.example.first.Account.AccountEdit.EditActivityRepo;
 import com.example.first.Profile;
 
 public class CompositeRepo implements RepoDB {
+    private static final String TAG = "Repo";
     private LocalRepo localRepo;
     private AccountRepo accountRepo;
 
@@ -51,6 +54,37 @@ public class CompositeRepo implements RepoDB {
             @Override
             public void Error() {
                 accountRepo.getImage(callback);
+            }
+        });
+    }
+
+    @Override
+    public void setProfile(final EditActivityRepo.ProfileInfo profile, final CallbackUpload callback) {
+        localRepo.setProfile(profile, new CallbackUpload() {
+            @Override
+            public void onSuccess() {
+                accountRepo.setProfile(profile, callback);
+            }
+
+            @Override
+            public void Error() {
+                accountRepo.setProfile(profile, callback);
+            }
+        });
+    }
+
+    @Override
+    public void setAvatarImage(final EditActivityRepo.AvatarImage avatarImage, final CallbackUpload callback) {
+        localRepo.setAvatarImage(avatarImage, new CallbackUpload() {
+            @Override
+            public void onSuccess() {
+                accountRepo.setAvatarImage(avatarImage, callback);
+            }
+
+            @Override
+            public void Error() {
+                Log.d(TAG, "localRepo error");
+                accountRepo.setAvatarImage(avatarImage, callback);
             }
         });
     }

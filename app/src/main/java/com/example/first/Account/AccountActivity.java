@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.first.AccountEdit.AccountEditActivity;
+import com.example.first.Account.AccountEdit.AccountEditActivity;
 import com.example.first.R;
 import com.example.first.authorizationAndRegistration.AuthorizationActivity;
 import com.example.first.mainScreen.ui.MainActivity;

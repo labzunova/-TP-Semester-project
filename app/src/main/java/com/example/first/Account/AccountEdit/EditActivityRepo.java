@@ -1,4 +1,4 @@
-package com.example.first.AccountEdit;
+package com.example.first.Account.AccountEdit;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -224,35 +224,46 @@ public class EditActivityRepo {
         public ProfileInfo() {
         }
 
-        String getName() {
+        public ProfileInfo(Profile profile) {
+            this.name = profile.getName();
+            this.email = profile.getEmail();
+            this.phone = profile.getPhone();
+            this.breed = profile.getBreed();
+            this.age = profile.getAge();
+            this.country = profile.getCountry();
+            this.city = profile.getCity();
+            this.address = profile.getAddress();
+        }
+
+        public String getName() {
             return name;
         }
 
-        String getEmail() {
+        public String getEmail() {
             return email;
         }
 
-        String getPhone() {
+        public String getPhone() {
             return phone;
         }
 
-        String getBreed() {
+        public String getBreed() {
             return breed;
         }
 
-        String getAge() {
+        public String getAge() {
             return age;
         }
 
-        String getCountry() {
+        public String getCountry() {
             return country;
         }
 
-        String getCity() {
+        public String getCity() {
             return city;
         }
 
-        String getAddress() {
+        public String getAddress() {
             return address;
         }
 
@@ -298,7 +309,7 @@ public class EditActivityRepo {
 
         public AvatarImage() {  }
 
-        Bitmap getAvatarBitmap() {
+        public Bitmap getAvatarBitmap() {
             return avatarBitmap;
         }
 

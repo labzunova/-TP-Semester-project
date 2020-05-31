@@ -1,4 +1,4 @@
-package com.example.first.AccountEdit;
+package com.example.first.Account.AccountEdit;
 
 import android.app.Application;
 import android.graphics.Bitmap;
@@ -10,6 +10,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+
+import com.example.first.Account.AccountCache;
+import com.example.first.Account.Repositories.RepoDB;
+import com.example.first.Profile;
 
 public class EditActivityViewModel extends AndroidViewModel {
     private static final String TAG = "EditAccountActivity";
@@ -29,7 +33,6 @@ public class EditActivityViewModel extends AndroidViewModel {
         UserInfo = EditActivityRepo.getInstance().getUserInfo();
     }
 
-    // getProfile() returning liveData
     LiveData<ValidationStatus> getProgress() {
         return mValidationState;
     }
@@ -44,19 +47,34 @@ public class EditActivityViewModel extends AndroidViewModel {
 
     void uploadProfileData(EditActivityRepo.ProfileInfo profileInfo) {
         // data validation
-        try {
-            Integer.parseInt(profileInfo.getAge());
-        } catch (NumberFormatException nfe) {
-            mValidationState.setValue(ValidationStatus.AGE_FAILURE);
-            return;
+        if (!profileInfo.getAge().equals("")) {
+            try {
+                Integer.parseInt(profileInfo.getAge());
+            } catch (NumberFormatException nfe) {
+                mValidationState.setValue(ValidationStatus.AGE_FAILURE);
+                return;
+            }
         }
+
         if (profileInfo.getName().length() > NAME_MAX_LENGTH){
             mValidationState.setValue(ValidationStatus.NAME_FAILURE);
             return;
         }
 
-        // request data-upload to firebase
-        EditActivityRepo.getInstance().uploadProfileData(profileInfo);
+        // EditActivityRepo.getInstance().uploadProfileData(profileInfo);
+        AccountCache.getInstance(getApplication())
+                .getRepo()
+                .setProfile(profileInfo, new RepoDB.CallbackUpload() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "CallbackUpload onSuccess");
+            }
+
+            @Override
+            public void Error() {
+                Log.d(TAG, "CallbackUpload Error");
+            }
+        });
 
         mValidationState.setValue(ValidationStatus.SUCCESS);
     }
@@ -70,9 +88,68 @@ public class EditActivityViewModel extends AndroidViewModel {
     }
 
     void uploadAvatarImage(Bitmap bitmap) {
-        EditActivityRepo.getInstance().updateAvatarImageCashe(bitmap);
-        EditActivityRepo.getInstance().uploadAvatarImage();
+        // EditActivityRepo.getInstance().updateAvatarImageCashe(bitmap);
+        // EditActivityRepo.getInstance().uploadAvatarImage();
+
+        AccountCache.getInstance(getApplication())
+                .getRepo()
+                .setAvatarImage(new EditActivityRepo.AvatarImage(bitmap), new RepoDB.CallbackUpload() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "CallbackUpload onSuccess");
+            }
+
+            @Override
+            public void Error() {
+                Log.d(TAG, "CallbackUpload Error");
+            }
+        });
     }
+
+
+    void getData() {
+        Log.d(TAG, "getData()");
+        // EditActivityRepo.getInstance().getData();
+
+        AccountCache.getInstance(getApplication()).getRepo().getProfile(new RepoDB.CallbackProfile() {
+            @Override
+            public void onSuccess(Profile profile) {
+                Log.d(TAG, "CallbackProfile onSuccess ");
+                userProfileInfo.setValue(new EditActivityRepo.ProfileInfo(profile));
+            }
+
+            @Override
+            public void notFound() {
+                Log.d(TAG, "CallbackProfile: notFound");
+            }
+
+            @Override
+            public void Error() {
+                Log.d(TAG, "CallbackProfile: Error");
+            }
+        });
+
+        AccountCache.getInstance(getApplication()).getRepo().getImage(new RepoDB.CallbackImage() {
+            @Override
+            public void onSuccess(Bitmap bitmap) {
+                Log.d(TAG, "CallbackImage onSuccess ");
+                userProfileImage.setValue(new EditActivityRepo.AvatarImage(bitmap));
+            }
+
+            @Override
+            public void notFound() {
+                Log.d(TAG, "CallbackImage: notFound");
+            }
+
+            @Override
+            public void Error() {
+                Log.d(TAG, "CallbackImage: Error");
+            }
+        });
+
+    }
+
+
 
     void subscribeRepoData() {
         userProfileImage.addSource(UserImage, new Observer<EditActivityRepo.AvatarImage>() {
@@ -94,11 +171,6 @@ public class EditActivityViewModel extends AndroidViewModel {
     void unsubscribeRepoData() {
         userProfileImage.removeSource(UserImage);
         userProfileInfo.removeSource(UserInfo);
-    }
-
-    void getData() {
-        Log.d(TAG, "getData()");
-        EditActivityRepo.getInstance().getData();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.first.AccountEdit;
+package com.example.first.Account.AccountEdit;
 
 import android.graphics.Bitmap;
 

@@ -1,4 +1,4 @@
-package com.example.first.AccountEdit;
+package com.example.first.Account.AccountEdit;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
