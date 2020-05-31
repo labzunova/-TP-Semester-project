@@ -129,7 +129,7 @@ public class AccountActivity extends AppCompatActivity {
                 if (bitmap != null)
                     photoProfile.setImageBitmap(bitmap);
                 else
-                    photoProfile.setImageResource(R.drawable.dog);
+                    photoProfile.setImageResource(R.drawable.default_avatar);
             }
         });
     }

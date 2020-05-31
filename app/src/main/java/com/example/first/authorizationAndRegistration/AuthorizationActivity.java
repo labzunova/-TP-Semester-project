@@ -30,7 +30,10 @@ public class AuthorizationActivity extends AppCompatActivity implements Firebase
         mRegistrationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AuthorizationActivity.this, RegistrationActivity.class));
+                Intent intent = new Intent(AuthorizationActivity.this, RegistrationActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                AuthorizationActivity.this.finish();
+                startActivity(intent);
             }
         });
     }
@@ -66,7 +69,10 @@ public class AuthorizationActivity extends AppCompatActivity implements Firebase
 
     @Override
     public void goToAccount() {
-        startActivity(new Intent(AuthorizationActivity.this, AccountActivity.class));
+        Intent intent = new Intent(AuthorizationActivity.this, AccountActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        AuthorizationActivity.this.finish();
+        startActivity(intent);
     }
 
     @Override

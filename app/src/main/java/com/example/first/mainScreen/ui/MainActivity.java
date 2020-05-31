@@ -10,6 +10,9 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.first.Account.AccountActivity;
 import com.example.first.matches.MatchesActivity;
@@ -74,6 +77,29 @@ public class MainActivity extends AppCompatActivity {
                         .beginTransaction()
                         .replace(R.id.dogFragment, fragment)
                         .commit();
+            }
+        });
+
+        mViewModel.getStatus().observe(this, new Observer<MainViewModel.status>() {
+            @Override
+            public void onChanged(MainViewModel.status status) {
+                MessageFragment fragment;
+                if (status == MainViewModel.status.PROFILE_END) {
+                    fragment = MessageFragment.newInstance(MessageFragment.PROFILE_END);
+
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.dogFragment, fragment)
+                            .commit();
+                }
+                else if (status == MainViewModel.status.INTERNET_ERROR){
+                    fragment = MessageFragment.newInstance(MessageFragment.BAD_INTERNET);
+
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.dogFragment, fragment)
+                            .commit();
+                }
             }
         });
     }

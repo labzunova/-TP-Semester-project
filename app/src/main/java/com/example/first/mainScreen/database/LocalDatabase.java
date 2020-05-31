@@ -1,9 +1,11 @@
-package com.example.first.mainScreen.database.local;
+package com.example.first.mainScreen.database;
 
 import android.content.Context;
 
 import com.example.first.Profile;
-import com.example.first.mainScreen.database.ProfileDatabase;
+import com.example.first.ProfilesDB.ProfileEntity;
+import com.example.first.ProfilesDB.CacheProfilesDao;
+import com.example.first.ProfilesDB.DBHelper;
 import com.example.first.mainScreen.executors.AppExecutors;
 import com.example.first.mainScreen.repositories.InfoRepo;
 
@@ -15,7 +17,7 @@ public class LocalDatabase implements ProfileDatabase {
     private ProfileDatabase mNetworkDatabase;
     private Context mContext;
 
-    private List<Credential> allCred = null;
+    private List<ProfileEntity> allCred = null;
     private int count = 0;
 
     public LocalDatabase(Context context, ProfileDatabase networkDatabase) {
@@ -31,7 +33,7 @@ public class LocalDatabase implements ProfileDatabase {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                CredentialDao dao;
+                CacheProfilesDao dao;
                 dao = DBHelper.getInstance(mContext)
                         .getCredentialDb()
                         .getCredentialDao();
@@ -46,25 +48,25 @@ public class LocalDatabase implements ProfileDatabase {
                     caseProfileCallback.onNotFound();
 
                 else {
-                    Credential currentCredential = allCred.get(0);
+                    ProfileEntity currentProfileEntity = allCred.get(0);
                     allCred.remove(0);
-                    dao.delete(currentCredential);
+                    dao.delete(currentProfileEntity);
 
                     final InfoRepo.CaseProfile caseProfile = new InfoRepo.CaseProfile();
                     Profile profile = new Profile();
-                    profile.setName(currentCredential.name);
-                    profile.setCity(currentCredential.city);
-                    profile.setAge(currentCredential.age);
-                    profile.setAddress(currentCredential.address);
-                    profile.setBreed(currentCredential.breed);
-                    profile.setCountry(currentCredential.country);
-                    profile.setEmail(currentCredential.email);
-                    profile.setPhone(currentCredential.phone);
+                    profile.setName(currentProfileEntity.name);
+                    profile.setCity(currentProfileEntity.city);
+                    profile.setAge(currentProfileEntity.age);
+                    profile.setAddress(currentProfileEntity.address);
+                    profile.setBreed(currentProfileEntity.breed);
+                    profile.setCountry(currentProfileEntity.country);
+                    profile.setEmail(currentProfileEntity.email);
+                    profile.setPhone(currentProfileEntity.phone);
 
                     caseProfile.profile = profile;
-                    caseProfile.id = currentCredential.id;
+                    caseProfile.id = currentProfileEntity.id;
                     caseProfile.name = profile.getName();
-                    caseProfile.bitmap = currentCredential.bitmap;
+                    caseProfile.bitmap = currentProfileEntity.bitmap;
 
                     AppExecutors.getInstance().mainThread().execute(new Runnable() {
                         @Override
@@ -91,7 +93,7 @@ public class LocalDatabase implements ProfileDatabase {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                final CredentialDao dao = DBHelper.getInstance(mContext)
+                final CacheProfilesDao dao = DBHelper.getInstance(mContext)
                         .getCredentialDb()
                         .getCredentialDao();
                 count = dao
@@ -103,7 +105,7 @@ public class LocalDatabase implements ProfileDatabase {
         });
     }
 
-    private void newProfile(final CredentialDao dao) {
+    private void newProfile(final CacheProfilesDao dao) {
         if (count > MAX_USER)
             return;
 
@@ -111,7 +113,7 @@ public class LocalDatabase implements ProfileDatabase {
         mNetworkDatabase.getCaseProfile(new GetCaseProfileCallback() {
             @Override
             public void onSuccess(InfoRepo.CaseProfile caseProfile) {
-                final Credential currentCredential = new Credential(
+                final ProfileEntity currentProfileEntity = new ProfileEntity(
                         caseProfile.id,
                         caseProfile.profile.getName(),
                         caseProfile.profile.getEmail(),
@@ -122,12 +124,12 @@ public class LocalDatabase implements ProfileDatabase {
                         caseProfile.profile.getCity(),
                         caseProfile.profile.getAddress());
 
-                currentCredential.bitmap = caseProfile.bitmap;
+                currentProfileEntity.bitmap = caseProfile.bitmap;
 
                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                     @Override
                     public void run() {
-                        dao.change(currentCredential);
+                        dao.change(currentProfileEntity);
                         newProfile(dao);
                     }
                 });

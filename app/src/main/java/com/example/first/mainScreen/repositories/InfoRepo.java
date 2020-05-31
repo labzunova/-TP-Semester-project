@@ -15,6 +15,7 @@ public class InfoRepo {
     private ProfileDatabase database;
     private CaseProfile newCase;
     private MediatorLiveData<CaseProfile> liveDataRepo;
+    private MediatorLiveData<statusRepo> liveDataRepoStatus;
 
     public InfoRepo(ProfileDatabase database) {
         newCase = null;
@@ -27,6 +28,10 @@ public class InfoRepo {
         return ApplicationModified.from(context).getInfoRepo();
     }
 
+    public LiveData<statusRepo> getStatus() {
+        liveDataRepoStatus = new MediatorLiveData<>();
+        return liveDataRepoStatus;
+    }
 
     public LiveData<CaseProfile> getFirstCaseProfile() {
         liveDataRepo = new MediatorLiveData<>();
@@ -41,7 +46,7 @@ public class InfoRepo {
 
     public LiveData<CaseProfile> getCaseProfile() {
         liveDataRepo = new MediatorLiveData<>();
-        //newCase = null;
+        newCase = null;
 
         database.getCaseProfile(new CredentialsCallback());
 
@@ -54,17 +59,16 @@ public class InfoRepo {
         if (changeUserCase == null)
             return;
 
-        if ((mLikes == null) || (mLikes.indexOf(changeUserCase.id) == -1)) {
-            ArrayList<String> likes;
-            likes = changeUserCase.profile.getLikes();
-            if (likes == null)
-                likes = new ArrayList<>();
-            likes.add(myUserCase.id);
-            changeUserCase.profile.setLikes(likes);
+        ArrayList<String> likes;
+        likes = changeUserCase.profile.getLikes();
+        if (likes == null)
+            likes = new ArrayList<>();
+        likes.add(myUserCase.id);
+        changeUserCase.profile.setLikes(likes);
 
-            database.changeProfileByCase(changeUserCase);
-        }
-        else {
+        database.changeProfileByCase(changeUserCase);
+
+        if ((mLikes != null) && (mLikes.indexOf(changeUserCase.id) != -1)) {
             ArrayList<Profile.Matches> matches;
 
             Profile.Matches myMatch = new Profile.Matches(changeUserCase.id, changeUserCase.name, "false");
@@ -75,6 +79,7 @@ public class InfoRepo {
             myUserCase.profile.setMatches(matches);
 
             database.changeProfileByCase(myUserCase);
+
 
             Profile.Matches youMatch = new Profile.Matches(myUserCase.id, myUserCase.name, "false");
             matches = changeUserCase.profile.getMatches();
@@ -127,16 +132,23 @@ public class InfoRepo {
         public void onSuccess(CaseProfile caseProfile) {
             newCase = caseProfile;
             liveDataRepo.setValue(caseProfile);
+            liveDataRepoStatus.setValue(statusRepo.SUCCESS);
         }
 
         @Override
         public void onError(final int codeError) {
-            liveDataRepo.setValue(null);
+            liveDataRepoStatus.setValue(statusRepo.INTERNET_ERROR);
         }
 
         @Override
         public void onNotFound() {
-            liveDataRepo.postValue(null);
+            liveDataRepoStatus.postValue(statusRepo.PROFILE_END);
         }
+    }
+
+    public enum statusRepo {
+        SUCCESS,
+        INTERNET_ERROR,
+        PROFILE_END
     }
 }

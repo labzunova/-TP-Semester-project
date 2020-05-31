@@ -1,4 +1,4 @@
-package com.example.first.mainScreen.database.local;
+package com.example.first.ProfilesDB;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,7 +7,7 @@ import androidx.room.TypeConverter;
 
 import java.io.ByteArrayOutputStream;
 
-class ConverterData {
+public class ConverterData {
 
     @TypeConverter
     public static byte[] getBytes(Bitmap bitmap) {

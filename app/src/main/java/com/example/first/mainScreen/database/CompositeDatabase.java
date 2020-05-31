@@ -2,8 +2,6 @@ package com.example.first.mainScreen.database;
 
 import android.content.Context;
 
-import com.example.first.mainScreen.database.local.LocalDatabase;
-import com.example.first.mainScreen.database.network.NetworkDatabase;
 import com.example.first.mainScreen.repositories.InfoRepo;
 
 public class CompositeDatabase implements ProfileDatabase {
