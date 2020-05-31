@@ -33,11 +33,11 @@ public class OtherDogActivity extends AppCompatActivity {
         city = findViewById(R.id.city);
         address = findViewById(R.id.address);
         photoProfile = findViewById(R.id.avatar);
-        layoutPhone = findViewById(R.id.layout_telephone);
+        layoutPhone = findViewById(R.id.layout_phone);
         layoutBreed = findViewById(R.id.layout_breed);
         layoutAge = findViewById(R.id.layout_age);
         layoutCity = findViewById(R.id.layout_city);
-        layoutAddress = findViewById(R.id.add);
+        layoutAddress = findViewById(R.id.layout_address);
         exitBtn = findViewById(R.id.topAppBar);
         exitBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,4 +1,4 @@
-package com.example.first.mainScreen.database.network;
+package com.example.first.mainScreen.database;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,7 +38,6 @@ public class NetworkDatabase implements ProfileDatabase {
     public NetworkDatabase(){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
-        user = FirebaseAuth.getInstance().getCurrentUser();
         storageRef = FirebaseStorage.getInstance().getReference().child(BRANCH_NAME);
     }
 
@@ -182,6 +181,7 @@ public class NetworkDatabase implements ProfileDatabase {
     @Override
     public void getMyCaseProfile(GetCaseProfileCallback caseProfileCallback) {
         String myId;
+        user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             caseProfileCallback.onError(NOT_ENTER);
             return;
@@ -201,6 +201,7 @@ public class NetworkDatabase implements ProfileDatabase {
                     @Override
                     public void onSuccess(ArrayList<String> seen) {
                         String id = null;
+                        user = FirebaseAuth.getInstance().getCurrentUser();
 
                         int i = 0;
                         while (i < allId.size() && (id == null)) {
@@ -259,6 +260,8 @@ public class NetworkDatabase implements ProfileDatabase {
     }
 
     private void getSeen(final SeenCollBack seenCollBack) {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
         myRef.child(BRANCH_NAME).child(user.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
