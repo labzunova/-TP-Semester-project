@@ -22,7 +22,7 @@
             android:screenOrientation="sensorPortrait"/>
         <activity android:name=".matches.MatchesActivity" />
 
-        <activity android:name=".AccountEdit.AccountEditActivity"
+        <activity android:name=".Account.AccountEdit.AccountEditActivity"
             android:screenOrientation="sensorPortrait"/>
         <activity android:name=".Account.AccountActivity"
             android:screenOrientation="sensorPortrait"/>
