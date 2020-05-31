@@ -13,15 +13,33 @@ import com.example.first.mainScreen.repositories.InfoRepo;
 public class MainViewModel extends AndroidViewModel {
     private MediatorLiveData<UIInfo> currentUser = new MediatorLiveData<>();
     private LiveData<InfoRepo.CaseProfile> informationLiveData;
+    private MediatorLiveData<status> statusLiveData = new MediatorLiveData<>();
 
     public MainViewModel(@NonNull Application application) {
         super(application);
         informationLiveData = InfoRepo.getInstance(getApplication()).getFirstCaseProfile();
         currentUser.addSource(informationLiveData, observer);
+
+        LiveData<InfoRepo.statusRepo> statusRepoLiveData = InfoRepo.getInstance(getApplication()).getStatus();
+        statusLiveData.addSource(statusRepoLiveData, new Observer<InfoRepo.statusRepo>() {
+            @Override
+            public void onChanged(InfoRepo.statusRepo statusRepo) {
+                if (statusRepo == InfoRepo.statusRepo.SUCCESS)
+                    statusLiveData.postValue(status.SUCCESS);
+                else if (statusRepo == InfoRepo.statusRepo.INTERNET_ERROR)
+                    statusLiveData.postValue(status.INTERNET_ERROR);
+                else if (statusRepo == InfoRepo.statusRepo.PROFILE_END)
+                    statusLiveData.postValue(status.PROFILE_END);
+            }
+        });
     }
 
     LiveData<UIInfo> getProfile() {
         return currentUser;
+    }
+
+    LiveData<status> getStatus() {
+        return statusLiveData;
     }
 
     void dislike() {
@@ -71,5 +89,11 @@ public class MainViewModel extends AndroidViewModel {
             this.infoProfile = infoProfile;
             this.mainImageUser = mainImageUser;
         }
+    }
+
+    enum status {
+        SUCCESS,
+        INTERNET_ERROR,
+        PROFILE_END
     }
 }

@@ -7,6 +7,7 @@ import com.example.first.AccountDB.ImageEntity;
 import com.example.first.AccountDB.ProfileEntity;
 import com.example.first.Account.Executors.ExecutorsDB;
 import com.example.first.Profile;
+import com.example.first.ProfilesDB.DBHelper;
 
 import java.util.ArrayList;
 
@@ -100,6 +101,7 @@ public class LocalRepo implements RepoDB {
                 list.add(ProfileEntity.DEFAULT_NUMBER);
                 DatabaseHelper.getInstance(context).getProfileDB().getProfileDao().deleteByIdList(list);
                 DatabaseHelper.getInstance(context).getProfileDB().getProfileDao().deleteImageByIdList(list);
+                DBHelper.getInstance(context).getCredentialDb().getCredentialDao().deleteAll();
             }
         });
     }
