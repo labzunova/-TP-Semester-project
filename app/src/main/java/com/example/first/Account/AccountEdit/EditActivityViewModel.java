@@ -23,14 +23,10 @@ public class EditActivityViewModel extends AndroidViewModel {
     private MediatorLiveData<EditActivityRepo.AvatarImage> userProfileImage = new MediatorLiveData<>();
     private MediatorLiveData<EditActivityRepo.ProfileInfo> userProfileInfo = new MediatorLiveData<>();
 
-    private final LiveData<EditActivityRepo.AvatarImage> UserImage;
-    private final LiveData<EditActivityRepo.ProfileInfo> UserInfo;
 
     public EditActivityViewModel(@NonNull Application application) {
         super(application);
 
-        UserImage = EditActivityRepo.getInstance().getUserImage();
-        UserInfo = EditActivityRepo.getInstance().getUserInfo();
     }
 
     LiveData<ValidationStatus> getProgress() {
@@ -67,12 +63,12 @@ public class EditActivityViewModel extends AndroidViewModel {
                 .setProfile(profileInfo, new RepoDB.CallbackUpload() {
             @Override
             public void onSuccess() {
-                Log.d(TAG, "CallbackUpload onSuccess");
+                Log.d(TAG, "CallbackUpload onSuccess profileInfo");
             }
 
             @Override
             public void Error() {
-                Log.d(TAG, "CallbackUpload Error");
+                Log.d(TAG, "CallbackUpload Error profileInfo");
             }
         });
 
@@ -148,30 +144,6 @@ public class EditActivityViewModel extends AndroidViewModel {
             }
         });
 
-    }
-
-
-
-    void subscribeRepoData() {
-        userProfileImage.addSource(UserImage, new Observer<EditActivityRepo.AvatarImage>() {
-            @Override
-            public void onChanged(EditActivityRepo.AvatarImage avatarImage) {
-                Log.d(TAG, "userProfileImage.addSource onChanged() in getData()");
-                userProfileImage.setValue(avatarImage);
-            }
-        });
-        userProfileInfo.addSource(UserInfo, new Observer<EditActivityRepo.ProfileInfo>() {
-            @Override
-            public void onChanged(EditActivityRepo.ProfileInfo profileInfo) {
-                Log.d(TAG, "userProfileInfo.addSource onChanged()");
-                userProfileInfo.setValue(profileInfo);
-            }
-        });
-    }
-
-    void unsubscribeRepoData() {
-        userProfileImage.removeSource(UserImage);
-        userProfileInfo.removeSource(UserInfo);
     }
 
 }

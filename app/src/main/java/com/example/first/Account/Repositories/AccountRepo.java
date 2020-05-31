@@ -94,8 +94,10 @@ public class AccountRepo implements RepoDB{
         if (user == null)
             getUser();
 
+        String userID = user.getUid();
+
         // TODO: данные разместить в отдельной папке, чтобы не было такого хардкода
-        DatabaseReference ref = databaseProfile.child(user.getUid());
+        DatabaseReference ref = databaseProfile.child(userID);
         ref.child("name").setValue(profile.getName());
         ref.child("phone").setValue(profile.getPhone());
         ref.child("breed").setValue(profile.getBreed());

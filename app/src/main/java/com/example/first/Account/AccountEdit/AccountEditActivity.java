@@ -108,8 +108,6 @@ public class AccountEditActivity extends AppCompatActivity {
         assert user != null;
         Log.d(TAG, "User id: " + user.getUid());
 
-        mViewModel.subscribeRepoData();
-
         // getData either from cash or from firebase
         Log.d(TAG, "mViewModel.getData();");
         mViewModel.getData();
@@ -204,11 +202,5 @@ public class AccountEditActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Failed to load photo", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        mViewModel.unsubscribeRepoData();
-        super.onDestroy();
     }
 }
