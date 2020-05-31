@@ -101,7 +101,7 @@ public class LocalRepo implements RepoDB {
                 list.add(ProfileEntity.DEFAULT_NUMBER);
                 DatabaseHelper.getInstance(context).getProfileDB().getProfileDao().deleteByIdList(list);
                 DatabaseHelper.getInstance(context).getProfileDB().getProfileDao().deleteImageByIdList(list);
-                DBHelper.getInstance(context).getCredentialDb().getCredentialDao().deleteAll();
+                DBHelper.getInstance(context).getCacheProfilesDb().getCacheProfilesDao().deleteAll();
             }
         });
     }

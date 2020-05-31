@@ -15,7 +15,7 @@ public class DBHelper {
         return ourInstance;
     }
 
-    public CacheProfilesDb getCredentialDb() {
+    public CacheProfilesDb getCacheProfilesDb() {
         return mCacheProfilesDb;
     }
 

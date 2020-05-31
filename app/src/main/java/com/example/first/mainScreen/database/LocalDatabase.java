@@ -35,8 +35,8 @@ public class LocalDatabase implements ProfileDatabase {
             public void run() {
                 CacheProfilesDao dao;
                 dao = DBHelper.getInstance(mContext)
-                        .getCredentialDb()
-                        .getCredentialDao();
+                        .getCacheProfilesDb()
+                        .getCacheProfilesDao();
 
                 if ((allCred == null) || (allCred.size() == 0))
                     allCred = dao.getAll();
@@ -94,8 +94,8 @@ public class LocalDatabase implements ProfileDatabase {
             @Override
             public void run() {
                 final CacheProfilesDao dao = DBHelper.getInstance(mContext)
-                        .getCredentialDb()
-                        .getCredentialDao();
+                        .getCacheProfilesDb()
+                        .getCacheProfilesDao();
                 count = dao
                         .getAll()
                         .size();
