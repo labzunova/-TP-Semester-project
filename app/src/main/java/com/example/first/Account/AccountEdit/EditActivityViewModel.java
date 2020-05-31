@@ -83,8 +83,6 @@ public class EditActivityViewModel extends AndroidViewModel {
     }
 
     void uploadAvatarImage(Bitmap bitmap) {
-        // EditActivityRepo.getInstance().updateAvatarImageCashe(bitmap);
-        // EditActivityRepo.getInstance().uploadAvatarImage();
 
         AccountCache.getInstance(getApplication())
                 .getRepo()
@@ -99,12 +97,14 @@ public class EditActivityViewModel extends AndroidViewModel {
                 Log.d(TAG, "CallbackUpload Error");
             }
         });
+
+        Bitmap temp_bitmap = resizeBitmap(bitmap);
+        userProfileImage.setValue(new EditActivityRepo.AvatarImage(temp_bitmap));
     }
 
 
     void getData() {
         Log.d(TAG, "getData()");
-        // EditActivityRepo.getInstance().getData();
 
         AccountCache.getInstance(getApplication()).getRepo().getProfile(new RepoDB.CallbackProfile() {
             @Override
@@ -143,6 +143,31 @@ public class EditActivityViewModel extends AndroidViewModel {
             }
         });
 
+    }
+
+    static Bitmap resizeBitmap(Bitmap bitmap) {
+        float maxResolution = 600f;
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int newWidth = width;
+        int newHeight = height;
+        float rate;
+
+        if (width > height) {
+            if (maxResolution < width) {
+                rate = maxResolution / width;
+                newHeight = (int) (height * rate);
+                newWidth = (int) maxResolution;
+            }
+        } else {
+            if (maxResolution < height) {
+                rate = maxResolution / height;
+                newWidth = (int) (width * rate);
+                newHeight = (int) maxResolution;
+            }
+        }
+
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 
 }
