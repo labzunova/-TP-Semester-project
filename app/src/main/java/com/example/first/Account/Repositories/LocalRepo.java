@@ -103,7 +103,6 @@ public class LocalRepo implements RepoDB {
                         .getProfileDB()
                         .getProfileDao()
                         .setById(profileEntity);
-                // TODO: remove avatarImage class and transfer bitmap diirectly
 
                 // TODO: понять, как отслеживать состояние таска setById(success/failure)
                 // После загрузки в базу вызываем onSuccess

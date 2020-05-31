@@ -48,7 +48,33 @@ public class CompositeRepo implements RepoDB {
 
             @Override
             public void notFound() {
-                accountRepo.getImage(callback);
+                accountRepo.getImage(new CallbackImage() {
+                    @Override
+                    public void onSuccess(Bitmap bitmap) {
+                        callback.onSuccess(bitmap);
+                        setImage(bitmap, new CallbackUpload() {
+                            @Override
+                            public void onSuccess() {
+                                Log.d(TAG, "CallbackUpload onSuccess");
+                            }
+
+                            @Override
+                            public void Error() {
+                                Log.d(TAG, "CallbackUpload Error");
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void notFound() {
+                        callback.notFound();
+                    }
+
+                    @Override
+                    public void Error() {
+                        callback.Error();
+                    }
+                });
             }
 
             @Override
