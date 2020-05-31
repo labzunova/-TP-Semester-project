@@ -24,7 +24,7 @@ public class ImageEntity {
     }
 
     public ImageEntity(@NotNull String id, Bitmap image) {
-        this.id = id;
+        this.id = id; // пока фотка одна - испульзую дефолтный id
         this.image = image;
     }
 }

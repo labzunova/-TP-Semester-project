@@ -1,4 +1,4 @@
-package com.example.first.AccountEdit;
+package com.example.first.Account.AccountEdit;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -108,8 +108,6 @@ public class AccountEditActivity extends AppCompatActivity {
         assert user != null;
         Log.d(TAG, "User id: " + user.getUid());
 
-        mViewModel.subscribeRepoData();
-
         // getData either from cash or from firebase
         Log.d(TAG, "mViewModel.getData();");
         mViewModel.getData();
@@ -179,11 +177,10 @@ public class AccountEditActivity extends AppCompatActivity {
         // When user chose photo - onActivityResult() is called
     }
 
-    // result from image chooser activity
-    // set chosen photo to imageview
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // set chosen photo to imageview
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             Uri filepath = data.getData();
@@ -205,5 +202,4 @@ public class AccountEditActivity extends AppCompatActivity {
             Toast.makeText(this, "Failed to load photo", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

@@ -21,12 +21,14 @@
         <activity android:name=".otherDogProf.OtherDogActivity"
             android:screenOrientation="sensorPortrait"/>
         <activity android:name=".matches.MatchesActivity" />
+
         <activity android:name=".AccountEdit.AccountEditActivity"
             android:screenOrientation="sensorPortrait"/>
         <activity android:name=".Account.AccountActivity"
             android:screenOrientation="sensorPortrait"/>
         <activity android:name=".authorizationAndRegistration.AuthorizationActivity"
             android:screenOrientation="sensorPortrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
