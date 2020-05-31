@@ -177,11 +177,10 @@ public class AccountEditActivity extends AppCompatActivity {
         // When user chose photo - onActivityResult() is called
     }
 
-    // result from image chooser activity
-    // set chosen photo to imageview
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // set chosen photo to imageview
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             Uri filepath = data.getData();

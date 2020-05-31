@@ -46,6 +46,7 @@ public class CompositeRepo implements RepoDB {
                 callback.onSuccess(bitmap);
             }
 
+            // если в базе фото нет, то при загрузке и файрбейс, еще и кладем в базу
             @Override
             public void notFound() {
                 accountRepo.getImage(new CallbackImage() {

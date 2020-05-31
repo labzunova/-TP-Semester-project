@@ -1,12 +1,10 @@
 package com.example.first.Account.Repositories;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.example.first.Account.AccountEdit.EditActivityRepo;
-import com.example.first.Account.AccountEdit.ProfileCash;
 import com.example.first.Profile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -83,7 +81,6 @@ public class AccountRepo implements RepoDB{
     }
 
     public void exit() {
-        ProfileCash.getInstance().isEmpty = true; // for correct ProfileCash work (AccountEdit)
         FirebaseAuth.getInstance().signOut();
         user = null;
     }
