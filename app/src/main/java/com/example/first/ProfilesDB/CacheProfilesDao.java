@@ -11,9 +11,6 @@ import java.util.List;
 @Dao
 public interface CacheProfilesDao {
 
-    @Query("SELECT * FROM ProfileEntity")
-    List<ProfileEntity> getAll();
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void change(ProfileEntity profileEntity);
 
@@ -22,4 +19,10 @@ public interface CacheProfilesDao {
 
     @Query("DELETE FROM ProfileEntity")
     void deleteAll();
+
+    @Query("SELECT * FROM profileentity LIMIT 1")
+    ProfileEntity getProfileEntity();
+
+    @Query("SELECT COUNT(*) FROM ProfileEntity")
+    int getCount();
 }

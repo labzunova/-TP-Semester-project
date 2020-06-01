@@ -35,7 +35,7 @@ public class NetworkDatabase implements ProfileDatabase {
     private ArrayList<String> seen = null;
     private ArrayList<String> allId = null;
 
-    public NetworkDatabase(){
+    NetworkDatabase(){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
         storageRef = FirebaseStorage.getInstance().getReference().child(BRANCH_NAME);
@@ -200,26 +200,7 @@ public class NetworkDatabase implements ProfileDatabase {
                 getSeen(new SeenCollBack() {
                     @Override
                     public void onSuccess(ArrayList<String> seen) {
-                        String id = null;
-                        user = FirebaseAuth.getInstance().getCurrentUser();
-
-                        int i = 0;
-                        while (i < allId.size() && (id == null)) {
-                            if (seen.indexOf(allId.get(i)) == -1) {
-                                id = allId.get(i);
-                            }
-                            i++;
-                        }
-
-                        if (id != null) {
-                            seen.add(id); // добавление в просмотренные
-                            Profile myProfile = new Profile();
-                            myProfile.setSeen(seen);
-                            InfoRepo.CaseProfile caseProfile = new InfoRepo.CaseProfile();
-                            caseProfile.id = user.getUid();
-                            caseProfile.profile = myProfile;
-                            changeProfileByCase(caseProfile);
-                        }
+                        String id = getId();
 
                         getCaseById(id, getCaseProfileCallback);
                     }
@@ -236,6 +217,35 @@ public class NetworkDatabase implements ProfileDatabase {
                 getCaseProfileCallback.onError(BAD_INTERNET);
             }
         });
+    }
+
+    private String getId() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        String id = null;
+        int i = 0;
+
+        if ((allId == null) || (seen == null))
+            return null;
+
+        while (i < allId.size() && (id == null)) {
+            if (seen.indexOf(allId.get(i)) == -1) {
+                id = allId.get(i);
+            }
+            i++;
+        }
+
+        if (id != null) {
+            seen.add(id); // добавление в просмотренные
+            Profile myProfile = new Profile();
+            myProfile.setSeen(seen);
+            InfoRepo.CaseProfile caseProfile = new InfoRepo.CaseProfile();
+            caseProfile.id = user.getUid();
+            caseProfile.profile = myProfile;
+            changeProfileByCase(caseProfile);
+        }
+
+        return id;
     }
 
     private void getAllId(final AllIdCollBack allIdCollBack) {
