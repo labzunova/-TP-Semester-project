@@ -1,6 +1,7 @@
 package com.example.first.mainScreen.database;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.first.Profile;
 import com.example.first.ProfilesDB.ProfileEntity;
@@ -9,18 +10,15 @@ import com.example.first.ProfilesDB.DBHelper;
 import com.example.first.mainScreen.executors.AppExecutors;
 import com.example.first.mainScreen.repositories.InfoRepo;
 
-import java.util.List;
-
 public class LocalDatabase implements ProfileDatabase {
     private final static int MAX_USER = 20;
 
     private ProfileDatabase mNetworkDatabase;
     private Context mContext;
 
-    private List<ProfileEntity> allCred = null;
     private int count = 0;
 
-    public LocalDatabase(Context context, ProfileDatabase networkDatabase) {
+    LocalDatabase(Context context, ProfileDatabase networkDatabase) {
         this.mContext = context;
         this.mNetworkDatabase = networkDatabase;
 
@@ -35,21 +33,18 @@ public class LocalDatabase implements ProfileDatabase {
             public void run() {
                 CacheProfilesDao dao;
                 dao = DBHelper.getInstance(mContext)
-                        .getCredentialDb()
-                        .getCredentialDao();
+                        .getCacheProfilesDb()
+                        .getCacheProfilesDao();
 
-                if ((allCred == null) || (allCred.size() == 0))
-                    allCred = dao.getAll();
+                count = dao.getCount();
 
-                if ((allCred == null) || allCred.size() < MAX_USER / 2)
-                    pullProfile();
-
-                if ((allCred == null) || (allCred.size() == 0))
+                if (count == 0) {
+                    Log.d("information", "not accaunt in localbase");
                     caseProfileCallback.onNotFound();
-
+                    return;
+                }
                 else {
-                    ProfileEntity currentProfileEntity = allCred.get(0);
-                    allCred.remove(0);
+                    ProfileEntity currentProfileEntity = dao.getProfileEntity();
                     dao.delete(currentProfileEntity);
 
                     final InfoRepo.CaseProfile caseProfile = new InfoRepo.CaseProfile();
@@ -75,6 +70,9 @@ public class LocalDatabase implements ProfileDatabase {
                         }
                     });
                 }
+
+                if (count < MAX_USER / 2)
+                    pullProfile();
             }
         });
     }
@@ -89,16 +87,15 @@ public class LocalDatabase implements ProfileDatabase {
         mNetworkDatabase.changeProfileByCase(caseProfile);
     }
 
-    private void pullProfile() {
+    public void pullProfile() {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
                 final CacheProfilesDao dao = DBHelper.getInstance(mContext)
-                        .getCredentialDb()
-                        .getCredentialDao();
+                        .getCacheProfilesDb()
+                        .getCacheProfilesDao();
                 count = dao
-                        .getAll()
-                        .size();
+                        .getCount();
 
                 newProfile(dao);
             }
