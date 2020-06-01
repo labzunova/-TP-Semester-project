@@ -64,11 +64,11 @@ public class MainViewModel extends AndroidViewModel {
                 uiInfo = new UIInfo(null, null);
             }
             else {
-                if (userInformation.profile.getName() != null)
+                if ((userInformation.profile.getName() != null) && (!userInformation.profile.getName().equals("")))
                     infoUser += userInformation.profile.getName();
-                if (userInformation.profile.getAge() != null)
+                if ((userInformation.profile.getAge() != null) && (!userInformation.profile.getAge().equals("")))
                     infoUser += ", " + userInformation.profile.getAge();
-                if (userInformation.profile.getCity() != null)
+                if ((userInformation.profile.getCity() != null) && (!userInformation.profile.getCity().equals("")))
                     infoUser += ", " + userInformation.profile.getCity();
 
                 bitmap = userInformation.bitmap;
