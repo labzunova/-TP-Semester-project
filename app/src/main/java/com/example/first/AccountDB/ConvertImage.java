@@ -1,4 +1,4 @@
-package com.example.first.mainScreen.database.local;
+package com.example.first.AccountDB;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,8 +7,7 @@ import androidx.room.TypeConverter;
 
 import java.io.ByteArrayOutputStream;
 
-public class ConverterData {
-
+public class ConvertImage {
     @TypeConverter
     public static byte[] getBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

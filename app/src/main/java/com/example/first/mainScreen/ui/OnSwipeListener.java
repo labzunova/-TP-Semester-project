@@ -13,7 +13,7 @@ public class OnSwipeListener implements View.OnTouchListener {
 
     private final GestureDetector gestureDetector;
     private int deltaRight = 0, deltaLeft = 0;
-    private static final long SPEED_SWIPE = 150L;
+    private static final long SPEED_SWIPE = 300L;
     private static final int MIN_DELTA_SWIPE = 150;
 
     private View view;
@@ -24,7 +24,7 @@ public class OnSwipeListener implements View.OnTouchListener {
         void swipeRight();
     }
 
-    public OnSwipeListener(Context context, View view, Listener listener) {
+    OnSwipeListener(Context context, View view, Listener listener) {
         gestureDetector = new GestureDetector(context, new GestureListener());
         this.view = view;
         this.mListener = listener;
@@ -56,6 +56,7 @@ public class OnSwipeListener implements View.OnTouchListener {
 
     private void onNotSwipe() {
         LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        linearLay.topMargin = view.getTop();
         deltaLeft = 0;
         deltaRight = 0;
         linearLay.leftMargin = deltaLeft;
@@ -105,8 +106,9 @@ public class OnSwipeListener implements View.OnTouchListener {
 
     }
 
-    public void onScrollRight(float diffX) {
+    private void onScrollRight(float diffX) {
         LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        linearLay.topMargin = view.getTop();
         deltaLeft += diffX;
         deltaRight -= diffX;
         linearLay.leftMargin = deltaLeft;
@@ -115,8 +117,9 @@ public class OnSwipeListener implements View.OnTouchListener {
         view.setLayoutParams(linearLay);
     }
 
-    public void onScrollLeft(float diffX) {
+    private void onScrollLeft(float diffX) {
         LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        linearLay.topMargin = view.getTop();
         deltaLeft -= diffX;
         deltaRight += diffX;
         linearLay.leftMargin = deltaLeft;

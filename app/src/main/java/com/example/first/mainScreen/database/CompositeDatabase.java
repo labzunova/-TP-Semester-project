@@ -1,9 +1,8 @@
 package com.example.first.mainScreen.database;
 
 import android.content.Context;
+import android.util.Log;
 
-import com.example.first.mainScreen.database.local.LocalDatabase;
-import com.example.first.mainScreen.database.network.NetworkDatabase;
 import com.example.first.mainScreen.repositories.InfoRepo;
 
 public class CompositeDatabase implements ProfileDatabase {
@@ -50,7 +49,25 @@ public class CompositeDatabase implements ProfileDatabase {
 
             @Override
             public void onNotFound() {
-                networkDatabase.getCaseProfile(caseCallback);
+                networkDatabase.getCaseProfile(new GetCaseProfileCallback() {
+                    @Override
+                    public void onSuccess(InfoRepo.CaseProfile caseProfile) {
+                        Log.d("information", "onSuccess in network");
+                        ((LocalDatabase)localDatabase).pullProfile();
+                        Log.d("information", "pullProfile");
+                        caseCallback.onSuccess(caseProfile);
+                    }
+
+                    @Override
+                    public void onError(int codeError) {
+                        caseCallback.onError(codeError);
+                    }
+
+                    @Override
+                    public void onNotFound() {
+                        caseCallback.onNotFound();
+                    }
+                });
             }
         });
     }

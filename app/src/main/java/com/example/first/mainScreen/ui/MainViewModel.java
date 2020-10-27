@@ -13,23 +13,41 @@ import com.example.first.mainScreen.repositories.InfoRepo;
 public class MainViewModel extends AndroidViewModel {
     private MediatorLiveData<UIInfo> currentUser = new MediatorLiveData<>();
     private LiveData<InfoRepo.CaseProfile> informationLiveData;
+    private MediatorLiveData<status> statusLiveData = new MediatorLiveData<>();
 
     public MainViewModel(@NonNull Application application) {
         super(application);
         informationLiveData = InfoRepo.getInstance(getApplication()).getFirstCaseProfile();
         currentUser.addSource(informationLiveData, observer);
+
+        LiveData<InfoRepo.statusRepo> statusRepoLiveData = InfoRepo.getInstance(getApplication()).getStatus();
+        statusLiveData.addSource(statusRepoLiveData, new Observer<InfoRepo.statusRepo>() {
+            @Override
+            public void onChanged(InfoRepo.statusRepo statusRepo) {
+                if (statusRepo == InfoRepo.statusRepo.SUCCESS)
+                    statusLiveData.postValue(status.SUCCESS);
+                else if (statusRepo == InfoRepo.statusRepo.INTERNET_ERROR)
+                    statusLiveData.postValue(status.INTERNET_ERROR);
+                else if (statusRepo == InfoRepo.statusRepo.PROFILE_END)
+                    statusLiveData.postValue(status.PROFILE_END);
+            }
+        });
     }
 
-    public LiveData<UIInfo> getProfile() {
+    LiveData<UIInfo> getProfile() {
         return currentUser;
     }
 
-    public void dislike() {
+    LiveData<status> getStatus() {
+        return statusLiveData;
+    }
+
+    void dislike() {
         informationLiveData = InfoRepo.getInstance(getApplication()).getCaseProfile();
         currentUser.addSource(informationLiveData, observer);
     }
 
-    public void like() {
+    void like() {
         InfoRepo.getInstance(getApplication()).processInformation();
         informationLiveData = InfoRepo.getInstance(getApplication()).getCaseProfile();
         currentUser.addSource(informationLiveData, observer);
@@ -46,12 +64,12 @@ public class MainViewModel extends AndroidViewModel {
                 uiInfo = new UIInfo(null, null);
             }
             else {
-                if (userInformation.profile.getName() != null)
+                if ((userInformation.profile.getName() != null) && (!userInformation.profile.getName().equals("")))
                     infoUser += userInformation.profile.getName();
-                if (userInformation.profile.getAge() != null)
-                    infoUser += userInformation.profile.getAge();
-                if (userInformation.profile.getCity() != null)
-                    infoUser += userInformation.profile.getCity();
+                if ((userInformation.profile.getAge() != null) && (!userInformation.profile.getAge().equals("")))
+                    infoUser += ", " + userInformation.profile.getAge();
+                if ((userInformation.profile.getCity() != null) && (!userInformation.profile.getCity().equals("")))
+                    infoUser += ", " + userInformation.profile.getCity();
 
                 bitmap = userInformation.bitmap;
 
@@ -64,12 +82,18 @@ public class MainViewModel extends AndroidViewModel {
     };
 
     static class UIInfo {
-        public String infoProfile;
-        public Bitmap mainImageUser;
+        String infoProfile;
+        Bitmap mainImageUser;
 
-        public UIInfo(String infoProfile, Bitmap mainImageUser) {
+        UIInfo(String infoProfile, Bitmap mainImageUser) {
             this.infoProfile = infoProfile;
             this.mainImageUser = mainImageUser;
         }
+    }
+
+    enum status {
+        SUCCESS,
+        INTERNET_ERROR,
+        PROFILE_END
     }
 }

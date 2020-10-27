@@ -3,7 +3,7 @@ package com.example.first.authorizationAndRegistration;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
-import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -24,21 +24,24 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-public class FirebaseForRegistration {
+class FirebaseForRegistration {
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseAuth.IdTokenListener mAuthListener;
     private Context context;
-    FirebaseStorage storage;
-    StorageReference storageRef;
+    private StorageReference storageRef;
     private String email;
 
-    public FirebaseForRegistration(Context context){
+    private FirebaseToLocalbaseData firebaseToLocalbaseData;
+
+    FirebaseForRegistration(Context context){
         this.context = context;
         mAuth = FirebaseAuth.getInstance();
-        storage = FirebaseStorage.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         startListening();
-        mAuth.addAuthStateListener(mAuthListener);
+        mAuth.addIdTokenListener(mAuthListener);
+
+        firebaseToLocalbaseData = new FirebaseToLocalbaseData(context);
     }
 
     interface Auth {
@@ -50,34 +53,42 @@ public class FirebaseForRegistration {
     }
 
 
-    public void startRegister(String email, String password) {
+    void startRegister(String email, String password) {
         this.email = email;
         if ((email.equals("")) || (password.equals(""))) {
             ((Toasts)context).makeToast("Fields are empty");
+
+            return;
         }
-            mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (!task.isSuccessful()) {
-                        ((FirebaseForRegistration.Toasts)context).makeToast("Sign in problem");
-                    }
+        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (!task.isSuccessful()) {
+                    ((FirebaseForRegistration.Toasts)context).makeToast("Sign in problem");
                 }
-            });
+                else {
+                    databaseFilling();
+
+                    firebaseToLocalbaseData.pushDate();
+                }
+            }
+        });
     }
 
-    public void startListening() {
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+    private void startListening() {
+        mAuthListener = new FirebaseAuth.IdTokenListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            public void onIdTokenChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
-                    databaseFilling();
+                    Log.d("information", "onIdTokenChanged in registration");
                     ((FirebaseForRegistration.Auth) context).goToAccount(); // Start account activity cause user != null
                 }
             }
         };
+
     }
 
-    public void databaseFilling() {
+    private void databaseFilling() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference();
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -93,6 +104,7 @@ public class FirebaseForRegistration {
         profile.setCity(str);
         profile.setBreed(str);
         ArrayList<String> seen = new ArrayList<>();
+        assert user != null;
         seen.add(user.getUid());
         profile.setSeen(seen);
 

@@ -1,12 +1,11 @@
-package com.example.first.Account;
+package com.example.first.authorizationAndRegistration;
+
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
-import com.example.first.AccountEdit.ProfileCash;
 import com.example.first.Profile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,78 +19,58 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class AccountRepo {
-    private static final String BRANCH = "Profiles";
-    private static final String AVATAR_IMAGE = "AvatarImage";
+class FirebaseToLocalbaseData {
+    private AuthRegDB authRegDB;
 
-    MutableLiveData<Profile> profileLiveData = new MutableLiveData<>();
-    MutableLiveData<Bitmap> imageLiveData = new MutableLiveData<>();
-
-    private DatabaseReference databaseProfile;
-    private FirebaseUser user;
-    private Profile profileData;
-    private StorageReference storageRef;
-
-    AccountRepo() {
-        getUser();
-        databaseProfile = FirebaseDatabase.getInstance().getReference(BRANCH);
-        storageRef = FirebaseStorage.getInstance().getReference().child(BRANCH);
+    FirebaseToLocalbaseData(Context context) {
+        authRegDB = new AuthRegDB(context);
     }
 
-    public LiveData getProfile() {
+    void pushDate() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null)
-            getUser();
+            return;
+        pushImageLocalDB(user.getUid());
+        pushProfileLocalDB(user.getUid());
+    }
 
-        databaseProfile.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+    private void pushProfileLocalDB(@NonNull String id) {
+        DatabaseReference databaseProfile = FirebaseDatabase.getInstance().getReference("Profiles");
+
+        databaseProfile.child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                profileData = dataSnapshot.getValue(Profile.class);
-                profileLiveData.postValue(profileData);
+                Profile profile = dataSnapshot.getValue(Profile.class);
+                authRegDB.setProfile(profile);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
-
-        return profileLiveData;
     }
 
-    public LiveData getImage() {
+    private void pushImageLocalDB(@NonNull String id) {
         final long ONE_MEGABYTE = 1024*1024;
 
-        if (user == null)
-            getUser();
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("Profiles");
 
-        storageRef.child(user.getUid()).child(AVATAR_IMAGE).getBytes(3 * ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        storageRef.child(id).child("AvatarImage").getBytes(3 * ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                bitmap = resizeBitmap(bitmap, 600.0f);
-                imageLiveData.postValue(bitmap);
+                bitmap = resizeBitmap(bitmap);
+                authRegDB.setImage(bitmap);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                imageLiveData.postValue(null);
             }
         });
-
-        return imageLiveData;
     }
 
-    public void exit() {
-        ProfileCash.getInstance().isEmpty = true; // for correct ProfileCash work (AccountEdit)
-        FirebaseAuth.getInstance().signOut();
-        user = null;
-    }
-
-    private void getUser() {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-    }
-
-    private Bitmap resizeBitmap(Bitmap bitmap, float maxResolution) {
+    private Bitmap resizeBitmap(Bitmap bitmap) {
+        float maxResolution = 600f;
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         int newWidth = width;

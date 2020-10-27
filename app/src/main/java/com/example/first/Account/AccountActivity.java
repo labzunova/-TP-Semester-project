@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.first.AccountEdit.AccountEditActivity;
+import com.example.first.Account.AccountEdit.AccountEditActivity;
 import com.example.first.R;
 import com.example.first.authorizationAndRegistration.AuthorizationActivity;
 import com.example.first.mainScreen.ui.MainActivity;
@@ -31,7 +31,6 @@ public class AccountActivity extends AppCompatActivity {
     private String str = "";
 
     private AccountViewModel accountViewModel;
-    private Toolbar toolbar;
 
     private void init() {
         labName = findViewById(R.id.i_name);
@@ -42,10 +41,10 @@ public class AccountActivity extends AppCompatActivity {
 
         photoProfile = findViewById(R.id.photo_profile);
 
-        layoutPhone = (LinearLayout) findViewById(R.id.layout_telephone);
-        layoutBreed = (LinearLayout) findViewById(R.id.layout_breed);
-        layoutAge = (LinearLayout) findViewById(R.id.layout_age);
-        layoutCity = (LinearLayout) findViewById(R.id.layout_city);
+        layoutPhone = findViewById(R.id.layout_telephone);
+        layoutBreed = findViewById(R.id.layout_breed);
+        layoutAge = findViewById(R.id.layout_age);
+        layoutCity = findViewById(R.id.layout_city);
 
         BottomNavigationView bottomNavigationView;
         bottomNavigationView = findViewById(R.id.testNavigation);
@@ -67,7 +66,7 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton accountEdit = (ImageButton) findViewById(R.id.editActivity);
+        ImageButton accountEdit = findViewById(R.id.editActivity);
         accountEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +83,7 @@ public class AccountActivity extends AppCompatActivity {
 
         init();
 
-        toolbar = findViewById(R.id.topAppBar);
+        Toolbar toolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(toolbar);
 
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
@@ -94,26 +93,31 @@ public class AccountActivity extends AppCompatActivity {
             public void onChanged(AccountViewModel.ProfileData profileData) {
                 if ( profileData.getName() != null && !profileData.getName().equals(str) ){
                     labName.setText(profileData.getName());
+                    labName.setVisibility(View.VISIBLE);
                 } else
                     labName.setVisibility(View.GONE);
 
                 if (profileData.getBreed() != null && !profileData.getBreed().equals(str) ){
                     labBreed.setText(profileData.getBreed());
+                    labBreed.setVisibility(View.VISIBLE);
                 } else
                     layoutBreed.setVisibility(View.GONE);
 
-                if (profileData.getAge() != null && !profileData.getAge().equals(str) ){
+                if (profileData.getAge() != null && !profileData.getAge().equals(AccountViewModel.DEFAULT_AGE)){
                     labAge.setText(profileData.getAge());
+                    labAge.setVisibility(View.VISIBLE);
                 } else
                     layoutAge.setVisibility(View.GONE);
 
                 if (profileData.getCity() != null && !profileData.getCity().equals(str) ){
                     labCity.setText(profileData.getCity());
+                    labCity.setVisibility(View.VISIBLE);
                 } else
                     layoutCity.setVisibility(View.GONE);
 
                 if (profileData.getPhone() != null && !profileData.getPhone().equals(str) ){
                     labPhone.setText(profileData.getPhone());
+                    labPhone.setVisibility(View.VISIBLE);
                 } else
                     layoutPhone.setVisibility(View.GONE);
             }
@@ -125,7 +129,7 @@ public class AccountActivity extends AppCompatActivity {
                 if (bitmap != null)
                     photoProfile.setImageBitmap(bitmap);
                 else
-                    photoProfile.setImageResource(R.drawable.dog);
+                    photoProfile.setImageResource(R.drawable.default_avatar);
             }
         });
     }

@@ -1,4 +1,4 @@
-package com.example.first.mainScreen.database.local;
+package com.example.first.ProfilesDB;
 
 import android.content.Context;
 
@@ -6,7 +6,7 @@ import androidx.room.Room;
 
 public class DBHelper {
     private static DBHelper ourInstance;
-    private final CredentialDb mCredentialDb;
+    private final CacheProfilesDb mCacheProfilesDb;
 
     public static DBHelper getInstance(Context context) {
         if (ourInstance == null) {
@@ -15,12 +15,13 @@ public class DBHelper {
         return ourInstance;
     }
 
-    public CredentialDb getCredentialDb() {
-        return mCredentialDb;
+    public CacheProfilesDb getCacheProfilesDb() {
+        return mCacheProfilesDb;
     }
 
     private DBHelper(Context context) {
-        this.mCredentialDb = Room.databaseBuilder(context, CredentialDb.class, "credential.db")
+        this.mCacheProfilesDb = Room.databaseBuilder(context, CacheProfilesDb.class, "credential.db")
+                .fallbackToDestructiveMigration()
                 .build();
     }
 

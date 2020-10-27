@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.first.R;
 
@@ -87,6 +88,7 @@ public class DogFragment extends Fragment {
                 }
             }));
         }
+
         return v;
     }
 
@@ -94,6 +96,11 @@ public class DogFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        LinearLayout.LayoutParams linearLay = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        linearLay.topMargin = view.getTop() + 100;
+
+        view.setLayoutParams(linearLay);
 
         Animation sunRiseAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_screen);
         // Подключаем анимацию к нужному View

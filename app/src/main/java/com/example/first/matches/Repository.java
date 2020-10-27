@@ -1,14 +1,9 @@
 package com.example.first.matches;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -16,18 +11,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 
 
 public class Repository {
 
-    static Repository instance;
-    FirebaseStorage storage;
-    StorageReference storageRef;
-    final long BATCH_SIZE = 1024 * 1024;
+    private static Repository instance;
     private ArrayList<UserModel> matches = new ArrayList<>();
     private MutableLiveData<ArrayList<UserModel>> dog = new MutableLiveData<>();
 
@@ -51,6 +40,7 @@ public class Repository {
         final FirebaseUser user;
         user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        assert user != null;
         DatabaseReference ref = reference.child("Profiles").child(user.getUid()).child("matches");
 
         ref.addChildEventListener(new ChildEventListener() {

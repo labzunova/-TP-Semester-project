@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.example.first.Account.AccountActivity;
 import com.example.first.otherDogProf.OtherDogActivity;
@@ -19,19 +18,14 @@ import com.example.first.mainScreen.ui.MainActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MatchesActivity extends AppCompatActivity implements MyAdapter.RecyclerClickListener2 {
 
     private RecyclerView matchesRecycler;
     private MyAdapter myAdapter;
-    private List<UserModel> result; // matches array
-    private TextView noMatches;
-    private MatchesViewModel model;
 
     public void InitView(){
-        noMatches = (TextView)findViewById(R.id.noMatches);
-        matchesRecycler = (RecyclerView)findViewById(R.id.matchesRecycler);
+        matchesRecycler = findViewById(R.id.matchesRecycler);
         matchesRecycler.setLayoutManager(new LinearLayoutManager(this));
         BottomNavigationView bottomNavigationView;
         bottomNavigationView = findViewById(R.id.bottomNavigation);
@@ -61,7 +55,7 @@ public class MatchesActivity extends AppCompatActivity implements MyAdapter.Recy
 
         InitView();
 
-        model = new ViewModelProvider(this).get(MatchesViewModel.class); // creating the object that we'll get till Activity are closed
+        MatchesViewModel model = new ViewModelProvider(this).get(MatchesViewModel.class); // creating the object that we'll get till Activity are closed
         // So, when screen orientation is changed, my MatchesViewModel will survive in provider
         model.init(); // taking the first data matchesMutableLiveData = Repository.getInstance().getMatches();
         model.getLiveData().observe(this, new Observer<ArrayList<UserModel>>() {

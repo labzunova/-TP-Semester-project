@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -25,13 +24,9 @@ import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implements RecyclerClickListener {
 
-    FirebaseStorage storage;
-    StorageReference storageRef;
-    final long BATCH_SIZE = 1024 * 1024;
-
     private ArrayList<UserModel> matches;
     private Context context;
-    public MyAdapter(ArrayList<UserModel> matches, Context context) {
+    MyAdapter(ArrayList<UserModel> matches, Context context) {
         this.matches = matches;
         this.context = context;
     }
@@ -78,13 +73,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
 
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameView;
         CardView cardView;
         ImageView photoView;
         LinearLayout newMatch;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameView = itemView.findViewById(R.id.name);
             cardView = itemView.findViewById(R.id.card_view);
@@ -92,11 +87,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
             newMatch = itemView.findViewById(R.id.newMatch); }
         }
 
-        public void setPhoto(final ViewHolder holder, int position) {
+        private void setPhoto(final ViewHolder holder, int position) {
             UserModel user = matches.get(position);
-            storage = FirebaseStorage.getInstance();
-            storageRef = storage.getReference();
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
             StorageReference myRef = storageRef.child("Profiles").child(user.id).child("AvatarImage");
+            long BATCH_SIZE = 1024 * 1024;
             myRef.getBytes(BATCH_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
